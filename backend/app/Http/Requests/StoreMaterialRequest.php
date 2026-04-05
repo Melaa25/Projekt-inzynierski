@@ -12,7 +12,7 @@ class StoreMaterialRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,11 @@ class StoreMaterialRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'serial_number' => 'required|string|max:100|unique:materials',
+            'weight' => 'required|numeric|min:0',
+            'length' => 'required|numeric|min:0',
+            'location' => 'required|string|max:100',
         ];
     }
 }

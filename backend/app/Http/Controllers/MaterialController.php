@@ -2,64 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreMaterialRequest;
+use App\Http\Requests\UpdateMaterialRequest;
 use App\Models\Material;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class MaterialController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
+        $materials = Material::orderBy('id', 'desc')->get();
+
+        return response()->json($materials);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(StoreMaterialRequest $request): JsonResponse
     {
-        //
+        $material = Material::create($request->validated());
+
+        return response()->json($material, 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show(Material $material): JsonResponse
     {
-        //
+        return response()->json($material);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Material $material)
+    public function update(UpdateMaterialRequest $request, Material $material): JsonResponse
     {
-        //
+        $material->update($request->validated());
+
+        return response()->json($material);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Material $material)
+    public function destroy(Material $material): JsonResponse
     {
-        //
-    }
+        $material->delete();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Material $material)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Material $material)
-    {
-        //
+        return response()->json([
+            'message' => 'Material deleted successfully',
+        ]);
     }
 }

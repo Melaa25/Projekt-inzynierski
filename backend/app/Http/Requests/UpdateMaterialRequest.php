@@ -12,7 +12,7 @@ class UpdateMaterialRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,8 +22,19 @@ class UpdateMaterialRequest extends FormRequest
      */
     public function rules(): array
     {
+        $materialId = $this->route('material')->id;
+
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'serial_code' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::unique('materials', 'serial_code')->ignore($materialId),
+            ],
+            'weight' => ['required', 'numeric', 'min:0'],
+            'length' => ['required', 'numeric', 'min:0'],
+            'location' => ['nullable', 'string', 'max:100'],
         ];
     }
 }
