@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('materials', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('serial_number')->unique();
+            $table->decimal('weight', 10, 3);
+            $table->decimal('length', 10, 3);
+            $table->string('location');
             $table->timestamps();
         });
     }
