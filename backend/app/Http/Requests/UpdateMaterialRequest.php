@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Material;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateMaterialRequest extends FormRequest
@@ -22,15 +24,16 @@ class UpdateMaterialRequest extends FormRequest
      */
     public function rules(): array
     {
-        $materialId = $this->route('material')->id;
+        $material = $this->route('material');
+        $materialId = $material instanceof Material ? $material->id : $material;
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'serial_code' => [
+            'serial_number' => [
                 'required',
                 'string',
                 'max:100',
-                Rule::unique('materials', 'serial_code')->ignore($materialId),
+                Rule::unique('materials', 'serial_number')->ignore($materialId),
             ],
             'weight' => ['required', 'numeric', 'min:0'],
             'length' => ['required', 'numeric', 'min:0'],

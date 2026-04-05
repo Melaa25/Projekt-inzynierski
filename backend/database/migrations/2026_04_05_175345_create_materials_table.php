@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('serial_number')->unique();
             $table->decimal('weight', 10, 3);
             $table->decimal('length', 10, 3);
-            $table->string('location');
+            $table->string('location')->nullable();
             $table->timestamps();
         });
     }
