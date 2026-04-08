@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 FROM php:8.4-cli
-=======
-FROM php:8.3-cli
->>>>>>> a374575e84fb1665071db13b99d16c9d743ad4f0
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends git unzip libpq-dev libzip-dev \
