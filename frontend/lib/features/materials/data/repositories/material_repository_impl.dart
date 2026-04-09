@@ -18,15 +18,84 @@ class MaterialRepositoryImpl implements MaterialRepository {
     } on DioException catch (e) {
       return Left(_mapDioError(e));
     } catch (_) {
-      return const Left('Wystapil nieoczekiwany blad podczas pobierania materialow');
+      return const Left('Wystąpił nieoczekiwany błąd podczas pobierania materiałów');
+    }
+  }
+
+  @override
+  Future<Either<String, MaterialEntity>> createMaterial({
+    required String name,
+    required String serialNumber,
+    required double weight,
+    required double length,
+    String? location,
+  }) async {
+    try {
+      final material = await remoteDataSource.createMaterial(
+        name: name,
+        serialNumber: serialNumber,
+        weight: weight,
+        length: length,
+        location: location,
+      );
+
+      return Right(material);
+    } on DioException catch (e) {
+      return Left(_mapDioError(e));
+    } catch (_) {
+      return const Left('Wystąpił nieoczekiwany błąd podczas dodawania materiału');
+    }
+  }
+
+  @override
+  Future<Either<String, MaterialEntity>> updateMaterial({
+    required int id,
+    required String name,
+    required String serialNumber,
+    required double weight,
+    required double length,
+    String? location,
+  }) async {
+    try {
+      final material = await remoteDataSource.updateMaterial(
+        id: id,
+        name: name,
+        serialNumber: serialNumber,
+        weight: weight,
+        length: length,
+        location: location,
+      );
+
+      return Right(material);
+    } on DioException catch (e) {
+      return Left(_mapDioError(e));
+    } catch (_) {
+      return const Left('Wystąpił nieoczekiwany błąd podczas edycji materiału');
+    }
+  }
+
+  @override
+  Future<Either<String, bool>> deleteMaterial(int id) async {
+    try {
+      await remoteDataSource.deleteMaterial(id);
+      return const Right(true);
+    } on DioException catch (e) {
+      return Left(_mapDioError(e));
+    } catch (_) {
+      return const Left('Wystąpił nieoczekiwany błąd podczas usuwania materiału');
     }
   }
 
   String _mapDioError(DioException e) {
     if (e.response != null) {
-      return 'Blad API: ${e.response?.statusCode}';
+      final data = e.response?.data;
+      if (data is Map<String, dynamic> && data['message'] is String) {
+        return data['message'] as String;
+      }
+
+      return 'Błąd API: ${e.response?.statusCode}';
     }
 
-    return 'Blad sieci. Sprawdz polaczenie z backendem.';
+    return 'Błąd sieci. Sprawdź połączenie z backendem.';
   }
 }

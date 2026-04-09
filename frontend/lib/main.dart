@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/di/injection_container.dart';
 import 'core/theme/app_theme.dart';
+import 'features/home/presentation/pages/home_page.dart';
 import 'features/materials/presentation/bloc/materials_bloc.dart';
-import 'features/materials/presentation/pages/materials_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         title: 'Magazyn',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
-        home: const MaterialsPage(),
+        home: const HomePage(),
       ),
     );
   }

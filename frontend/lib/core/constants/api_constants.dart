@@ -1,10 +1,10 @@
 class ApiConstants {
-  // Domyslny adres dla uruchomienia lokalnego; mozna nadpisac przez --dart-define=API_BASE_URL=...
+  // Adres API mozna nadpisac przez --dart-define=API_BASE_URL=...
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://127.0.0.1:8000/api',
+    defaultValue: 'https://projekt-inzynierski-3wfv.onrender.com/api',
   );
 
-  // Emulator Androida nie polaczy sie z hostem przez 127.0.0.1.
+  // Dla emulatora Androida nalezy uzyc 10.0.2.2 zamiast 127.0.0.1.
   static const String androidEmulatorBaseUrl = 'http://10.0.2.2:8000/api';
 }

@@ -11,7 +11,7 @@ import '../network/dio_client.dart';
 final getIt = GetIt.instance;
 
 Future<void> setupDependencies() async {
-  // Wspoldzielony klient sieciowy dla calej aplikacji.
+  // Rejestracja wszystkich zaleznosci aplikacji.
   getIt.registerLazySingleton<DioClient>(DioClient.new);
   getIt.registerLazySingleton<Dio>(() => getIt<DioClient>().dio);
 
@@ -27,7 +27,6 @@ Future<void> setupDependencies() async {
     () => GetMaterials(getIt<MaterialRepository>()),
   );
 
-  // Nowa instancja bloca dla kazdego uzycia w UI.
   getIt.registerFactory<MaterialsBloc>(
     () => MaterialsBloc(getIt<GetMaterials>()),
   );

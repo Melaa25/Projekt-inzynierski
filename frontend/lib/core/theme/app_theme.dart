@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static ThemeData get light {
-    const seed = Color(0xFF2E7D32);
+    const seed = Color(0xFF00A54F);
 
     final colorScheme = ColorScheme.fromSeed(
       seedColor: seed,
@@ -12,19 +13,24 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: const Color(0xFFF7FCF7),
+      textTheme: GoogleFonts.poppinsTextTheme(),
+      scaffoldBackgroundColor: const Color(0xFFF4F7F5),
       appBarTheme: const AppBarTheme(
         centerTitle: true,
-        backgroundColor: Colors.white,
-        foregroundColor: Color(0xFF1B5E20),
+        backgroundColor: Color(0xFF00A54F),
+        foregroundColor: Colors.white,
         elevation: 0,
+      ),
+      drawerTheme: const DrawerThemeData(
+        backgroundColor: Colors.white,
       ),
       cardTheme: CardThemeData(
         color: Colors.white,
-        elevation: 0,
+        elevation: 2,
+        shadowColor: Color(0x1A000000),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
-          side: const BorderSide(color: Color(0xFFE2F2E3)),
+          side: const BorderSide(color: Color(0xFFE2E8E4)),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -32,11 +38,11 @@ class AppTheme {
         fillColor: Colors.white,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFD5EAD7)),
+          borderSide: const BorderSide(color: Color(0xFFD7E2DC)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFD5EAD7)),
+          borderSide: const BorderSide(color: Color(0xFFD7E2DC)),
         ),
       ),
     );

@@ -22,7 +22,7 @@ class MaterialModel extends MaterialEntity {
   }
 
   static double _toDouble(dynamic value) {
-    // Laravel moze zwrocic pola dziesietne jako liczbe albo jako tekst.
+    // API moze zwrocic liczbe jako num albo String.
     if (value is num) {
       return value.toDouble();
     }
