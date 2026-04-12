@@ -41,6 +41,9 @@ dependencies:
   get_it: ^8.2.0
   dartz: ^0.10.1
   google_fonts: ^6.3.0
+  pdf: ^3.11.3
+  printing: ^5.14.2
+  mobile_scanner: ^7.1.1
 
 dev_dependencies:
   flutter_test:

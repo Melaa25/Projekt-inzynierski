@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../materials/presentation/pages/materials_page.dart';
+import '../../../scanner/presentation/pages/scanner_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -40,9 +41,15 @@ class HomePage extends StatelessWidget {
               ),
               _DashboardTile(
                 title: 'Skanowanie',
-                subtitle: 'Moduł w przygotowaniu',
+                subtitle: 'Skan kodów i szybkie wyszukiwanie',
                 icon: Icons.qr_code_scanner_rounded,
-                onTap: () => _showSoonSnackBar(context),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const ScannerPage(),
+                    ),
+                  );
+                },
               ),
               _DashboardTile(
                 title: 'Przyjęcia',
@@ -251,7 +258,14 @@ class _AppDrawer extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.qr_code_scanner_rounded),
                   title: const Text('Skanowanie'),
-                  onTap: () => _showSoonSnackBar(context),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const ScannerPage(),
+                      ),
+                    );
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.insights_rounded),

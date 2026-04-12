@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../core/di/injection_container.dart';
 import '../../domain/entities/material_entity.dart';
 import '../../domain/repositories/material_repository.dart';
 import 'edit_material_page.dart';
+import '../services/material_label_print_service.dart';
 
 class MaterialDetailsPage extends StatefulWidget {
   final MaterialEntity material;
@@ -21,6 +23,7 @@ class _MaterialDetailsPageState extends State<MaterialDetailsPage> {
   late MaterialEntity _material;
   bool _hasChanges = false;
   bool _isDeleting = false;
+  bool _isPrinting = false;
 
   @override
   void initState() {
@@ -106,6 +109,21 @@ class _MaterialDetailsPageState extends State<MaterialDetailsPage> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: _isPrinting ? null : _printLabel,
+                icon: _isPrinting
+                    ? const SizedBox(
+                        width: 14,
+                        height: 14,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.print_rounded),
+                label: Text(_isPrinting ? 'Przygotowywanie etykiety...' : 'Drukuj etykietę kodu'),
+              ),
             ),
             const SizedBox(height: 14),
             _DetailsCard(
@@ -205,6 +223,50 @@ class _MaterialDetailsPageState extends State<MaterialDetailsPage> {
         Navigator.of(context).pop(true);
       },
     );
+  }
+
+  Future<void> _printLabel() async {
+    setState(() {
+      _isPrinting = true;
+    });
+
+    try {
+      await MaterialLabelPrintService.printSingleLabel(_material);
+
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Etykieta gotowa do wydruku.')),
+      );
+    } on MissingPluginException {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Brak pluginu drukowania w uruchomionej wersji aplikacji. Zrób pełny restart aplikacji (nie hot reload).',
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Nie udało się przygotować etykiety: $e')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPrinting = false;
+        });
+      }
+    }
   }
 }
 
