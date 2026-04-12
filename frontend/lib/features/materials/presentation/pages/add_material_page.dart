@@ -13,7 +13,6 @@ class AddMaterialPage extends StatefulWidget {
 class _AddMaterialPageState extends State<AddMaterialPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _serialController = TextEditingController();
   final _weightController = TextEditingController();
   final _lengthController = TextEditingController();
   final _locationController = TextEditingController();
@@ -23,7 +22,6 @@ class _AddMaterialPageState extends State<AddMaterialPage> {
   @override
   void dispose() {
     _nameController.dispose();
-    _serialController.dispose();
     _weightController.dispose();
     _lengthController.dispose();
     _locationController.dispose();
@@ -57,20 +55,25 @@ class _AddMaterialPageState extends State<AddMaterialPage> {
               },
             ),
             const SizedBox(height: 12),
-            TextFormField(
-              controller: _serialController,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(
-                labelText: 'Numer seryjny',
-                hintText: 'Np. MAT-001',
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF4F8F5),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFD8E4DD)),
               ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Podaj numer seryjny';
-                }
-
-                return null;
-              },
+              child: const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.info_outline_rounded, size: 18),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Numer seryjny zostanie wygenerowany automatycznie na podstawie nazwy (np. BL-0001).',
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 12),
             TextFormField(
@@ -151,7 +154,6 @@ class _AddMaterialPageState extends State<AddMaterialPage> {
     final repository = getIt<MaterialRepository>();
     final result = await repository.createMaterial(
       name: _nameController.text.trim(),
-      serialNumber: _serialController.text.trim(),
       weight: double.parse(_weightController.text.replaceAll(',', '.').trim()),
       length: double.parse(_lengthController.text.replaceAll(',', '.').trim()),
       location: _locationController.text.trim().isEmpty

@@ -19,7 +19,6 @@ class EditMaterialPage extends StatefulWidget {
 class _EditMaterialPageState extends State<EditMaterialPage> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
-  late final TextEditingController _serialController;
   late final TextEditingController _weightController;
   late final TextEditingController _lengthController;
   late final TextEditingController _locationController;
@@ -30,7 +29,6 @@ class _EditMaterialPageState extends State<EditMaterialPage> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.material.name);
-    _serialController = TextEditingController(text: widget.material.serialNumber);
     _weightController = TextEditingController(
       text: widget.material.weight.toStringAsFixed(2),
     );
@@ -43,7 +41,6 @@ class _EditMaterialPageState extends State<EditMaterialPage> {
   @override
   void dispose() {
     _nameController.dispose();
-    _serialController.dispose();
     _weightController.dispose();
     _lengthController.dispose();
     _locationController.dispose();
@@ -76,19 +73,25 @@ class _EditMaterialPageState extends State<EditMaterialPage> {
               },
             ),
             const SizedBox(height: 12),
-            TextFormField(
-              controller: _serialController,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(
-                labelText: 'Numer seryjny',
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF4F8F5),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFD8E4DD)),
               ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Podaj numer seryjny';
-                }
-
-                return null;
-              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.lock_outline_rounded, size: 18),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Numer seryjny: ${widget.material.serialNumber}\nGenerowany automatycznie przy dodawaniu materiału.',
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 12),
             TextFormField(
@@ -167,7 +170,6 @@ class _EditMaterialPageState extends State<EditMaterialPage> {
     final result = await repository.updateMaterial(
       id: widget.material.id,
       name: _nameController.text.trim(),
-      serialNumber: _serialController.text.trim(),
       weight: double.parse(_weightController.text.replaceAll(',', '.').trim()),
       length: double.parse(_lengthController.text.replaceAll(',', '.').trim()),
       location: _locationController.text.trim().isEmpty

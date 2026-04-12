@@ -7,7 +7,6 @@ abstract class MaterialRepository {
 
   Future<Either<String, MaterialEntity>> createMaterial({
     required String name,
-    required String serialNumber,
     required double weight,
     required double length,
     String? location,
@@ -16,7 +15,6 @@ abstract class MaterialRepository {
   Future<Either<String, MaterialEntity>> updateMaterial({
     required int id,
     required String name,
-    required String serialNumber,
     required double weight,
     required double length,
     String? location,

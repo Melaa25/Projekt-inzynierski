@@ -25,7 +25,6 @@ class MaterialRepositoryImpl implements MaterialRepository {
   @override
   Future<Either<String, MaterialEntity>> createMaterial({
     required String name,
-    required String serialNumber,
     required double weight,
     required double length,
     String? location,
@@ -33,7 +32,6 @@ class MaterialRepositoryImpl implements MaterialRepository {
     try {
       final material = await remoteDataSource.createMaterial(
         name: name,
-        serialNumber: serialNumber,
         weight: weight,
         length: length,
         location: location,
@@ -51,7 +49,6 @@ class MaterialRepositoryImpl implements MaterialRepository {
   Future<Either<String, MaterialEntity>> updateMaterial({
     required int id,
     required String name,
-    required String serialNumber,
     required double weight,
     required double length,
     String? location,
@@ -60,7 +57,6 @@ class MaterialRepositoryImpl implements MaterialRepository {
       final material = await remoteDataSource.updateMaterial(
         id: id,
         name: name,
-        serialNumber: serialNumber,
         weight: weight,
         length: length,
         location: location,

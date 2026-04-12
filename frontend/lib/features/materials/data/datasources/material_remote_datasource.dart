@@ -7,7 +7,6 @@ abstract class MaterialRemoteDataSource {
 
   Future<MaterialModel> createMaterial({
     required String name,
-    required String serialNumber,
     required double weight,
     required double length,
     String? location,
@@ -16,7 +15,6 @@ abstract class MaterialRemoteDataSource {
   Future<MaterialModel> updateMaterial({
     required int id,
     required String name,
-    required String serialNumber,
     required double weight,
     required double length,
     String? location,
@@ -44,7 +42,6 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
   @override
   Future<MaterialModel> createMaterial({
     required String name,
-    required String serialNumber,
     required double weight,
     required double length,
     String? location,
@@ -53,7 +50,6 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
       '/materials',
       data: {
         'name': name,
-        'serial_number': serialNumber,
         'weight': weight,
         'length': length,
         'location': location,
@@ -67,7 +63,6 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
   Future<MaterialModel> updateMaterial({
     required int id,
     required String name,
-    required String serialNumber,
     required double weight,
     required double length,
     String? location,
@@ -76,7 +71,6 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
       '/materials/$id',
       data: {
         'name': name,
-        'serial_number': serialNumber,
         'weight': weight,
         'length': length,
         'location': location,
