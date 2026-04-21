@@ -8,70 +8,99 @@ import '../../domain/entities/material_entity.dart';
 
 class MaterialLabelPrintService {
   static Future<void> printSingleLabel(MaterialEntity material) async {
+    await printManyLabels([material]);
+  }
+
+  static Future<void> printManyLabels(List<MaterialEntity> materials) async {
+    if (materials.isEmpty) {
+      throw StateError('Brak materiałów do wydruku.');
+    }
+
     await Printing.layoutPdf(
-      name: 'etykieta_${material.serialNumber}.pdf',
-      onLayout: (_) => _buildSingleLabel(material),
+      name: materials.length == 1
+          ? 'etykieta_${materials.first.serialNumber}.pdf'
+          : 'etykiety_${materials.length}.pdf',
+      onLayout: (_) => _buildLabelsDocument(materials),
     );
   }
 
-  static Future<Uint8List> _buildSingleLabel(MaterialEntity material) async {
+  static Future<Uint8List> _buildLabelsDocument(List<MaterialEntity> materials) async {
     final pdf = pw.Document();
-    final safeName = _toPdfSafeText(material.name);
-
-    const pageFormat = PdfPageFormat(
-      90 * PdfPageFormat.mm,
-      54 * PdfPageFormat.mm,
-      marginAll: 4 * PdfPageFormat.mm,
-    );
+    const labelWidth = 62 * PdfPageFormat.mm;
+    const labelHeight = 28 * PdfPageFormat.mm;
 
     pdf.addPage(
-      pw.Page(
-        pageFormat: pageFormat,
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        margin: const pw.EdgeInsets.all(8 * PdfPageFormat.mm),
         build: (context) {
-          return pw.Container(
-            padding: const pw.EdgeInsets.all(6),
-            decoration: pw.BoxDecoration(
-              border: pw.Border.all(color: PdfColors.black, width: 0.8),
-              borderRadius: const pw.BorderRadius.all(pw.Radius.circular(4)),
+          return [
+            pw.Wrap(
+              spacing: 3 * PdfPageFormat.mm,
+              runSpacing: 3 * PdfPageFormat.mm,
+              children: materials
+                  .map(
+                    (material) => _buildSingleSmallLabel(
+                      material,
+                      width: labelWidth,
+                      height: labelHeight,
+                    ),
+                  )
+                  .toList(),
             ),
-            child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Text(
-                  safeName,
-                  style: pw.TextStyle(
-                    fontSize: 12,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                  maxLines: 1,
-                ),
-                pw.SizedBox(height: 4),
-                pw.Text(
-                  'Kod seryjny: ${material.serialNumber}',
-                  style: const pw.TextStyle(fontSize: 10),
-                ),
-                pw.SizedBox(height: 2),
-                pw.Text(
-                  'Waga: ${material.weight.toStringAsFixed(2)} | Dlugosc: ${material.length.toStringAsFixed(2)}',
-                  style: const pw.TextStyle(fontSize: 9),
-                ),
-                pw.SizedBox(height: 6),
-                pw.Expanded(
-                  child: pw.BarcodeWidget(
-                    barcode: pw.Barcode.code128(),
-                    data: material.serialNumber,
-                    drawText: true,
-                    textStyle: const pw.TextStyle(fontSize: 9),
-                  ),
-                ),
-              ],
-            ),
-          );
+          ];
         },
       ),
     );
 
     return pdf.save();
+  }
+
+  static pw.Widget _buildSingleSmallLabel(
+    MaterialEntity material, {
+    required double width,
+    required double height,
+  }) {
+    final safeName = _toPdfSafeText(material.name);
+
+    return pw.Container(
+      width: width,
+      height: height,
+      padding: const pw.EdgeInsets.all(4),
+      decoration: pw.BoxDecoration(
+        border: pw.Border.all(color: PdfColors.black, width: 0.6),
+        borderRadius: const pw.BorderRadius.all(pw.Radius.circular(2)),
+      ),
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text(
+            safeName,
+            style: pw.TextStyle(
+              fontSize: 8,
+              fontWeight: pw.FontWeight.bold,
+            ),
+            maxLines: 1,
+          ),
+          pw.SizedBox(height: 1.5),
+          pw.Text(
+            material.serialNumber,
+            style: pw.TextStyle(
+              fontSize: 8,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+          pw.SizedBox(height: 2),
+          pw.Expanded(
+            child: pw.BarcodeWidget(
+              barcode: pw.Barcode.code128(),
+              data: material.serialNumber,
+              drawText: false,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   static String _toPdfSafeText(String input) {

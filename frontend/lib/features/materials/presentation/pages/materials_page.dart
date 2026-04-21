@@ -7,6 +7,7 @@ import '../bloc/materials_event.dart';
 import '../bloc/materials_state.dart';
 import 'add_material_page.dart';
 import 'material_details_page.dart';
+import '../services/material_label_print_service.dart';
 
 class MaterialsPage extends StatefulWidget {
   const MaterialsPage({super.key});
@@ -18,6 +19,9 @@ class MaterialsPage extends StatefulWidget {
 class _MaterialsPageState extends State<MaterialsPage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
+  final Set<int> _selectedMaterialIds = <int>{};
+  bool _isSelectionMode = false;
+  bool _isPrintingLabels = false;
 
   @override
   void initState() {
@@ -33,26 +37,68 @@ class _MaterialsPageState extends State<MaterialsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.watch<MaterialsBloc>().state;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista materiałów'),
+        title: Text(
+          _isSelectionMode
+              ? 'Zaznaczone: ${_selectedMaterialIds.length}'
+              : 'Lista materiałów',
+        ),
         actions: [
-          IconButton(
-            tooltip: 'Dodaj materiał',
-            onPressed: _openAddMaterialForm,
-            icon: const Icon(Icons.add_circle_outline_rounded),
-          ),
-          IconButton(
-            tooltip: 'Odśwież',
-            onPressed: _refreshMaterials,
-            icon: const Icon(Icons.refresh_rounded),
-          ),
+          if (_isSelectionMode) ...[
+            IconButton(
+              tooltip: 'Zaznacz wszystkie widoczne',
+              onPressed: () => _selectAllVisible(state.materials),
+              icon: const Icon(Icons.select_all_rounded),
+            ),
+            IconButton(
+              tooltip: 'Drukuj etykiety',
+              onPressed: _isPrintingLabels
+                  ? null
+                  : () => _printSelectedLabels(state.materials),
+              icon: _isPrintingLabels
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2.2),
+                    )
+                  : const Icon(Icons.print_rounded),
+            ),
+            IconButton(
+              tooltip: 'Anuluj zaznaczanie',
+              onPressed: _clearSelection,
+              icon: const Icon(Icons.close_rounded),
+            ),
+          ] else ...[
+            IconButton(
+              tooltip: 'Tryb zaznaczania',
+              onPressed: _enableSelectionMode,
+              icon: const Icon(Icons.checklist_rounded),
+            ),
+            IconButton(
+              tooltip: 'Dodaj materiał',
+              onPressed: _openAddMaterialForm,
+              icon: const Icon(Icons.add_circle_outline_rounded),
+            ),
+            IconButton(
+              tooltip: 'Odśwież',
+              onPressed: _refreshMaterials,
+              icon: const Icon(Icons.refresh_rounded),
+            ),
+          ],
         ],
       ),
-      body: BlocBuilder<MaterialsBloc, MaterialsState>(
-        builder: (context, state) {
-          if (state.status == MaterialsStatus.initial &&
-              state.materials.isEmpty) {
+      body: Builder(
+        builder: (context) {
+          final existingIds = state.materials.map((material) => material.id).toSet();
+          _selectedMaterialIds.removeWhere((id) => !existingIds.contains(id));
+          if (_selectedMaterialIds.isEmpty && _isSelectionMode && !_isPrintingLabels) {
+            _isSelectionMode = false;
+          }
+
+          if (state.status == MaterialsStatus.initial && state.materials.isEmpty) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -105,7 +151,21 @@ class _MaterialsPageState extends State<MaterialsPage> {
                               index: index,
                               child: _MaterialCard(
                                 material: material,
-                                onTap: () => _openMaterialDetails(material),
+                                isSelectionMode: _isSelectionMode,
+                                isSelected: _selectedMaterialIds.contains(material.id),
+                                onTap: () {
+                                  if (_isSelectionMode) {
+                                    _toggleSelection(material);
+                                  } else {
+                                    _openMaterialDetails(material);
+                                  }
+                                },
+                                onLongPress: () {
+                                  if (!_isSelectionMode) {
+                                    _enableSelectionMode();
+                                  }
+                                  _toggleSelection(material);
+                                },
                               ),
                             );
                           }),
@@ -117,6 +177,94 @@ class _MaterialsPageState extends State<MaterialsPage> {
         },
       ),
     );
+  }
+
+  void _enableSelectionMode() {
+    setState(() {
+      _isSelectionMode = true;
+    });
+  }
+
+  void _toggleSelection(MaterialEntity material) {
+    setState(() {
+      if (_selectedMaterialIds.contains(material.id)) {
+        _selectedMaterialIds.remove(material.id);
+      } else {
+        _selectedMaterialIds.add(material.id);
+      }
+
+      if (_selectedMaterialIds.isEmpty) {
+        _isSelectionMode = false;
+      }
+    });
+  }
+
+  void _selectAllVisible(List<MaterialEntity> allMaterials) {
+    final visibleIds = _buildVisibleMaterials(allMaterials)
+        .map((material) => material.id)
+        .toSet();
+
+    if (visibleIds.isEmpty) {
+      return;
+    }
+
+    setState(() {
+      _isSelectionMode = true;
+      _selectedMaterialIds.addAll(visibleIds);
+    });
+  }
+
+  void _clearSelection() {
+    setState(() {
+      _selectedMaterialIds.clear();
+      _isSelectionMode = false;
+    });
+  }
+
+  Future<void> _printSelectedLabels(List<MaterialEntity> allMaterials) async {
+    final selectedMaterials = allMaterials
+        .where((material) => _selectedMaterialIds.contains(material.id))
+        .toList();
+
+    if (selectedMaterials.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Zaznacz co najmniej jeden materiał.')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isPrintingLabels = true;
+    });
+
+    try {
+      await MaterialLabelPrintService.printManyLabels(selectedMaterials);
+
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Przygotowano ${selectedMaterials.length} etykiet do wydruku.'),
+        ),
+      );
+      _clearSelection();
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Nie udało się przygotować etykiet: $e')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPrintingLabels = false;
+        });
+      }
+    }
   }
 
   void _refreshMaterials() {
@@ -292,11 +440,17 @@ class _AnimatedMaterialCard extends StatelessWidget {
 
 class _MaterialCard extends StatelessWidget {
   final MaterialEntity material;
+  final bool isSelectionMode;
+  final bool isSelected;
   final VoidCallback onTap;
+  final VoidCallback onLongPress;
 
   const _MaterialCard({
     required this.material,
+    required this.isSelectionMode,
+    required this.isSelected,
     required this.onTap,
+    required this.onLongPress,
   });
 
   @override
@@ -306,6 +460,7 @@ class _MaterialCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
         onTap: onTap,
+        onLongPress: onLongPress,
         child: Padding(
           padding: const EdgeInsets.all(14),
           child: Row(
@@ -348,10 +503,16 @@ class _MaterialCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(
-                Icons.chevron_right_rounded,
-                color: Color(0xFF7D8A82),
-              ),
+              if (isSelectionMode)
+                Checkbox(
+                  value: isSelected,
+                  onChanged: (_) => onTap(),
+                )
+              else
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  color: Color(0xFF7D8A82),
+                ),
             ],
           ),
         ),
