@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../materials/presentation/pages/materials_page.dart';
-import '../../../scanner/presentation/pages/scanner_page.dart';
+import 'materials/materials_view.dart';
+import 'scanner/scanner_view.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomeView extends StatelessWidget {
+  const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,6 @@ class HomePage extends StatelessWidget {
         children: [
           const _HeaderPanel(),
           const SizedBox(height: 16),
-          // Kafelki główne modułu magazynowego.
           GridView.count(
             physics: const NeverScrollableScrollPhysics(),
             crossAxisCount: 2,
@@ -33,9 +32,7 @@ class HomePage extends StatelessWidget {
                 icon: Icons.inventory_2_rounded,
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const MaterialsPage(),
-                    ),
+                    MaterialPageRoute<void>(builder: (_) => const MaterialsView()),
                   );
                 },
               ),
@@ -45,9 +42,7 @@ class HomePage extends StatelessWidget {
                 icon: Icons.qr_code_scanner_rounded,
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const ScannerPage(),
-                    ),
+                    MaterialPageRoute<void>(builder: (_) => const ScannerView()),
                   );
                 },
               ),
@@ -84,9 +79,7 @@ class HomePage extends StatelessWidget {
 
   void _showSoonSnackBar(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Ten moduł będzie dodany w kolejnym etapie.'),
-      ),
+      const SnackBar(content: Text('Ten moduł będzie dodany w kolejnym etapie.')),
     );
   }
 }
@@ -197,7 +190,6 @@ class _AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: SafeArea(
-        // Rozwijana nawigacja podzielona na sekcje.
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -207,11 +199,7 @@ class _AppDrawer extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
-                    Icons.warehouse_rounded,
-                    color: Colors.white,
-                    size: 32,
-                  ),
+                  const Icon(Icons.warehouse_rounded, color: Colors.white, size: 32),
                   const SizedBox(height: 10),
                   Text(
                     'Nawigacja',
@@ -233,9 +221,7 @@ class _AppDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => const MaterialsPage(),
-                      ),
+                      MaterialPageRoute<void>(builder: (_) => const MaterialsView()),
                     );
                   },
                 ),
@@ -253,7 +239,7 @@ class _AppDrawer extends StatelessWidget {
             ),
             ExpansionTile(
               leading: const Icon(Icons.build_circle_outlined),
-                  title: const Text('Narzędzia'),
+              title: const Text('Narzędzia'),
               children: [
                 ListTile(
                   leading: const Icon(Icons.qr_code_scanner_rounded),
@@ -261,9 +247,7 @@ class _AppDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => const ScannerPage(),
-                      ),
+                      MaterialPageRoute<void>(builder: (_) => const ScannerView()),
                     );
                   },
                 ),
@@ -281,12 +265,9 @@ class _AppDrawer extends StatelessWidget {
   }
 
   void _showSoonSnackBar(BuildContext context) {
-    // Komunikat tymczasowy dla modułów, które będą dodane później.
     Navigator.of(context).pop();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Ten moduł będzie dodany w kolejnym etapie.'),
-      ),
+      const SnackBar(content: Text('Ten moduł będzie dodany w kolejnym etapie.')),
     );
   }
 }

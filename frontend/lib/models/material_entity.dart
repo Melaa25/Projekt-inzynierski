@@ -18,12 +18,5 @@ class MaterialEntity extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-        id,
-        name,
-        serialNumber,
-        weight,
-        length,
-        location,
-      ];
+  List<Object?> get props => [id, name, serialNumber, weight, length, location];
 }

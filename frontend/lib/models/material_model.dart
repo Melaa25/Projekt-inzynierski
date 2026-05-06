@@ -1,4 +1,4 @@
-import '../../domain/entities/material_entity.dart';
+import 'material_entity.dart';
 
 class MaterialModel extends MaterialEntity {
   const MaterialModel({
@@ -22,7 +22,6 @@ class MaterialModel extends MaterialEntity {
   }
 
   static double _toDouble(dynamic value) {
-    // API moze zwrocic liczbe jako num albo String.
     if (value is num) {
       return value.toDouble();
     }

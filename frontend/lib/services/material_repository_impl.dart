@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
-import '../../domain/entities/material_entity.dart';
-import '../../domain/repositories/material_repository.dart';
-import '../datasources/material_remote_datasource.dart';
+import '../models/material_entity.dart';
+import 'material_repository.dart';
+import 'material_remote_data_source.dart';
 
 class MaterialRepositoryImpl implements MaterialRepository {
   final MaterialRemoteDataSource remoteDataSource;

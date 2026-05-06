@@ -4,7 +4,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
-import '../../domain/entities/material_entity.dart';
+import '../models/material_entity.dart';
 
 class MaterialLabelPrintService {
   static Future<void> printSingleLabel(MaterialEntity material) async {
@@ -76,19 +76,13 @@ class MaterialLabelPrintService {
         children: [
           pw.Text(
             safeName,
-            style: pw.TextStyle(
-              fontSize: 8,
-              fontWeight: pw.FontWeight.bold,
-            ),
+            style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold),
             maxLines: 1,
           ),
           pw.SizedBox(height: 1.5),
           pw.Text(
             material.serialNumber,
-            style: pw.TextStyle(
-              fontSize: 8,
-              fontWeight: pw.FontWeight.bold,
-            ),
+            style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold),
           ),
           pw.SizedBox(height: 2),
           pw.Expanded(

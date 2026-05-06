@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-import '../../../../core/di/injection_container.dart';
-import '../../../materials/domain/entities/material_entity.dart';
-import '../../../materials/domain/repositories/material_repository.dart';
-import '../../../materials/presentation/pages/material_details_page.dart';
+import '../../components/scanner/matched_material_tile.dart';
+import '../../components/scanner/scanner_overlay.dart';
+import '../../core/di/injection_container.dart';
+import '../../models/material_entity.dart';
+import '../../services/material_repository.dart';
+import '../materials/material_details_view.dart';
 
-class ScannerPage extends StatefulWidget {
-  const ScannerPage({super.key});
+class ScannerView extends StatefulWidget {
+  const ScannerView({super.key});
 
   @override
-  State<ScannerPage> createState() => _ScannerPageState();
+  State<ScannerView> createState() => _ScannerViewState();
 }
 
-class _ScannerPageState extends State<ScannerPage> {
+class _ScannerViewState extends State<ScannerView> {
   final MobileScannerController _controller = MobileScannerController(
     detectionSpeed: DetectionSpeed.noDuplicates,
     facing: CameraFacing.back,
@@ -79,11 +81,8 @@ class _ScannerPageState extends State<ScannerPage> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          MobileScanner(
-            controller: _controller,
-            onDetect: _onDetect,
-          ),
-          const _ScannerOverlay(),
+          MobileScanner(controller: _controller, onDetect: _onDetect),
+          const ScannerOverlay(),
           Positioned(
             left: 12,
             right: 12,
@@ -115,9 +114,7 @@ class _ScannerPageState extends State<ScannerPage> {
           children: [
             Text(
               'Wpisz kod ręcznie',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -133,9 +130,7 @@ class _ScannerPageState extends State<ScannerPage> {
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: _isSearching
-                    ? null
-                    : () => _searchByCode(_manualCodeController.text),
+                onPressed: _isSearching ? null : () => _searchByCode(_manualCodeController.text),
                 icon: _isSearching
                     ? const SizedBox(
                         width: 14,
@@ -161,22 +156,17 @@ class _ScannerPageState extends State<ScannerPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: hasError ? const Color(0xFFE6C4C4) : const Color(0xFFDCE8E1),
-        ),
+        border: Border.all(color: hasError ? const Color(0xFFE6C4C4) : const Color(0xFFDCE8E1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Wynik skanowania',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 8),
-          if (_lastScannedCode != null)
-            Text('Ostatni kod: $_lastScannedCode'),
+          if (_lastScannedCode != null) Text('Ostatni kod: $_lastScannedCode'),
           if (_statusMessage != null) ...[
             const SizedBox(height: 6),
             Text(
@@ -188,7 +178,7 @@ class _ScannerPageState extends State<ScannerPage> {
           ],
           if (_matchedMaterial != null) ...[
             const SizedBox(height: 10),
-            _MatchedMaterialTile(
+            MatchedMaterialTile(
               material: _matchedMaterial!,
               onOpenDetails: () => _openMaterialDetails(_matchedMaterial!),
             ),
@@ -280,97 +270,11 @@ class _ScannerPageState extends State<ScannerPage> {
 
   Future<void> _openMaterialDetails(MaterialEntity material) async {
     final hasChanges = await Navigator.of(context).push<bool>(
-      MaterialPageRoute<bool>(
-        builder: (_) => MaterialDetailsPage(material: material),
-      ),
+      MaterialPageRoute<bool>(builder: (_) => MaterialDetailsView(material: material)),
     );
 
     if (hasChanges == true && mounted && _lastScannedCode != null) {
       await _searchByCode(_lastScannedCode!);
     }
-  }
-}
-
-class _MatchedMaterialTile extends StatelessWidget {
-  final MaterialEntity material;
-  final VoidCallback onOpenDetails;
-
-  const _MatchedMaterialTile({
-    required this.material,
-    required this.onOpenDetails,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(12),
-      onTap: onOpenDetails,
-      child: Ink(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF2F8F4),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFD6E7DC)),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: const Color(0x1A00A54F),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(Icons.inventory_2_rounded, color: Color(0xFF006B38)),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    material.name,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text('Kod: ${material.serialNumber}'),
-                  Text('Lokalizacja: ${material.location ?? '-'}'),
-                ],
-              ),
-            ),
-            const Icon(Icons.chevron_right_rounded),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ScannerOverlay extends StatelessWidget {
-  const _ScannerOverlay();
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: Center(
-        child: Container(
-          width: 230,
-          height: 110,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFF5EF3AA), width: 2),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x6600A54F),
-                blurRadius: 12,
-                spreadRadius: 1,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }

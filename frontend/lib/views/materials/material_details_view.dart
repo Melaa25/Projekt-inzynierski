@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../core/di/injection_container.dart';
-import '../../domain/entities/material_entity.dart';
-import '../../domain/repositories/material_repository.dart';
-import 'edit_material_page.dart';
-import '../services/material_label_print_service.dart';
+import '../../core/di/injection_container.dart';
+import '../../models/material_entity.dart';
+import '../../services/material_label_print_service.dart';
+import '../../services/material_repository.dart';
+import 'edit_material_view.dart';
 
-class MaterialDetailsPage extends StatefulWidget {
+class MaterialDetailsView extends StatefulWidget {
   final MaterialEntity material;
 
-  const MaterialDetailsPage({
-    super.key,
-    required this.material,
-  });
+  const MaterialDetailsView({super.key, required this.material});
 
   @override
-  State<MaterialDetailsPage> createState() => _MaterialDetailsPageState();
+  State<MaterialDetailsView> createState() => _MaterialDetailsViewState();
 }
 
-class _MaterialDetailsPageState extends State<MaterialDetailsPage> {
+class _MaterialDetailsViewState extends State<MaterialDetailsView> {
   late MaterialEntity _material;
   bool _hasChanges = false;
   bool _isDeleting = false;
@@ -103,9 +100,7 @@ class _MaterialDetailsPageState extends State<MaterialDetailsPage> {
                           )
                         : const Icon(Icons.delete_rounded),
                     label: Text(_isDeleting ? 'Usuwanie...' : 'Usuń'),
-                    style: FilledButton.styleFrom(
-                      foregroundColor: const Color(0xFF8E1B1B),
-                    ),
+                    style: FilledButton.styleFrom(foregroundColor: const Color(0xFF8E1B1B)),
                   ),
                 ),
               ],
@@ -154,9 +149,7 @@ class _MaterialDetailsPageState extends State<MaterialDetailsPage> {
 
   Future<void> _openEditPage() async {
     final updatedMaterial = await Navigator.of(context).push<MaterialEntity>(
-      MaterialPageRoute<MaterialEntity>(
-        builder: (_) => EditMaterialPage(material: _material),
-      ),
+      MaterialPageRoute<MaterialEntity>(builder: (_) => EditMaterialView(material: _material)),
     );
 
     if (updatedMaterial != null && mounted) {
@@ -173,9 +166,7 @@ class _MaterialDetailsPageState extends State<MaterialDetailsPage> {
           builder: (dialogContext) {
             return AlertDialog(
               title: const Text('Potwierdzenie usunięcia'),
-              content: Text(
-                'Czy na pewno chcesz usunąć materiał "${_material.name}"?',
-              ),
+              content: Text('Czy na pewno chcesz usunąć materiał "${_material.name}"?'),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -212,14 +203,10 @@ class _MaterialDetailsPageState extends State<MaterialDetailsPage> {
 
     result.fold(
       (error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error)),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
       },
       (_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Materiał został usunięty.')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Materiał został usunięty.')));
         Navigator.of(context).pop(true);
       },
     );
@@ -237,9 +224,7 @@ class _MaterialDetailsPageState extends State<MaterialDetailsPage> {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Etykieta gotowa do wydruku.')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Etykieta gotowa do wydruku.')));
     } on MissingPluginException {
       if (!mounted) {
         return;
@@ -257,9 +242,7 @@ class _MaterialDetailsPageState extends State<MaterialDetailsPage> {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Nie udało się przygotować etykiety: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Nie udało się wydrukować etykiety: $e')));
     } finally {
       if (mounted) {
         setState(() {
@@ -275,26 +258,14 @@ class _DetailsCard extends StatelessWidget {
   final String value;
   final IconData icon;
 
-  const _DetailsCard({
-    required this.title,
-    required this.value,
-    required this.icon,
-  });
+  const _DetailsCard({required this.title, required this.value, required this.icon});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: ListTile(
-        leading: Container(
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(
-            color: const Color(0x1A00A54F),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Icon(icon, color: const Color(0xFF006B38), size: 18),
-        ),
+        leading: Icon(icon, color: const Color(0xFF006B38)),
         title: Text(title),
         subtitle: Text(value),
       ),

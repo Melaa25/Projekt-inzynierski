@@ -34,9 +34,7 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
 
     final List<dynamic> data = response.data as List<dynamic>;
 
-    return data
-        .map((item) => MaterialModel.fromJson(item as Map<String, dynamic>))
-        .toList();
+    return data.map((item) => MaterialModel.fromJson(item as Map<String, dynamic>)).toList();
   }
 
   @override
