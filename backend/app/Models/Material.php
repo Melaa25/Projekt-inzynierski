@@ -12,6 +12,7 @@ class Material extends Model
         'weight',
         'length',
         'location',
+        'status',
     ];
 
     protected static function booted(): void
