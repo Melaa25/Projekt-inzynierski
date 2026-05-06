@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -14,6 +15,10 @@ return new class extends Migration
         Schema::table('materials', function (Blueprint $table) {
             $table->string('status')->default('in_stock')->after('location');
         });
+
+        DB::table('materials')
+            ->whereNull('status')
+            ->update(['status' => 'in_stock']);
     }
 
     /**

@@ -10,6 +10,7 @@ abstract class MaterialRepository {
     required double weight,
     required double length,
     String? location,
+    required String status,
   });
 
   Future<Either<String, MaterialEntity>> updateMaterial({
@@ -18,6 +19,7 @@ abstract class MaterialRepository {
     required double weight,
     required double length,
     String? location,
+    required String status,
   });
 
   Future<Either<String, bool>> deleteMaterial(int id);

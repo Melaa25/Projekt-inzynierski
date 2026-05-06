@@ -10,6 +10,7 @@ abstract class MaterialRemoteDataSource {
     required double weight,
     required double length,
     String? location,
+    required String status,
   });
 
   Future<MaterialModel> updateMaterial({
@@ -18,6 +19,7 @@ abstract class MaterialRemoteDataSource {
     required double weight,
     required double length,
     String? location,
+    required String status,
   });
 
   Future<void> deleteMaterial(int id);
@@ -43,6 +45,7 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
     required double weight,
     required double length,
     String? location,
+    required String status,
   }) async {
     final Response<dynamic> response = await dio.post(
       '/materials',
@@ -51,6 +54,7 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
         'weight': weight,
         'length': length,
         'location': location,
+        'status': status,
       },
     );
 
@@ -64,6 +68,7 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
     required double weight,
     required double length,
     String? location,
+    required String status,
   }) async {
     final Response<dynamic> response = await dio.put(
       '/materials/$id',
@@ -72,6 +77,7 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
         'weight': weight,
         'length': length,
         'location': location,
+        'status': status,
       },
     );
 

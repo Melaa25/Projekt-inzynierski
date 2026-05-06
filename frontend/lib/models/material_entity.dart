@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'material_status.dart';
+
 class MaterialEntity extends Equatable {
   final int id;
   final String name;
@@ -7,6 +9,7 @@ class MaterialEntity extends Equatable {
   final double weight;
   final double length;
   final String? location;
+  final String status;
 
   const MaterialEntity({
     required this.id,
@@ -15,8 +18,9 @@ class MaterialEntity extends Equatable {
     required this.weight,
     required this.length,
     this.location,
+    this.status = MaterialStatus.inStock,
   });
 
   @override
-  List<Object?> get props => [id, name, serialNumber, weight, length, location];
+  List<Object?> get props => [id, name, serialNumber, weight, length, location, status];
 }

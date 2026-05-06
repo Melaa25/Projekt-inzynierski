@@ -28,6 +28,7 @@ class MaterialRepositoryImpl implements MaterialRepository {
     required double weight,
     required double length,
     String? location,
+    required String status,
   }) async {
     try {
       final material = await remoteDataSource.createMaterial(
@@ -35,6 +36,7 @@ class MaterialRepositoryImpl implements MaterialRepository {
         weight: weight,
         length: length,
         location: location,
+        status: status,
       );
 
       return Right(material);
@@ -52,6 +54,7 @@ class MaterialRepositoryImpl implements MaterialRepository {
     required double weight,
     required double length,
     String? location,
+    required String status,
   }) async {
     try {
       final material = await remoteDataSource.updateMaterial(
@@ -60,6 +63,7 @@ class MaterialRepositoryImpl implements MaterialRepository {
         weight: weight,
         length: length,
         location: location,
+        status: status,
       );
 
       return Right(material);

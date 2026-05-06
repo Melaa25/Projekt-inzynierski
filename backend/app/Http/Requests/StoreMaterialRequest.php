@@ -27,6 +27,7 @@ class StoreMaterialRequest extends FormRequest
             'weight' => 'required|numeric|min:0',
             'length' => 'required|numeric|min:0',
             'location' => 'nullable|string|max:100',
+            'status' => 'required|string|in:in_stock,cutting,reserved,issued,damaged,missing,transit',
         ];
     }
 }

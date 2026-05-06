@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../core/di/injection_container.dart';
 import '../../models/material_entity.dart';
+import '../../models/material_status.dart';
 import '../../services/material_label_print_service.dart';
 import '../../services/material_repository.dart';
 import 'edit_material_view.dart';
@@ -140,6 +141,11 @@ class _MaterialDetailsViewState extends State<MaterialDetailsView> {
               title: 'Lokalizacja',
               value: _material.location ?? '-',
               icon: Icons.place_rounded,
+            ),
+            _DetailsCard(
+              title: 'Status',
+              value: MaterialStatus.label(_material.status),
+              icon: Icons.flag_rounded,
             ),
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/di/injection_container.dart';
+import '../../models/material_status.dart';
 import '../../services/material_repository.dart';
 
 class AddMaterialView extends StatefulWidget {
@@ -16,6 +17,7 @@ class _AddMaterialViewState extends State<AddMaterialView> {
   final _weightController = TextEditingController();
   final _lengthController = TextEditingController();
   final _locationController = TextEditingController();
+  String _selectedStatus = MaterialStatus.inStock;
 
   bool _isSaving = false;
 
@@ -113,6 +115,28 @@ class _AddMaterialViewState extends State<AddMaterialView> {
                 hintText: 'Np. A-01-R03',
               ),
             ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String>(
+              value: _selectedStatus,
+              decoration: const InputDecoration(labelText: 'Status materiału'),
+              items: MaterialStatus.values
+                  .map(
+                    (status) => DropdownMenuItem<String>(
+                      value: status,
+                      child: Text(MaterialStatus.label(status)),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                if (value == null) {
+                  return;
+                }
+
+                setState(() {
+                  _selectedStatus = value;
+                });
+              },
+            ),
             const SizedBox(height: 20),
             FilledButton.icon(
               onPressed: _isSaving ? null : _submit,
@@ -146,6 +170,7 @@ class _AddMaterialViewState extends State<AddMaterialView> {
       weight: double.parse(_weightController.text.replaceAll(',', '.').trim()),
       length: double.parse(_lengthController.text.replaceAll(',', '.').trim()),
       location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
+      status: _selectedStatus,
     );
 
     if (!mounted) {

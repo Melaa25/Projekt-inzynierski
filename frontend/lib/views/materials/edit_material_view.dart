@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/di/injection_container.dart';
 import '../../models/material_entity.dart';
+import '../../models/material_status.dart';
 import '../../services/material_repository.dart';
 
 class EditMaterialView extends StatefulWidget {
@@ -19,6 +20,7 @@ class _EditMaterialViewState extends State<EditMaterialView> {
   late final TextEditingController _weightController;
   late final TextEditingController _lengthController;
   late final TextEditingController _locationController;
+  late String _selectedStatus;
 
   bool _isSaving = false;
 
@@ -29,6 +31,7 @@ class _EditMaterialViewState extends State<EditMaterialView> {
     _weightController = TextEditingController(text: widget.material.weight.toStringAsFixed(2));
     _lengthController = TextEditingController(text: widget.material.length.toStringAsFixed(2));
     _locationController = TextEditingController(text: widget.material.location ?? '');
+    _selectedStatus = widget.material.status;
   }
 
   @override
@@ -122,6 +125,28 @@ class _EditMaterialViewState extends State<EditMaterialView> {
               textInputAction: TextInputAction.done,
               decoration: const InputDecoration(labelText: 'Lokalizacja (opcjonalnie)'),
             ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String>(
+              value: _selectedStatus,
+              decoration: const InputDecoration(labelText: 'Status materiału'),
+              items: MaterialStatus.values
+                  .map(
+                    (status) => DropdownMenuItem<String>(
+                      value: status,
+                      child: Text(MaterialStatus.label(status)),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                if (value == null) {
+                  return;
+                }
+
+                setState(() {
+                  _selectedStatus = value;
+                });
+              },
+            ),
             const SizedBox(height: 20),
             FilledButton.icon(
               onPressed: _isSaving ? null : _submit,
@@ -156,6 +181,7 @@ class _EditMaterialViewState extends State<EditMaterialView> {
       weight: double.parse(_weightController.text.replaceAll(',', '.').trim()),
       length: double.parse(_lengthController.text.replaceAll(',', '.').trim()),
       location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
+      status: _selectedStatus,
     );
 
     if (!mounted) {

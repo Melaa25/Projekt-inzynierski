@@ -1,4 +1,5 @@
 import 'material_entity.dart';
+import 'material_status.dart';
 
 class MaterialModel extends MaterialEntity {
   const MaterialModel({
@@ -8,6 +9,7 @@ class MaterialModel extends MaterialEntity {
     required super.weight,
     required super.length,
     super.location,
+    super.status,
   });
 
   factory MaterialModel.fromJson(Map<String, dynamic> json) {
@@ -18,6 +20,7 @@ class MaterialModel extends MaterialEntity {
       weight: _toDouble(json['weight']),
       length: _toDouble(json['length']),
       location: json['location'] as String?,
+      status: (json['status'] as String?) ?? MaterialStatus.inStock,
     );
   }
 

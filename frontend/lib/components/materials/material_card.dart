@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/material_entity.dart';
+import '../../models/material_status.dart';
 
 class MaterialCard extends StatelessWidget {
   final MaterialEntity material;
@@ -58,6 +59,13 @@ class MaterialCard extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       'Lokalizacja: ${material.location ?? '-'}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: const Color(0xFF5A685F),
+                          ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Status: ${MaterialStatus.label(material.status)}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: const Color(0xFF5A685F),
                           ),
