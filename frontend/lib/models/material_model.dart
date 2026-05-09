@@ -1,5 +1,6 @@
 import 'material_entity.dart';
 import 'material_status.dart';
+import 'location_model.dart';
 
 class MaterialModel extends MaterialEntity {
   const MaterialModel({
@@ -10,9 +11,12 @@ class MaterialModel extends MaterialEntity {
     required super.length,
     super.location,
     super.status,
+    super.currentLocation,
   });
 
   factory MaterialModel.fromJson(Map<String, dynamic> json) {
+    final currentLocationJson = json['current_location'] as Map<String, dynamic>?;
+
     return MaterialModel(
       id: json['id'] as int,
       name: json['name'] as String,
@@ -21,6 +25,7 @@ class MaterialModel extends MaterialEntity {
       length: _toDouble(json['length']),
       location: json['location'] as String?,
       status: (json['status'] as String?) ?? MaterialStatus.inStock,
+      currentLocation: currentLocationJson == null ? null : LocationModel.fromJson(currentLocationJson),
     );
   }
 

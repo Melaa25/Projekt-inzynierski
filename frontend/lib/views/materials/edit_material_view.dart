@@ -4,6 +4,8 @@ import '../../core/di/injection_container.dart';
 import '../../models/material_entity.dart';
 import '../../models/material_status.dart';
 import '../../services/material_repository.dart';
+import '../../models/location_entity.dart';
+import '../../services/location_repository.dart';
 
 class EditMaterialView extends StatefulWidget {
   final MaterialEntity material;
@@ -21,6 +23,8 @@ class _EditMaterialViewState extends State<EditMaterialView> {
   late final TextEditingController _lengthController;
   late final TextEditingController _locationController;
   late String _selectedStatus;
+  LocationEntity? _selectedLocation;
+  List<LocationEntity> _locations = [];
 
   bool _isSaving = false;
 
@@ -32,6 +36,14 @@ class _EditMaterialViewState extends State<EditMaterialView> {
     _lengthController = TextEditingController(text: widget.material.length.toStringAsFixed(2));
     _locationController = TextEditingController(text: widget.material.location ?? '');
     _selectedStatus = widget.material.status;
+    _selectedLocation = widget.material.currentLocation;
+    _loadLocations();
+  }
+
+  Future<void> _loadLocations() async {
+    final repo = getIt<LocationRepository>();
+    final res = await repo.getLocations();
+    res.fold((_) => null, (list) => setState(() => _locations = list));
   }
 
   @override
@@ -120,10 +132,24 @@ class _EditMaterialViewState extends State<EditMaterialView> {
               },
             ),
             const SizedBox(height: 12),
+            DropdownButtonFormField<LocationEntity?>(
+              value: _selectedLocation,
+              decoration: const InputDecoration(labelText: 'Lokalizacja (opcjonalnie)'),
+              items: [
+                const DropdownMenuItem<LocationEntity?>(value: null, child: Text('Brak')),
+                ..._locations.map((l) => DropdownMenuItem<LocationEntity?>(value: l, child: Text(l.name))),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedLocation = value;
+                });
+              },
+            ),
+            const SizedBox(height: 8),
             TextFormField(
               controller: _locationController,
               textInputAction: TextInputAction.done,
-              decoration: const InputDecoration(labelText: 'Lokalizacja (opcjonalnie)'),
+              decoration: const InputDecoration(labelText: 'Lokalizacja (opcjonalnie) - tekst (fallback)'),
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
@@ -181,6 +207,7 @@ class _EditMaterialViewState extends State<EditMaterialView> {
       weight: double.parse(_weightController.text.replaceAll(',', '.').trim()),
       length: double.parse(_lengthController.text.replaceAll(',', '.').trim()),
       location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
+      currentLocationId: _selectedLocation?.id,
       status: _selectedStatus,
     );
 

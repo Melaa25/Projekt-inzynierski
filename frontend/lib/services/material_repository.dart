@@ -10,6 +10,7 @@ abstract class MaterialRepository {
     required double weight,
     required double length,
     String? location,
+    int? currentLocationId,
     required String status,
   });
 
@@ -19,6 +20,7 @@ abstract class MaterialRepository {
     required double weight,
     required double length,
     String? location,
+    int? currentLocationId,
     required String status,
   });
 

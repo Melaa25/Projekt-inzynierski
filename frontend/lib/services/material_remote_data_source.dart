@@ -10,6 +10,7 @@ abstract class MaterialRemoteDataSource {
     required double weight,
     required double length,
     String? location,
+    int? currentLocationId,
     required String status,
   });
 
@@ -19,6 +20,7 @@ abstract class MaterialRemoteDataSource {
     required double weight,
     required double length,
     String? location,
+    int? currentLocationId,
     required String status,
   });
 
@@ -45,6 +47,7 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
     required double weight,
     required double length,
     String? location,
+    int? currentLocationId,
     required String status,
   }) async {
     final Response<dynamic> response = await dio.post(
@@ -54,6 +57,7 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
         'weight': weight,
         'length': length,
         'location': location,
+        'current_location_id': currentLocationId,
         'status': status,
       },
     );
@@ -68,6 +72,7 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
     required double weight,
     required double length,
     String? location,
+    int? currentLocationId,
     required String status,
   }) async {
     final Response<dynamic> response = await dio.put(
@@ -77,6 +82,7 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
         'weight': weight,
         'length': length,
         'location': location,
+        'current_location_id': currentLocationId,
         'status': status,
       },
     );

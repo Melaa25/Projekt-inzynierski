@@ -28,6 +28,7 @@ class MaterialRepositoryImpl implements MaterialRepository {
     required double weight,
     required double length,
     String? location,
+    int? currentLocationId,
     required String status,
   }) async {
     try {
@@ -36,6 +37,7 @@ class MaterialRepositoryImpl implements MaterialRepository {
         weight: weight,
         length: length,
         location: location,
+        currentLocationId: currentLocationId,
         status: status,
       );
 
@@ -54,6 +56,7 @@ class MaterialRepositoryImpl implements MaterialRepository {
     required double weight,
     required double length,
     String? location,
+    int? currentLocationId,
     required String status,
   }) async {
     try {
@@ -63,6 +66,7 @@ class MaterialRepositoryImpl implements MaterialRepository {
         weight: weight,
         length: length,
         location: location,
+        currentLocationId: currentLocationId,
         status: status,
       );
 

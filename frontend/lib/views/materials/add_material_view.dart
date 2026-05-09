@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../core/di/injection_container.dart';
 import '../../models/material_status.dart';
 import '../../services/material_repository.dart';
+import '../../models/location_entity.dart';
+import '../../services/location_repository.dart';
 
 class AddMaterialView extends StatefulWidget {
   const AddMaterialView({super.key});
@@ -17,6 +19,8 @@ class _AddMaterialViewState extends State<AddMaterialView> {
   final _weightController = TextEditingController();
   final _lengthController = TextEditingController();
   final _locationController = TextEditingController();
+  LocationEntity? _selectedLocation;
+  List<LocationEntity> _locations = [];
   String _selectedStatus = MaterialStatus.inStock;
 
   bool _isSaving = false;
@@ -28,6 +32,18 @@ class _AddMaterialViewState extends State<AddMaterialView> {
     _lengthController.dispose();
     _locationController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLocations();
+  }
+
+  Future<void> _loadLocations() async {
+    final repo = getIt<LocationRepository>();
+    final res = await repo.getLocations();
+    res.fold((_) => null, (list) => setState(() => _locations = list));
   }
 
   @override
@@ -107,11 +123,25 @@ class _AddMaterialViewState extends State<AddMaterialView> {
               },
             ),
             const SizedBox(height: 12),
+            DropdownButtonFormField<LocationEntity?>(
+              value: _selectedLocation,
+              decoration: const InputDecoration(labelText: 'Lokalizacja (opcjonalnie)'),
+              items: [
+                const DropdownMenuItem<LocationEntity?>(value: null, child: Text('Brak')),
+                ..._locations.map((l) => DropdownMenuItem<LocationEntity?>(value: l, child: Text(l.name))),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedLocation = value;
+                });
+              },
+            ),
+            const SizedBox(height: 8),
             TextFormField(
               controller: _locationController,
               textInputAction: TextInputAction.done,
               decoration: const InputDecoration(
-                labelText: 'Lokalizacja (opcjonalnie)',
+                labelText: 'Lokalizacja (opcjonalnie) - tekst (fallback)',
                 hintText: 'Np. A-01-R03',
               ),
             ),
@@ -170,6 +200,7 @@ class _AddMaterialViewState extends State<AddMaterialView> {
       weight: double.parse(_weightController.text.replaceAll(',', '.').trim()),
       length: double.parse(_lengthController.text.replaceAll(',', '.').trim()),
       location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
+      currentLocationId: _selectedLocation?.id,
       status: _selectedStatus,
     );
 
