@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('warehouse_locations', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
+            $table->string('code')->nullable()->unique();
             $table->string('name');
-            $table->string('type');
+            $table->string('type')->nullable();
             $table->foreignId('parent_id')->nullable()->constrained('warehouse_locations')->nullOnDelete();
             $table->text('description')->nullable();
             $table->timestamps();
