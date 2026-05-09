@@ -13,6 +13,7 @@ class Material extends Model
         'length',
         'location',
         'status',
+        'current_location_id',
     ];
 
     protected static function booted(): void
@@ -20,6 +21,11 @@ class Material extends Model
         static::creating(function (Material $material): void {
             $material->serial_number = static::generateSerialNumber($material->name);
         });
+    }
+
+    public function currentLocation()
+    {
+        return $this->belongsTo(WarehouseLocation::class, 'current_location_id');
     }
 
     private static function generateSerialNumber(string $name): string

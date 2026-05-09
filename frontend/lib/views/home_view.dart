@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'locations/locations_view.dart';
 import 'materials/materials_view.dart';
 import 'scanner/scanner_view.dart';
 
@@ -18,6 +19,8 @@ class HomeView extends StatelessWidget {
         children: [
           const _HeaderPanel(),
           const SizedBox(height: 16),
+          const _LocationsPreviewCard(),
+          const SizedBox(height: 16),
           GridView.count(
             physics: const NeverScrollableScrollPhysics(),
             crossAxisCount: 2,
@@ -33,6 +36,16 @@ class HomeView extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute<void>(builder: (_) => const MaterialsView()),
+                  );
+                },
+              ),
+              _DashboardTile(
+                title: 'Lokalizacje',
+                subtitle: 'Strefy, sektory i miejsca',
+                icon: Icons.place_outlined,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(builder: (_) => const LocationsView()),
                   );
                 },
               ),
@@ -62,12 +75,6 @@ class HomeView extends StatelessWidget {
                 title: 'Raporty',
                 subtitle: 'Analiza i zestawienia',
                 icon: Icons.insights_rounded,
-                onTap: () => _showSoonSnackBar(context),
-              ),
-              _DashboardTile(
-                title: 'Kontrahenci',
-                subtitle: 'Baza klientów i dostawców',
-                icon: Icons.groups_rounded,
                 onTap: () => _showSoonSnackBar(context),
               ),
             ],
@@ -115,6 +122,56 @@ class _HeaderPanel extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: const Color(0xFFE5FFF1),
                 ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LocationsPreviewCard extends StatelessWidget {
+  const _LocationsPreviewCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE1E9E4)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: const Color(0x1A00A54F),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(Icons.place_rounded, color: Color(0xFF006B38)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Lokalizacje magazynowe',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Wersja 2 modelu danych będzie opierać się na strefach, sektorach i miejscach.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: const Color(0xFF4D5751),
+                      ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -215,6 +272,16 @@ class _AppDrawer extends StatelessWidget {
               leading: const Icon(Icons.inventory_2_outlined),
               title: const Text('Magazyn'),
               children: [
+                ListTile(
+                  leading: const Icon(Icons.place_outlined),
+                  title: const Text('Lokalizacje'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(builder: (_) => const LocationsView()),
+                    );
+                  },
+                ),
                 ListTile(
                   leading: const Icon(Icons.list_alt_rounded),
                   title: const Text('Lista materiałów'),
