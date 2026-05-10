@@ -18,7 +18,6 @@ class _AddMaterialViewState extends State<AddMaterialView> {
   final _nameController = TextEditingController();
   final _weightController = TextEditingController();
   final _lengthController = TextEditingController();
-  final _locationController = TextEditingController();
   LocationEntity? _selectedLocation;
   List<LocationEntity> _locations = [];
   String _selectedStatus = MaterialStatus.inStock;
@@ -30,7 +29,6 @@ class _AddMaterialViewState extends State<AddMaterialView> {
     _nameController.dispose();
     _weightController.dispose();
     _lengthController.dispose();
-    _locationController.dispose();
     super.dispose();
   }
 
@@ -58,7 +56,10 @@ class _AddMaterialViewState extends State<AddMaterialView> {
             TextFormField(
               controller: _nameController,
               textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Nazwa', hintText: 'Np. Blacha stalowa'),
+              decoration: const InputDecoration(
+                labelText: 'Nazwa',
+                hintText: 'Np. Blacha stalowa',
+              ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return 'Podaj nazwę materiału';
@@ -92,8 +93,13 @@ class _AddMaterialViewState extends State<AddMaterialView> {
             TextFormField(
               controller: _weightController,
               textInputAction: TextInputAction.next,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: 'Waga', hintText: 'Np. 10.5'),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'Waga',
+                hintText: 'Np. 10.5',
+              ),
               validator: (value) {
                 final normalized = (value ?? '').replaceAll(',', '.').trim();
                 final number = double.tryParse(normalized);
@@ -109,8 +115,13 @@ class _AddMaterialViewState extends State<AddMaterialView> {
             TextFormField(
               controller: _lengthController,
               textInputAction: TextInputAction.next,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: 'Długość', hintText: 'Np. 250'),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              decoration: const InputDecoration(
+                labelText: 'Długość',
+                hintText: 'Np. 250',
+              ),
               validator: (value) {
                 final normalized = (value ?? '').replaceAll(',', '.').trim();
                 final number = double.tryParse(normalized);
@@ -125,25 +136,29 @@ class _AddMaterialViewState extends State<AddMaterialView> {
             const SizedBox(height: 12),
             DropdownButtonFormField<LocationEntity?>(
               value: _selectedLocation,
-              decoration: const InputDecoration(labelText: 'Lokalizacja (opcjonalnie)'),
+              decoration: const InputDecoration(
+                labelText: 'Lokalizacja ',
+              ),
+              validator: (value) {
+                if (value == null) {
+                  return 'Wybierz lokalizację';
+                }
+
+                return null;
+              },
               items: [
-                const DropdownMenuItem<LocationEntity?>(value: null, child: Text('Brak')),
-                ..._locations.map((l) => DropdownMenuItem<LocationEntity?>(value: l, child: Text(l.name))),
+                ..._locations.map(
+                  (l) => DropdownMenuItem<LocationEntity?>(
+                    value: l,
+                    child: Text(l.name),
+                  ),
+                ),
               ],
               onChanged: (value) {
                 setState(() {
                   _selectedLocation = value;
                 });
               },
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: _locationController,
-              textInputAction: TextInputAction.done,
-              decoration: const InputDecoration(
-                labelText: 'Lokalizacja (opcjonalnie) - tekst (fallback)',
-                hintText: 'Np. A-01-R03',
-              ),
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
@@ -199,7 +214,7 @@ class _AddMaterialViewState extends State<AddMaterialView> {
       name: _nameController.text.trim(),
       weight: double.parse(_weightController.text.replaceAll(',', '.').trim()),
       length: double.parse(_lengthController.text.replaceAll(',', '.').trim()),
-      location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
+      location: _selectedLocation?.name,
       currentLocationId: _selectedLocation?.id,
       status: _selectedStatus,
     );
@@ -214,10 +229,14 @@ class _AddMaterialViewState extends State<AddMaterialView> {
 
     result.fold(
       (error) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error)));
       },
       (_) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Materiał został dodany.')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Materiał został dodany.')),
+        );
         Navigator.of(context).pop(true);
       },
     );

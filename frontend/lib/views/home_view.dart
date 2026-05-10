@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'materials/materials_view.dart';
+import 'locations/locations_view.dart';
 import 'scanner/scanner_view.dart';
 
 class HomeView extends StatelessWidget {
@@ -9,9 +10,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Panel główny'),
-      ),
+      appBar: AppBar(title: const Text('Panel główny')),
       drawer: const _AppDrawer(),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -32,7 +31,21 @@ class HomeView extends StatelessWidget {
                 icon: Icons.inventory_2_rounded,
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute<void>(builder: (_) => const MaterialsView()),
+                    MaterialPageRoute<void>(
+                      builder: (_) => const MaterialsView(),
+                    ),
+                  );
+                },
+              ),
+              _DashboardTile(
+                title: 'Lokalizacje',
+                subtitle: 'Strefy, sektory i miejsca',
+                icon: Icons.place_rounded,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const LocationsView(),
+                    ),
                   );
                 },
               ),
@@ -42,7 +55,9 @@ class HomeView extends StatelessWidget {
                 icon: Icons.qr_code_scanner_rounded,
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute<void>(builder: (_) => const ScannerView()),
+                    MaterialPageRoute<void>(
+                      builder: (_) => const ScannerView(),
+                    ),
                   );
                 },
               ),
@@ -73,7 +88,9 @@ class HomeView extends StatelessWidget {
 
   void _showSoonSnackBar(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Ten moduł będzie dodany w kolejnym etapie.')),
+      const SnackBar(
+        content: Text('Ten moduł będzie dodany w kolejnym etapie.'),
+      ),
     );
   }
 }
@@ -99,23 +116,22 @@ class _HeaderPanel extends StatelessWidget {
           Text(
             'System magazynowy',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                ),
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             'Szybki dostęp do najważniejszych funkcji magazynu.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: const Color(0xFFE5FFF1),
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: const Color(0xFFE5FFF1)),
           ),
         ],
       ),
     );
   }
 }
-
 
 class _DashboardTile extends StatelessWidget {
   final String title;
@@ -159,16 +175,16 @@ class _DashboardTile extends StatelessWidget {
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: const Color(0xFF111111),
-                      fontWeight: FontWeight.w700,
-                    ),
+                  color: const Color(0xFF111111),
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               const SizedBox(height: 6),
               Text(
                 subtitle,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: const Color(0xFF4D5751),
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: const Color(0xFF4D5751)),
               ),
             ],
           ),
@@ -194,14 +210,18 @@ class _AppDrawer extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.warehouse_rounded, color: Colors.white, size: 32),
+                  const Icon(
+                    Icons.warehouse_rounded,
+                    color: Colors.white,
+                    size: 32,
+                  ),
                   const SizedBox(height: 10),
                   Text(
                     'Nawigacja',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),
@@ -212,7 +232,21 @@ class _AppDrawer extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(
-                  MaterialPageRoute<void>(builder: (_) => const MaterialsView()),
+                  MaterialPageRoute<void>(
+                    builder: (_) => const MaterialsView(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.place_rounded),
+              title: const Text('Lokalizacje'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const LocationsView(),
+                  ),
                 );
               },
             ),
@@ -226,7 +260,9 @@ class _AppDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).push(
-                      MaterialPageRoute<void>(builder: (_) => const ScannerView()),
+                      MaterialPageRoute<void>(
+                        builder: (_) => const ScannerView(),
+                      ),
                     );
                   },
                 ),
@@ -241,7 +277,9 @@ class _AppDrawer extends StatelessWidget {
   void _showSoonSnackBar(BuildContext context) {
     Navigator.of(context).pop();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Ten moduł będzie dodany w kolejnym etapie.')),
+      const SnackBar(
+        content: Text('Ten moduł będzie dodany w kolejnym etapie.'),
+      ),
     );
   }
 }

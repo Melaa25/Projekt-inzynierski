@@ -65,16 +65,16 @@ class _MaterialDetailsViewState extends State<MaterialDetailsView> {
                   Text(
                     _material.name,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                        ),
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'ID: ${_material.id}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: const Color(0xFFE5FFF1),
-                        ),
+                      color: const Color(0xFFE5FFF1),
+                    ),
                   ),
                 ],
               ),
@@ -101,7 +101,9 @@ class _MaterialDetailsViewState extends State<MaterialDetailsView> {
                           )
                         : const Icon(Icons.delete_rounded),
                     label: Text(_isDeleting ? 'Usuwanie...' : 'Usuń'),
-                    style: FilledButton.styleFrom(foregroundColor: const Color(0xFF8E1B1B)),
+                    style: FilledButton.styleFrom(
+                      foregroundColor: const Color(0xFF8E1B1B),
+                    ),
                   ),
                 ),
               ],
@@ -118,7 +120,11 @@ class _MaterialDetailsViewState extends State<MaterialDetailsView> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.print_rounded),
-                label: Text(_isPrinting ? 'Przygotowywanie etykiety...' : 'Drukuj etykietę kodu'),
+                label: Text(
+                  _isPrinting
+                      ? 'Przygotowywanie etykiety...'
+                      : 'Drukuj etykietę kodu',
+                ),
               ),
             ),
             const SizedBox(height: 14),
@@ -139,7 +145,8 @@ class _MaterialDetailsViewState extends State<MaterialDetailsView> {
             ),
             _DetailsCard(
               title: 'Lokalizacja',
-              value: _material.location ?? '-',
+              value:
+                  _material.currentLocation?.name ?? _material.location ?? '-',
               icon: Icons.place_rounded,
             ),
             _DetailsCard(
@@ -155,7 +162,9 @@ class _MaterialDetailsViewState extends State<MaterialDetailsView> {
 
   Future<void> _openEditPage() async {
     final updatedMaterial = await Navigator.of(context).push<MaterialEntity>(
-      MaterialPageRoute<MaterialEntity>(builder: (_) => EditMaterialView(material: _material)),
+      MaterialPageRoute<MaterialEntity>(
+        builder: (_) => EditMaterialView(material: _material),
+      ),
     );
 
     if (updatedMaterial != null && mounted) {
@@ -167,12 +176,15 @@ class _MaterialDetailsViewState extends State<MaterialDetailsView> {
   }
 
   Future<void> _confirmDelete() async {
-    final shouldDelete = await showDialog<bool>(
+    final shouldDelete =
+        await showDialog<bool>(
           context: context,
           builder: (dialogContext) {
             return AlertDialog(
               title: const Text('Potwierdzenie usunięcia'),
-              content: Text('Czy na pewno chcesz usunąć materiał "${_material.name}"?'),
+              content: Text(
+                'Czy na pewno chcesz usunąć materiał "${_material.name}"?',
+              ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(dialogContext).pop(false),
@@ -209,10 +221,14 @@ class _MaterialDetailsViewState extends State<MaterialDetailsView> {
 
     result.fold(
       (error) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error)));
       },
       (_) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Materiał został usunięty.')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Materiał został usunięty.')),
+        );
         Navigator.of(context).pop(true);
       },
     );
@@ -230,7 +246,9 @@ class _MaterialDetailsViewState extends State<MaterialDetailsView> {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Etykieta gotowa do wydruku.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Etykieta gotowa do wydruku.')),
+      );
     } on MissingPluginException {
       if (!mounted) {
         return;
@@ -248,7 +266,9 @@ class _MaterialDetailsViewState extends State<MaterialDetailsView> {
         return;
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Nie udało się wydrukować etykiety: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Nie udało się wydrukować etykiety: $e')),
+      );
     } finally {
       if (mounted) {
         setState(() {
@@ -264,7 +284,11 @@ class _DetailsCard extends StatelessWidget {
   final String value;
   final IconData icon;
 
-  const _DetailsCard({required this.title, required this.value, required this.icon});
+  const _DetailsCard({
+    required this.title,
+    required this.value,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {

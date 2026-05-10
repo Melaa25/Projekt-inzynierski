@@ -21,7 +21,6 @@ class _EditMaterialViewState extends State<EditMaterialView> {
   late final TextEditingController _nameController;
   late final TextEditingController _weightController;
   late final TextEditingController _lengthController;
-  late final TextEditingController _locationController;
   late String _selectedStatus;
   LocationEntity? _selectedLocation;
   List<LocationEntity> _locations = [];
@@ -32,9 +31,12 @@ class _EditMaterialViewState extends State<EditMaterialView> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.material.name);
-    _weightController = TextEditingController(text: widget.material.weight.toStringAsFixed(2));
-    _lengthController = TextEditingController(text: widget.material.length.toStringAsFixed(2));
-    _locationController = TextEditingController(text: widget.material.location ?? '');
+    _weightController = TextEditingController(
+      text: widget.material.weight.toStringAsFixed(2),
+    );
+    _lengthController = TextEditingController(
+      text: widget.material.length.toStringAsFixed(2),
+    );
     _selectedStatus = widget.material.status;
     _selectedLocation = widget.material.currentLocation;
     _loadLocations();
@@ -51,7 +53,6 @@ class _EditMaterialViewState extends State<EditMaterialView> {
     _nameController.dispose();
     _weightController.dispose();
     _lengthController.dispose();
-    _locationController.dispose();
     super.dispose();
   }
 
@@ -101,7 +102,9 @@ class _EditMaterialViewState extends State<EditMaterialView> {
             TextFormField(
               controller: _weightController,
               textInputAction: TextInputAction.next,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: const InputDecoration(labelText: 'Waga'),
               validator: (value) {
                 final normalized = (value ?? '').replaceAll(',', '.').trim();
@@ -118,7 +121,9 @@ class _EditMaterialViewState extends State<EditMaterialView> {
             TextFormField(
               controller: _lengthController,
               textInputAction: TextInputAction.next,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: const InputDecoration(labelText: 'Długość'),
               validator: (value) {
                 final normalized = (value ?? '').replaceAll(',', '.').trim();
@@ -134,22 +139,29 @@ class _EditMaterialViewState extends State<EditMaterialView> {
             const SizedBox(height: 12),
             DropdownButtonFormField<LocationEntity?>(
               value: _selectedLocation,
-              decoration: const InputDecoration(labelText: 'Lokalizacja (opcjonalnie)'),
+              decoration: const InputDecoration(
+                labelText: 'Lokalizacja (z listy)',
+              ),
+              validator: (value) {
+                if (value == null) {
+                  return 'Wybierz lokalizację z listy';
+                }
+
+                return null;
+              },
               items: [
-                const DropdownMenuItem<LocationEntity?>(value: null, child: Text('Brak')),
-                ..._locations.map((l) => DropdownMenuItem<LocationEntity?>(value: l, child: Text(l.name))),
+                ..._locations.map(
+                  (l) => DropdownMenuItem<LocationEntity?>(
+                    value: l,
+                    child: Text(l.name),
+                  ),
+                ),
               ],
               onChanged: (value) {
                 setState(() {
                   _selectedLocation = value;
                 });
               },
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: _locationController,
-              textInputAction: TextInputAction.done,
-              decoration: const InputDecoration(labelText: 'Lokalizacja (opcjonalnie) - tekst (fallback)'),
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
@@ -206,7 +218,7 @@ class _EditMaterialViewState extends State<EditMaterialView> {
       name: _nameController.text.trim(),
       weight: double.parse(_weightController.text.replaceAll(',', '.').trim()),
       length: double.parse(_lengthController.text.replaceAll(',', '.').trim()),
-      location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
+      location: _selectedLocation?.name,
       currentLocationId: _selectedLocation?.id,
       status: _selectedStatus,
     );
@@ -221,10 +233,14 @@ class _EditMaterialViewState extends State<EditMaterialView> {
 
     result.fold(
       (error) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error)));
       },
       (updatedMaterial) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Materiał został zaktualizowany.')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Materiał został zaktualizowany.')),
+        );
         Navigator.of(context).pop(updatedMaterial);
       },
     );
