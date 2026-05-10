@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../core/di/injection_container.dart';
+import '../services/auth_service.dart';
+import 'auth/login_view.dart';
 import 'materials/materials_view.dart';
 import 'locations/locations_view.dart';
 import 'scanner/scanner_view.dart';
@@ -199,6 +202,9 @@ class _AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authService = getIt<AuthService>();
+    final currentUser = authService.currentUser;
+
     return Drawer(
       child: SafeArea(
         child: ListView(
@@ -221,6 +227,15 @@ class _AppDrawer extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    currentUser == null
+                        ? 'Niezalogowany'
+                        : '${currentUser.name} (${currentUser.roleLabel})',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: const Color(0xFFE5FFF1),
                     ),
                   ),
                 ],
@@ -267,6 +282,21 @@ class _AppDrawer extends StatelessWidget {
                   },
                 ),
               ],
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout_rounded),
+              title: const Text('Wyloguj'),
+              onTap: () async {
+                await authService.logout();
+                if (!context.mounted) {
+                  return;
+                }
+
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute<void>(builder: (_) => const LoginView()),
+                  (_) => false,
+                );
+              },
             ),
           ],
         ),

@@ -7,6 +7,7 @@ import '../../services/material_repository_impl.dart';
 import '../../services/location_remote_data_source.dart';
 import '../../services/location_repository.dart';
 import '../../services/location_repository_impl.dart';
+import '../../services/auth_service.dart';
 import '../network/dio_client.dart';
 
 final getIt = GetIt.instance;
@@ -15,6 +16,8 @@ Future<void> setupDependencies() async {
   // Rejestracja wszystkich zaleznosci aplikacji.
   getIt.registerLazySingleton<DioClient>(DioClient.new);
   getIt.registerLazySingleton<Dio>(() => getIt<DioClient>().dio);
+
+  getIt.registerLazySingleton<AuthService>(() => AuthService(getIt<Dio>()));
 
   getIt.registerLazySingleton<MaterialRemoteDataSource>(
     () => MaterialRemoteDataSourceImpl(getIt<Dio>()),

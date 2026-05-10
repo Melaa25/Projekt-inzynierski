@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'core/di/injection_container.dart';
 import 'core/theme/app_theme.dart';
-import 'views/home_view.dart';
+import 'views/auth/login_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Magazyn',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: const HomeView(),
+      home: const LoginView(),
     );
   }
 }
