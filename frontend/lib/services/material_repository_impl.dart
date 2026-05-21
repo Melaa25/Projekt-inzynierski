@@ -90,6 +90,31 @@ class MaterialRepositoryImpl implements MaterialRepository {
     }
   }
 
+  @override
+  Future<Either<String, MaterialEntity>> recordMovement({
+    required int materialId,
+    required String type,
+    String? destination,
+    String? note,
+    int? newLocationId,
+  }) async {
+    try {
+      final material = await remoteDataSource.recordMovement(
+        materialId: materialId,
+        type: type,
+        destination: destination,
+        note: note,
+        newLocationId: newLocationId,
+      );
+
+      return Right(material);
+    } on DioException catch (e) {
+      return Left(_mapDioError(e));
+    } catch (_) {
+      return const Left('Wystąpił nieoczekiwany błąd podczas zapisu ruchu materiału');
+    }
+  }
+
   String _mapDioError(DioException e) {
     if (e.response != null) {
       final data = e.response?.data;

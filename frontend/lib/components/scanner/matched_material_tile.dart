@@ -33,7 +33,10 @@ class MatchedMaterialTile extends StatelessWidget {
                 color: const Color(0x1A00A54F),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.inventory_2_rounded, color: Color(0xFF006B38)),
+              child: const Icon(
+                Icons.inventory_2_rounded,
+                color: Color(0xFF006B38),
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -43,12 +46,14 @@ class MatchedMaterialTile extends StatelessWidget {
                   Text(
                     material.name,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(height: 2),
                   Text('Kod: ${material.serialNumber}'),
-                  Text('Lokalizacja: ${material.location ?? '-'}'),
+                  Text(
+                    'Lokalizacja: ${material.currentLocation?.name ?? material.location ?? '-'}',
+                  ),
                 ],
               ),
             ),

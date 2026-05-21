@@ -19,14 +19,21 @@ class _ScannerViewState extends State<ScannerView> {
   final MobileScannerController _controller = MobileScannerController(
     detectionSpeed: DetectionSpeed.noDuplicates,
     facing: CameraFacing.back,
-    formats: const [BarcodeFormat.code128, BarcodeFormat.code39, BarcodeFormat.qrCode],
+    formats: const [
+      BarcodeFormat.code128,
+      BarcodeFormat.code39,
+      BarcodeFormat.qrCode,
+    ],
   );
 
   final TextEditingController _manualCodeController = TextEditingController();
+  final TextEditingController _movementTargetController =
+      TextEditingController();
 
   bool _isTorchOn = false;
   bool _isSearching = false;
   bool _isHandlingScan = false;
+  bool _isSavingMovement = false;
 
   String? _lastScannedCode;
   String? _statusMessage;
@@ -36,6 +43,7 @@ class _ScannerViewState extends State<ScannerView> {
   void dispose() {
     _controller.dispose();
     _manualCodeController.dispose();
+    _movementTargetController.dispose();
     super.dispose();
   }
 
@@ -53,7 +61,9 @@ class _ScannerViewState extends State<ScannerView> {
           IconButton(
             tooltip: _isTorchOn ? 'Wyłącz latarkę' : 'Włącz latarkę',
             onPressed: _toggleTorch,
-            icon: Icon(_isTorchOn ? Icons.flash_on_rounded : Icons.flash_off_rounded),
+            icon: Icon(
+              _isTorchOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
+            ),
           ),
         ],
       ),
@@ -114,7 +124,9 @@ class _ScannerViewState extends State<ScannerView> {
           children: [
             Text(
               'Wpisz kod ręcznie',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -130,7 +142,9 @@ class _ScannerViewState extends State<ScannerView> {
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: _isSearching ? null : () => _searchByCode(_manualCodeController.text),
+                onPressed: _isSearching
+                    ? null
+                    : () => _searchByCode(_manualCodeController.text),
                 icon: _isSearching
                     ? const SizedBox(
                         width: 14,
@@ -138,7 +152,9 @@ class _ScannerViewState extends State<ScannerView> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.search_rounded),
-                label: Text(_isSearching ? 'Wyszukiwanie...' : 'Wyszukaj materiał'),
+                label: Text(
+                  _isSearching ? 'Wyszukiwanie...' : 'Wyszukaj materiał',
+                ),
               ),
             ),
           ],
@@ -156,14 +172,18 @@ class _ScannerViewState extends State<ScannerView> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: hasError ? const Color(0xFFE6C4C4) : const Color(0xFFDCE8E1)),
+        border: Border.all(
+          color: hasError ? const Color(0xFFE6C4C4) : const Color(0xFFDCE8E1),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Wynik skanowania',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 8),
           if (_lastScannedCode != null) Text('Ostatni kod: $_lastScannedCode'),
@@ -172,8 +192,10 @@ class _ScannerViewState extends State<ScannerView> {
             Text(
               _statusMessage!,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: hasError ? const Color(0xFF8E1B1B) : const Color(0xFF245E3F),
-                  ),
+                color: hasError
+                    ? const Color(0xFF8E1B1B)
+                    : const Color(0xFF245E3F),
+              ),
             ),
           ],
           if (_matchedMaterial != null) ...[
@@ -181,6 +203,40 @@ class _ScannerViewState extends State<ScannerView> {
             MatchedMaterialTile(
               material: _matchedMaterial!,
               onOpenDetails: () => _openMaterialDetails(_matchedMaterial!),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _movementTargetController,
+              decoration: const InputDecoration(
+                labelText: 'Cel / uwaga',
+                hintText: 'Np. Piła, hala 3, dostawca X',
+              ),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: _isSavingMovement
+                        ? null
+                        : () => _registerMovement('received'),
+                    icon: const Icon(Icons.call_received_rounded),
+                    label: Text(
+                      _isSavingMovement ? 'Zapisywanie...' : 'Przyjęty',
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: FilledButton.tonalIcon(
+                    onPressed: _isSavingMovement
+                        ? null
+                        : () => _registerMovement('issued'),
+                    icon: const Icon(Icons.call_made_rounded),
+                    label: const Text('Wydane'),
+                  ),
+                ),
+              ],
             ),
           ],
         ],
@@ -234,6 +290,7 @@ class _ScannerViewState extends State<ScannerView> {
       _statusMessage = null;
       _matchedMaterial = null;
     });
+    _movementTargetController.clear();
 
     final repository = getIt<MaterialRepository>();
     final result = await repository.getMaterials();
@@ -250,18 +307,18 @@ class _ScannerViewState extends State<ScannerView> {
         });
       },
       (materials) {
-        final match = materials.where((item) => item.serialNumber.toUpperCase() == code).cast<MaterialEntity?>().firstWhere(
-              (item) => item != null,
-              orElse: () => null,
-            );
+        final match = materials
+            .where((item) => item.serialNumber.toUpperCase() == code)
+            .cast<MaterialEntity?>()
+            .firstWhere((item) => item != null, orElse: () => null);
 
         setState(() {
           _matchedMaterial = match;
           _statusMessage = match == null
               ? 'Nie znaleziono materiału dla kodu $code.'
               : fromScanner
-                  ? 'Znaleziono materiał dla zeskanowanego kodu.'
-                  : 'Znaleziono materiał.';
+              ? 'Znaleziono materiał dla zeskanowanego kodu.'
+              : 'Znaleziono materiał.';
           _isSearching = false;
         });
       },
@@ -270,11 +327,69 @@ class _ScannerViewState extends State<ScannerView> {
 
   Future<void> _openMaterialDetails(MaterialEntity material) async {
     final hasChanges = await Navigator.of(context).push<bool>(
-      MaterialPageRoute<bool>(builder: (_) => MaterialDetailsView(material: material)),
+      MaterialPageRoute<bool>(
+        builder: (_) => MaterialDetailsView(material: material),
+      ),
     );
 
     if (hasChanges == true && mounted && _lastScannedCode != null) {
       await _searchByCode(_lastScannedCode!);
     }
+  }
+
+  Future<void> _registerMovement(String type) async {
+    final material = _matchedMaterial;
+    if (material == null) {
+      return;
+    }
+
+    setState(() {
+      _isSavingMovement = true;
+    });
+
+    final repository = getIt<MaterialRepository>();
+    final result = await repository.recordMovement(
+      materialId: material.id,
+      type: type,
+      destination: _movementTargetController.text.trim().isEmpty
+          ? null
+          : _movementTargetController.text.trim(),
+      note: null,
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _isSavingMovement = false;
+    });
+
+    result.fold(
+      (error) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error)));
+      },
+      (updatedMaterial) {
+        setState(() {
+          _matchedMaterial = updatedMaterial;
+          _statusMessage = type == 'received'
+              ? 'Materiał oznaczono jako przyjęty.'
+              : 'Materiał oznaczono jako wydany.';
+          _movementTargetController.clear();
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              type == 'received'
+                  ? 'Zapisano przyjęcie materiału.'
+                  : 'Zapisano wydanie materiału.',
+            ),
+          ),
+        );
+      },
+    );
   }
 }

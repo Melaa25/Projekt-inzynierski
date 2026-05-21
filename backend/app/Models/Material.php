@@ -28,6 +28,11 @@ class Material extends Model
         return $this->belongsTo(WarehouseLocation::class, 'current_location_id');
     }
 
+    public function movements()
+    {
+        return $this->hasMany(MaterialMovement::class);
+    }
+
     private static function generateSerialNumber(string $name): string
     {
         $prefix = static::buildPrefix($name);

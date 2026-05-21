@@ -25,4 +25,12 @@ abstract class MaterialRepository {
   });
 
   Future<Either<String, bool>> deleteMaterial(int id);
+
+  Future<Either<String, MaterialEntity>> recordMovement({
+    required int materialId,
+    required String type,
+    String? destination,
+    String? note,
+    int? newLocationId,
+  });
 }

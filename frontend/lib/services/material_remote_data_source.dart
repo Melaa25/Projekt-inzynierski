@@ -25,6 +25,14 @@ abstract class MaterialRemoteDataSource {
   });
 
   Future<void> deleteMaterial(int id);
+
+  Future<MaterialModel> recordMovement({
+    required int materialId,
+    required String type,
+    String? destination,
+    String? note,
+    int? newLocationId,
+  });
 }
 
 class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
@@ -93,5 +101,27 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
   @override
   Future<void> deleteMaterial(int id) async {
     await dio.delete('/materials/$id');
+  }
+
+  @override
+  Future<MaterialModel> recordMovement({
+    required int materialId,
+    required String type,
+    String? destination,
+    String? note,
+    int? newLocationId,
+  }) async {
+    final Response<dynamic> response = await dio.post(
+      '/materials/$materialId/movements',
+      data: {
+        'type': type,
+        'destination': destination,
+        'note': note,
+        'new_location_id': newLocationId,
+      },
+    );
+
+    final data = response.data as Map<String, dynamic>;
+    return MaterialModel.fromJson(data['material'] as Map<String, dynamic>);
   }
 }
