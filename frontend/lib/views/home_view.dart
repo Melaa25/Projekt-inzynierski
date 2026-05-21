@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/di/injection_container.dart';
 import '../services/auth_service.dart';
 import 'auth/login_view.dart';
+import 'admin/users_admin_view.dart';
 import 'materials/materials_view.dart';
 import 'locations/locations_view.dart';
 import 'scanner/scanner_view.dart';
@@ -52,6 +53,19 @@ class HomeView extends StatelessWidget {
                   );
                 },
               ),
+              if (getIt<AuthService>().isAdmin)
+                _DashboardTile(
+                  title: 'Panel administratora',
+                  subtitle: 'Użytkownicy i role',
+                  icon: Icons.admin_panel_settings_rounded,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const UsersAdminView(),
+                      ),
+                    );
+                  },
+                ),
               _DashboardTile(
                 title: 'Skanowanie',
                 subtitle: 'Skan kodów i szybkie wyszukiwanie',
@@ -265,6 +279,19 @@ class _AppDrawer extends StatelessWidget {
                 );
               },
             ),
+            if (authService.isAdmin)
+              ListTile(
+                leading: const Icon(Icons.admin_panel_settings_rounded),
+                title: const Text('Panel administratora'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const UsersAdminView(),
+                    ),
+                  );
+                },
+              ),
             ExpansionTile(
               leading: const Icon(Icons.build_circle_outlined),
               title: const Text('Narzędzia'),

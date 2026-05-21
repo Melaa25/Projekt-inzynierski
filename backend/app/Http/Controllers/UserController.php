@@ -53,6 +53,12 @@ class UserController extends Controller
 
     public function destroy(User $user): JsonResponse
     {
+        if (request()->user()?->id === $user->id) {
+            return response()->json([
+                'message' => 'Nie możesz usunąć własnego konta.'
+            ], 422);
+        }
+
         $user->delete();
 
         return response()->json([

@@ -15,6 +15,8 @@ class AuthService {
 
   bool get isAuthenticated => _token != null;
 
+  bool get isAdmin => _currentUser?.role == 'admin';
+
   Future<Either<String, AuthUser>> login({
     required String email,
     required String password,
