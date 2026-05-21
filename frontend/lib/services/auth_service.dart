@@ -1,9 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/auth_user.dart';
 
-class AuthService {
+class AuthService extends ChangeNotifier {
   final Dio _dio;
 
   String? _token;
@@ -40,6 +41,7 @@ class AuthService {
 
       final user = AuthUser.fromJson(userJson);
       _currentUser = user;
+      notifyListeners();
 
       return Right(user);
     } on DioException catch (e) {
@@ -60,6 +62,7 @@ class AuthService {
       _token = null;
       _currentUser = null;
       _dio.options.headers.remove('Authorization');
+      notifyListeners();
     }
   }
 
@@ -68,6 +71,7 @@ class AuthService {
       final response = await _dio.get('/auth/me');
       final user = AuthUser.fromJson(response.data as Map<String, dynamic>);
       _currentUser = user;
+      notifyListeners();
       return Right(user);
     } on DioException catch (e) {
       return Left(_mapDioError(e));

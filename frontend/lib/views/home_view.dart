@@ -13,93 +13,100 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Panel główny')),
-      drawer: const _AppDrawer(),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          const _HeaderPanel(),
-          const SizedBox(height: 16),
-          GridView.count(
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 2,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 1.2,
-            shrinkWrap: true,
+    final authService = getIt<AuthService>();
+
+    return AnimatedBuilder(
+      animation: authService,
+      builder: (context, _) {
+        return Scaffold(
+          appBar: AppBar(title: const Text('Panel główny')),
+          drawer: const _AppDrawer(),
+          body: ListView(
+            padding: const EdgeInsets.all(16),
             children: [
-              _DashboardTile(
-                title: 'Lista materiałów',
-                subtitle: 'Podgląd aktualnych pozycji',
-                icon: Icons.inventory_2_rounded,
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const MaterialsView(),
+              const _HeaderPanel(),
+              const SizedBox(height: 16),
+              GridView.count(
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 1.2,
+                shrinkWrap: true,
+                children: [
+                  _DashboardTile(
+                    title: 'Lista materiałów',
+                    subtitle: 'Podgląd aktualnych pozycji',
+                    icon: Icons.inventory_2_rounded,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const MaterialsView(),
+                        ),
+                      );
+                    },
+                  ),
+                  _DashboardTile(
+                    title: 'Lokalizacje',
+                    subtitle: 'Strefy, sektory i miejsca',
+                    icon: Icons.place_rounded,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const LocationsView(),
+                        ),
+                      );
+                    },
+                  ),
+                  if (authService.isAdmin)
+                    _DashboardTile(
+                      title: 'Panel administratora',
+                      subtitle: 'Użytkownicy i role',
+                      icon: Icons.admin_panel_settings_rounded,
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const UsersAdminView(),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-              _DashboardTile(
-                title: 'Lokalizacje',
-                subtitle: 'Strefy, sektory i miejsca',
-                icon: Icons.place_rounded,
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const LocationsView(),
-                    ),
-                  );
-                },
-              ),
-              if (getIt<AuthService>().isAdmin)
-                _DashboardTile(
-                  title: 'Panel administratora',
-                  subtitle: 'Użytkownicy i role',
-                  icon: Icons.admin_panel_settings_rounded,
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => const UsersAdminView(),
-                      ),
-                    );
-                  },
-                ),
-              _DashboardTile(
-                title: 'Skanowanie',
-                subtitle: 'Skan kodów i szybkie wyszukiwanie',
-                icon: Icons.qr_code_scanner_rounded,
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const ScannerView(),
-                    ),
-                  );
-                },
-              ),
-              _DashboardTile(
-                title: 'Przyjęcia',
-                subtitle: 'Rejestr dostaw',
-                icon: Icons.move_to_inbox_rounded,
-                onTap: () => _showSoonSnackBar(context),
-              ),
-              _DashboardTile(
-                title: 'Wydania',
-                subtitle: 'Historia wyjść z magazynu',
-                icon: Icons.local_shipping_rounded,
-                onTap: () => _showSoonSnackBar(context),
-              ),
-              _DashboardTile(
-                title: 'Raporty',
-                subtitle: 'Analiza i zestawienia',
-                icon: Icons.insights_rounded,
-                onTap: () => _showSoonSnackBar(context),
+                  _DashboardTile(
+                    title: 'Skanowanie',
+                    subtitle: 'Skan kodów i szybkie wyszukiwanie',
+                    icon: Icons.qr_code_scanner_rounded,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const ScannerView(),
+                        ),
+                      );
+                    },
+                  ),
+                  _DashboardTile(
+                    title: 'Przyjęcia',
+                    subtitle: 'Rejestr dostaw',
+                    icon: Icons.move_to_inbox_rounded,
+                    onTap: () => _showSoonSnackBar(context),
+                  ),
+                  _DashboardTile(
+                    title: 'Wydania',
+                    subtitle: 'Historia wyjść z magazynu',
+                    icon: Icons.local_shipping_rounded,
+                    onTap: () => _showSoonSnackBar(context),
+                  ),
+                  _DashboardTile(
+                    title: 'Raporty',
+                    subtitle: 'Analiza i zestawienia',
+                    icon: Icons.insights_rounded,
+                    onTap: () => _showSoonSnackBar(context),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -217,117 +224,125 @@ class _AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = getIt<AuthService>();
-    final currentUser = authService.currentUser;
 
-    return Drawer(
-      child: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              color: const Color(0xFF00A54F),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(
-                    Icons.warehouse_rounded,
-                    color: Colors.white,
-                    size: 32,
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Nawigacja',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    currentUser == null
-                        ? 'Niezalogowany'
-                        : '${currentUser.name} (${currentUser.roleLabel})',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: const Color(0xFFE5FFF1),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.list_alt_rounded),
-              title: const Text('Lista materiałów'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const MaterialsView(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.place_rounded),
-              title: const Text('Lokalizacje'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const LocationsView(),
-                  ),
-                );
-              },
-            ),
-            if (authService.isAdmin)
-              ListTile(
-                leading: const Icon(Icons.admin_panel_settings_rounded),
-                title: const Text('Panel administratora'),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (_) => const UsersAdminView(),
-                    ),
-                  );
-                },
-              ),
-            ExpansionTile(
-              leading: const Icon(Icons.build_circle_outlined),
-              title: const Text('Narzędzia'),
+    return AnimatedBuilder(
+      animation: authService,
+      builder: (context, _) {
+        final currentUser = authService.currentUser;
+
+        return Drawer(
+          child: SafeArea(
+            child: ListView(
+              padding: EdgeInsets.zero,
               children: [
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  color: const Color(0xFF00A54F),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(
+                        Icons.warehouse_rounded,
+                        color: Colors.white,
+                        size: 32,
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Nawigacja',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        currentUser == null
+                            ? 'Niezalogowany'
+                            : '${currentUser.name} (${currentUser.roleLabel})',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: const Color(0xFFE5FFF1),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 ListTile(
-                  leading: const Icon(Icons.qr_code_scanner_rounded),
-                  title: const Text('Skanowanie'),
+                  leading: const Icon(Icons.list_alt_rounded),
+                  title: const Text('Lista materiałów'),
                   onTap: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).push(
                       MaterialPageRoute<void>(
-                        builder: (_) => const ScannerView(),
+                        builder: (_) => const MaterialsView(),
                       ),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.place_rounded),
+                  title: const Text('Lokalizacje'),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const LocationsView(),
+                      ),
+                    );
+                  },
+                ),
+                if (authService.isAdmin)
+                  ListTile(
+                    leading: const Icon(Icons.admin_panel_settings_rounded),
+                    title: const Text('Panel administratora'),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const UsersAdminView(),
+                        ),
+                      );
+                    },
+                  ),
+                ExpansionTile(
+                  leading: const Icon(Icons.build_circle_outlined),
+                  title: const Text('Narzędzia'),
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.qr_code_scanner_rounded),
+                      title: const Text('Skanowanie'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const ScannerView(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                ListTile(
+                  leading: const Icon(Icons.logout_rounded),
+                  title: const Text('Wyloguj'),
+                  onTap: () async {
+                    await authService.logout();
+                    if (!context.mounted) {
+                      return;
+                    }
+
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const LoginView(),
+                      ),
+                      (_) => false,
                     );
                   },
                 ),
               ],
             ),
-            ListTile(
-              leading: const Icon(Icons.logout_rounded),
-              title: const Text('Wyloguj'),
-              onTap: () async {
-                await authService.logout();
-                if (!context.mounted) {
-                  return;
-                }
-
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute<void>(builder: (_) => const LoginView()),
-                  (_) => false,
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
