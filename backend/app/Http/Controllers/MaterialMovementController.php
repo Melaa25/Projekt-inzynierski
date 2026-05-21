@@ -47,4 +47,19 @@ class MaterialMovementController extends Controller
             'material' => $material,
         ], 201);
     }
+
+    public function index(Request $request): JsonResponse
+    {
+        $type = $request->query('type');
+
+        $query = MaterialMovement::with(['material.currentLocation', 'user', 'previousLocation', 'newLocation']);
+
+        if ($type) {
+            $query->where('type', $type);
+        }
+
+        $movements = $query->orderBy('created_at', 'desc')->paginate(50);
+
+        return response()->json($movements);
+    }
 }

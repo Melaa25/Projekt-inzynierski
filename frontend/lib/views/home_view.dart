@@ -7,6 +7,8 @@ import 'admin/users_admin_view.dart';
 import 'materials/materials_view.dart';
 import 'locations/locations_view.dart';
 import 'scanner/scanner_view.dart';
+import 'movements/receipts_view.dart';
+import 'movements/issues_view.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -87,13 +89,25 @@ class HomeView extends StatelessWidget {
                     title: 'Przyjęcia',
                     subtitle: 'Rejestr dostaw',
                     icon: Icons.move_to_inbox_rounded,
-                    onTap: () => _showSoonSnackBar(context),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const ReceiptsView(),
+                        ),
+                      );
+                    },
                   ),
                   _DashboardTile(
                     title: 'Wydania',
                     subtitle: 'Historia wyjść z magazynu',
                     icon: Icons.local_shipping_rounded,
-                    onTap: () => _showSoonSnackBar(context),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const IssuesView(),
+                        ),
+                      );
+                    },
                   ),
                   _DashboardTile(
                     title: 'Raporty',
@@ -315,6 +329,30 @@ class _AppDrawer extends StatelessWidget {
                         Navigator.of(context).push(
                           MaterialPageRoute<void>(
                             builder: (_) => const ScannerView(),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.move_to_inbox_rounded),
+                      title: const Text('Przyjęcia'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const ReceiptsView(),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.local_shipping_rounded),
+                      title: const Text('Wydania'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const IssuesView(),
                           ),
                         );
                       },

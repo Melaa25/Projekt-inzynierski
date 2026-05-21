@@ -33,4 +33,6 @@ abstract class MaterialRepository {
     String? note,
     int? newLocationId,
   });
+
+  Future<Either<String, List<dynamic>>> getMovements({String? type});
 }

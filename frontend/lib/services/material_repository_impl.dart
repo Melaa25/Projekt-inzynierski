@@ -115,6 +115,18 @@ class MaterialRepositoryImpl implements MaterialRepository {
     }
   }
 
+  @override
+  Future<Either<String, List<dynamic>>> getMovements({String? type}) async {
+    try {
+      final movements = await remoteDataSource.getMovements(type: type);
+      return Right(movements);
+    } on DioException catch (e) {
+      return Left(_mapDioError(e));
+    } catch (_) {
+      return const Left('Wystąpił nieoczekiwany błąd podczas pobierania ruchów materiałów');
+    }
+  }
+
   String _mapDioError(DioException e) {
     if (e.response != null) {
       final data = e.response?.data;

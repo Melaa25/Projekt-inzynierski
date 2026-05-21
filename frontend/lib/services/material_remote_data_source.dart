@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../models/material_model.dart';
+import '../models/material_movement_model.dart';
 
 abstract class MaterialRemoteDataSource {
   Future<List<MaterialModel>> getMaterials();
@@ -33,6 +34,8 @@ abstract class MaterialRemoteDataSource {
     String? note,
     int? newLocationId,
   });
+
+  Future<List<MaterialMovementModel>> getMovements({String? type});
 }
 
 class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
@@ -123,5 +126,18 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
 
     final data = response.data as Map<String, dynamic>;
     return MaterialModel.fromJson(data['material'] as Map<String, dynamic>);
+  }
+
+  @override
+  Future<List<MaterialMovementModel>> getMovements({String? type}) async {
+    final Response<dynamic> response = await dio.get(
+      '/movements',
+      queryParameters: type == null ? null : {'type': type},
+    );
+
+    final data = response.data as Map<String, dynamic>;
+    final items = data['data'] as List<dynamic>;
+
+    return items.map((e) => MaterialMovementModel.fromJson(e as Map<String, dynamic>)).toList();
   }
 }

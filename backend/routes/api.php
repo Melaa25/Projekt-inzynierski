@@ -16,6 +16,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
 	Route::get('materials', [MaterialController::class, 'index']);
 	Route::get('materials/{material}', [MaterialController::class, 'show']);
 	Route::post('materials/{material}/movements', [MaterialMovementController::class, 'store']);
+	Route::get('movements', [MaterialMovementController::class, 'index']);
 
 	Route::get('locations', [WarehouseLocationController::class, 'index']);
 	Route::get('locations/{location}', [WarehouseLocationController::class, 'show']);
