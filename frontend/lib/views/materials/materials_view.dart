@@ -46,7 +46,9 @@ class _MaterialsViewState extends State<MaterialsView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _isSelectionMode ? 'Zaznaczone: ${_selectedMaterialIds.length}' : 'Lista materiałów',
+          _isSelectionMode
+              ? 'Zaznaczone: ${_selectedMaterialIds.length}'
+              : 'Lista materiałów',
         ),
         actions: [
           if (_isSelectionMode) ...[
@@ -57,7 +59,9 @@ class _MaterialsViewState extends State<MaterialsView> {
             ),
             IconButton(
               tooltip: 'Drukuj etykiety',
-              onPressed: _isPrintingLabels ? null : () => _printSelectedLabels(_materials),
+              onPressed: _isPrintingLabels
+                  ? null
+                  : () => _printSelectedLabels(_materials),
               icon: _isPrintingLabels
                   ? const SizedBox(
                       width: 18,
@@ -94,7 +98,9 @@ class _MaterialsViewState extends State<MaterialsView> {
         builder: (context) {
           final existingIds = _materials.map((material) => material.id).toSet();
           _selectedMaterialIds.removeWhere((id) => !existingIds.contains(id));
-          if (_selectedMaterialIds.isEmpty && _isSelectionMode && !_isPrintingLabels) {
+          if (_selectedMaterialIds.isEmpty &&
+              _isSelectionMode &&
+              !_isPrintingLabels) {
             _isSelectionMode = false;
           }
 
@@ -123,6 +129,8 @@ class _MaterialsViewState extends State<MaterialsView> {
                     setState(() {
                       _searchQuery = value;
                     });
+
+                    _loadMaterials(search: value);
                   },
                 ),
                 const SizedBox(height: 12),
@@ -135,10 +143,14 @@ class _MaterialsViewState extends State<MaterialsView> {
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 280),
                   child: visibleMaterials.isEmpty
-                      ? const MaterialsEmptyState(key: ValueKey<String>('empty_state'))
+                      ? const MaterialsEmptyState(
+                          key: ValueKey<String>('empty_state'),
+                        )
                       : Column(
                           key: const ValueKey<String>('list_state'),
-                          children: List.generate(visibleMaterials.length, (index) {
+                          children: List.generate(visibleMaterials.length, (
+                            index,
+                          ) {
                             final material = visibleMaterials[index];
 
                             return _AnimatedMaterialCard(
@@ -146,7 +158,9 @@ class _MaterialsViewState extends State<MaterialsView> {
                               child: MaterialCard(
                                 material: material,
                                 isSelectionMode: _isSelectionMode,
-                                isSelected: _selectedMaterialIds.contains(material.id),
+                                isSelected: _selectedMaterialIds.contains(
+                                  material.id,
+                                ),
                                 onTap: () {
                                   if (_isSelectionMode) {
                                     _toggleSelection(material);
@@ -194,7 +208,9 @@ class _MaterialsViewState extends State<MaterialsView> {
   }
 
   void _selectAllVisible(List<MaterialEntity> allMaterials) {
-    final visibleIds = _buildVisibleMaterials(allMaterials).map((material) => material.id).toSet();
+    final visibleIds = _buildVisibleMaterials(
+      allMaterials,
+    ).map((material) => material.id).toSet();
 
     if (visibleIds.isEmpty) {
       return;
@@ -237,7 +253,11 @@ class _MaterialsViewState extends State<MaterialsView> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Przygotowano ${selectedMaterials.length} etykiet do wydruku.')),
+        SnackBar(
+          content: Text(
+            'Przygotowano ${selectedMaterials.length} etykiet do wydruku.',
+          ),
+        ),
       );
       _clearSelection();
     } catch (e) {
@@ -257,14 +277,16 @@ class _MaterialsViewState extends State<MaterialsView> {
     }
   }
 
-  Future<void> _loadMaterials() async {
+  Future<void> _loadMaterials({String? search}) async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
 
     final repository = getIt<MaterialRepository>();
-    final result = await repository.getMaterials();
+    final result = await repository.getMaterials(
+      search: search ?? _searchQuery,
+    );
 
     if (!mounted) {
       return;
@@ -303,7 +325,9 @@ class _MaterialsViewState extends State<MaterialsView> {
 
   Future<void> _openMaterialDetails(MaterialEntity material) async {
     final hasChanges = await Navigator.of(context).push<bool>(
-      MaterialPageRoute<bool>(builder: (_) => MaterialDetailsView(material: material)),
+      MaterialPageRoute<bool>(
+        builder: (_) => MaterialDetailsView(material: material),
+      ),
     );
 
     if (hasChanges == true && mounted) {
@@ -324,7 +348,9 @@ class _MaterialsViewState extends State<MaterialsView> {
           (material.location?.toLowerCase().contains(query) ?? false);
     }).toList();
 
-    filtered.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    filtered.sort(
+      (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+    );
 
     return filtered;
   }

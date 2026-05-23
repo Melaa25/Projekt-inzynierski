@@ -3,7 +3,11 @@ import 'package:dartz/dartz.dart';
 import '../models/material_entity.dart';
 
 abstract class MaterialRepository {
-  Future<Either<String, List<MaterialEntity>>> getMaterials();
+  Future<Either<String, List<MaterialEntity>>> getMaterials({
+    String? search,
+    String? status,
+    int? locationId,
+  });
 
   Future<Either<String, MaterialEntity>> createMaterial({
     required String name,

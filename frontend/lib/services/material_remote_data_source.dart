@@ -4,7 +4,11 @@ import '../models/material_model.dart';
 import '../models/material_movement_model.dart';
 
 abstract class MaterialRemoteDataSource {
-  Future<List<MaterialModel>> getMaterials();
+  Future<List<MaterialModel>> getMaterials({
+    String? search,
+    String? status,
+    int? locationId,
+  });
 
   Future<MaterialModel> createMaterial({
     required String name,
@@ -44,12 +48,35 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
   MaterialRemoteDataSourceImpl(this.dio);
 
   @override
-  Future<List<MaterialModel>> getMaterials() async {
-    final Response<dynamic> response = await dio.get('/materials');
+  Future<List<MaterialModel>> getMaterials({
+    String? search,
+    String? status,
+    int? locationId,
+  }) async {
+    final queryParameters = <String, dynamic>{};
+
+    if (search != null && search.trim().isNotEmpty) {
+      queryParameters['search'] = search.trim();
+    }
+
+    if (status != null && status.trim().isNotEmpty) {
+      queryParameters['status'] = status.trim();
+    }
+
+    if (locationId != null) {
+      queryParameters['location_id'] = locationId;
+    }
+
+    final Response<dynamic> response = await dio.get(
+      '/materials',
+      queryParameters: queryParameters.isEmpty ? null : queryParameters,
+    );
 
     final List<dynamic> data = response.data as List<dynamic>;
 
-    return data.map((item) => MaterialModel.fromJson(item as Map<String, dynamic>)).toList();
+    return data
+        .map((item) => MaterialModel.fromJson(item as Map<String, dynamic>))
+        .toList();
   }
 
   @override
@@ -138,6 +165,8 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
     final data = response.data as Map<String, dynamic>;
     final items = data['data'] as List<dynamic>;
 
-    return items.map((e) => MaterialMovementModel.fromJson(e as Map<String, dynamic>)).toList();
+    return items
+        .map((e) => MaterialMovementModel.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 }

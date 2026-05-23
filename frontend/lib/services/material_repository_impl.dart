@@ -11,14 +11,24 @@ class MaterialRepositoryImpl implements MaterialRepository {
   MaterialRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<String, List<MaterialEntity>>> getMaterials() async {
+  Future<Either<String, List<MaterialEntity>>> getMaterials({
+    String? search,
+    String? status,
+    int? locationId,
+  }) async {
     try {
-      final materials = await remoteDataSource.getMaterials();
+      final materials = await remoteDataSource.getMaterials(
+        search: search,
+        status: status,
+        locationId: locationId,
+      );
       return Right(materials);
     } on DioException catch (e) {
       return Left(_mapDioError(e));
     } catch (_) {
-      return const Left('Wystąpił nieoczekiwany błąd podczas pobierania materiałów');
+      return const Left(
+        'Wystąpił nieoczekiwany błąd podczas pobierania materiałów',
+      );
     }
   }
 
@@ -45,7 +55,9 @@ class MaterialRepositoryImpl implements MaterialRepository {
     } on DioException catch (e) {
       return Left(_mapDioError(e));
     } catch (_) {
-      return const Left('Wystąpił nieoczekiwany błąd podczas dodawania materiału');
+      return const Left(
+        'Wystąpił nieoczekiwany błąd podczas dodawania materiału',
+      );
     }
   }
 
@@ -86,7 +98,9 @@ class MaterialRepositoryImpl implements MaterialRepository {
     } on DioException catch (e) {
       return Left(_mapDioError(e));
     } catch (_) {
-      return const Left('Wystąpił nieoczekiwany błąd podczas usuwania materiału');
+      return const Left(
+        'Wystąpił nieoczekiwany błąd podczas usuwania materiału',
+      );
     }
   }
 
@@ -111,7 +125,9 @@ class MaterialRepositoryImpl implements MaterialRepository {
     } on DioException catch (e) {
       return Left(_mapDioError(e));
     } catch (_) {
-      return const Left('Wystąpił nieoczekiwany błąd podczas zapisu ruchu materiału');
+      return const Left(
+        'Wystąpił nieoczekiwany błąd podczas zapisu ruchu materiału',
+      );
     }
   }
 
@@ -123,7 +139,9 @@ class MaterialRepositoryImpl implements MaterialRepository {
     } on DioException catch (e) {
       return Left(_mapDioError(e));
     } catch (_) {
-      return const Left('Wystąpił nieoczekiwany błąd podczas pobierania ruchów materiałów');
+      return const Left(
+        'Wystąpił nieoczekiwany błąd podczas pobierania ruchów materiałów',
+      );
     }
   }
 
