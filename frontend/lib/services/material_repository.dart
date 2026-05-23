@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import '../models/material_entity.dart';
+import '../models/material_movement_entity.dart';
 
 abstract class MaterialRepository {
   Future<Either<String, List<MaterialEntity>>> getMaterials({
@@ -38,5 +39,7 @@ abstract class MaterialRepository {
     int? newLocationId,
   });
 
-  Future<Either<String, List<dynamic>>> getMovements({String? type});
+  Future<Either<String, List<MaterialMovementEntity>>> getMovements({
+    String? type,
+  });
 }

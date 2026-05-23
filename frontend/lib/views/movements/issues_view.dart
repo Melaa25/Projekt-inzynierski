@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../core/di/injection_container.dart';
-import '../../models/material_movement_model.dart';
+import '../../models/material_movement_entity.dart';
+import '../../models/material_status.dart';
 import '../../services/material_repository.dart';
 import '../scanner/scanner_view.dart';
 
@@ -15,7 +16,7 @@ class IssuesView extends StatefulWidget {
 class _IssuesViewState extends State<IssuesView> {
   bool _isLoading = true;
   String? _error;
-  List<MaterialMovementModel> _items = [];
+  List<MaterialMovementEntity> _items = [];
 
   @override
   void initState() {
@@ -38,7 +39,7 @@ class _IssuesViewState extends State<IssuesView> {
         _isLoading = false;
       }),
       (data) => setState(() {
-        _items = (data as List).cast<MaterialMovementModel>();
+        _items = data;
         _isLoading = false;
       }),
     );
@@ -106,8 +107,7 @@ class _IssuesViewState extends State<IssuesView> {
                     const Center(child: CircularProgressIndicator()),
                   ] else if (_error != null) ...[
                     const SizedBox(height: 8),
-                    Text('Błąd: '),
-                    Text(_error ?? ''),
+                    Text('Błąd: ${_error ?? ''}'),
                   ] else if (_items.isEmpty) ...[
                     const SizedBox(height: 8),
                     const Text('Brak wydanych materiałów.'),
@@ -124,14 +124,22 @@ class _IssuesViewState extends State<IssuesView> {
     );
   }
 
-  Widget _buildMovementTile(MaterialMovementModel m) {
+  Widget _buildMovementTile(MaterialMovementEntity m) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
-      title: Text('${m.type.toUpperCase()} — ${m.materialId}'),
+      title: Text('${_movementTypeLabel(m.type)} — ${m.materialId}'),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (m.userName != null) Text('Użytkownik: ${m.userName}'),
+          if (m.previousLocation != null || m.newLocation != null)
+            Text(
+              'Lokalizacja: ${m.previousLocation?.name ?? '-'} → ${m.newLocation?.name ?? '-'}',
+            ),
+          if (m.previousStatus != null || m.newStatus != null)
+            Text(
+              'Status: ${_statusLabel(m.previousStatus)} → ${_statusLabel(m.newStatus)}',
+            ),
           if (m.note != null && m.note!.isNotEmpty) Text('Uwagi: ${m.note}'),
           Text('Data: ${m.createdAt.toLocal()}'),
         ],
@@ -141,5 +149,24 @@ class _IssuesViewState extends State<IssuesView> {
         children: [if (m.newLocation != null) Text(m.newLocation!.name)],
       ),
     );
+  }
+
+  String _statusLabel(String? status) {
+    if (status == null || status.isEmpty) {
+      return '-';
+    }
+
+    return MaterialStatus.label(status);
+  }
+
+  String _movementTypeLabel(String type) {
+    switch (type) {
+      case 'received':
+        return 'Przyjęcie';
+      case 'issued':
+        return 'Wydanie';
+      default:
+        return type;
+    }
   }
 }

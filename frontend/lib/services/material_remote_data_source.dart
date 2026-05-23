@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../models/material_model.dart';
+import '../models/material_movement_entity.dart';
 import '../models/material_movement_model.dart';
 
 abstract class MaterialRemoteDataSource {
@@ -39,7 +40,7 @@ abstract class MaterialRemoteDataSource {
     int? newLocationId,
   });
 
-  Future<List<MaterialMovementModel>> getMovements({String? type});
+  Future<List<MaterialMovementEntity>> getMovements({String? type});
 }
 
 class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
@@ -156,7 +157,7 @@ class MaterialRemoteDataSourceImpl implements MaterialRemoteDataSource {
   }
 
   @override
-  Future<List<MaterialMovementModel>> getMovements({String? type}) async {
+  Future<List<MaterialMovementEntity>> getMovements({String? type}) async {
     final Response<dynamic> response = await dio.get(
       '/movements',
       queryParameters: type == null ? null : {'type': type},

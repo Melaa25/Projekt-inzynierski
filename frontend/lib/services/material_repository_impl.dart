@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 import '../models/material_entity.dart';
+import '../models/material_movement_entity.dart';
 import 'material_repository.dart';
 import 'material_remote_data_source.dart';
 
@@ -132,7 +133,9 @@ class MaterialRepositoryImpl implements MaterialRepository {
   }
 
   @override
-  Future<Either<String, List<dynamic>>> getMovements({String? type}) async {
+  Future<Either<String, List<MaterialMovementEntity>>> getMovements({
+    String? type,
+  }) async {
     try {
       final movements = await remoteDataSource.getMovements(type: type);
       return Right(movements);
