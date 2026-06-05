@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/forms/form_cards.dart';
 import '../../core/di/injection_container.dart';
 import '../../models/location_entity.dart';
 import '../../services/location_repository.dart';
@@ -51,39 +52,72 @@ class _LocationsViewState extends State<LocationsView> {
     final result = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
           location == null ? 'Nowa lokalizacja' : 'Edytuj lokalizację',
         ),
-        content: Form(
-          key: formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: codeController,
-                  decoration: const InputDecoration(labelText: 'Kod'),
-                ),
-                TextFormField(
-                  controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Nazwa'),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Podaj nazwę lokalizacji';
-                    }
+        content: SizedBox(
+          width: 420,
+          child: Form(
+            key: formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FormSectionCard(
+                    title: 'Dane lokalizacji',
+                    subtitle: 'Uzupełnij nazwę, kod i dodatkowy opis.',
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: codeController,
+                          textInputAction: TextInputAction.next,
+                          decoration: const InputDecoration(
+                            labelText: 'Kod',
+                            prefixIcon: Icon(Icons.qr_code_rounded),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        TextFormField(
+                          controller: nameController,
+                          textInputAction: TextInputAction.next,
+                          decoration: const InputDecoration(
+                            labelText: 'Nazwa',
+                            prefixIcon: Icon(Icons.place_rounded),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Podaj nazwę lokalizacji';
+                            }
 
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: typeController,
-                  decoration: const InputDecoration(labelText: 'Typ'),
-                ),
-                TextFormField(
-                  controller: descController,
-                  decoration: const InputDecoration(labelText: 'Opis'),
-                ),
-              ],
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        TextFormField(
+                          controller: typeController,
+                          textInputAction: TextInputAction.next,
+                          decoration: const InputDecoration(
+                            labelText: 'Typ',
+                            prefixIcon: Icon(Icons.category_rounded),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        TextFormField(
+                          controller: descController,
+                          maxLines: 3,
+                          decoration: const InputDecoration(
+                            labelText: 'Opis',
+                            alignLabelWithHint: true,
+                            prefixIcon: Icon(Icons.notes_rounded),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -156,6 +190,8 @@ class _LocationsViewState extends State<LocationsView> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text('Usuń lokalizację'),
         content: Text('Na pewno usunąć "${location.name}"?'),
         actions: [

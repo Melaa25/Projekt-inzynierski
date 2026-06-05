@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/forms/form_cards.dart';
 import '../../core/di/injection_container.dart';
 import '../../models/material_entity.dart';
 import '../../models/material_status.dart';
@@ -60,144 +61,199 @@ class _EditMaterialViewState extends State<EditMaterialView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Edytuj materiał')),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            TextFormField(
-              controller: _nameController,
-              textInputAction: TextInputAction.next,
-              decoration: const InputDecoration(labelText: 'Nazwa'),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Podaj nazwę materiału';
-                }
-
-                return null;
-              },
-            ),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF4F8F5),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFD8E4DD)),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFF4F7F5), Color(0xFFEAF4EE)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              const FormHeaderCard(
+                icon: Icons.edit_note_rounded,
+                title: 'Edycja materiału',
+                subtitle:
+                    'Aktualizuj dane bez zmiany numeru seryjnego. Zmiany zapiszesz w kilku prostych krokach.',
               ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(Icons.lock_outline_rounded, size: 18),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Numer seryjny: ${widget.material.serialNumber}\nGenerowany automatycznie przy dodawaniu materiału.',
+              const SizedBox(height: 16),
+              FormSectionCard(
+                title: 'Dane podstawowe',
+                subtitle: 'Podstawowe pola opisujące materiał.',
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _nameController,
+                      textInputAction: TextInputAction.next,
+                      decoration: const InputDecoration(
+                        labelText: 'Nazwa',
+                        prefixIcon: Icon(Icons.label_rounded),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Podaj nazwę materiału';
+                        }
+
+                        return null;
+                      },
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _weightController,
-              textInputAction: TextInputAction.next,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              decoration: const InputDecoration(labelText: 'Waga'),
-              validator: (value) {
-                final normalized = (value ?? '').replaceAll(',', '.').trim();
-                final number = double.tryParse(normalized);
+                    const SizedBox(height: 12),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF3F8F4),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: const Color(0xFFD9E4DC)),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.lock_outline_rounded, size: 18),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Numer seryjny: ${widget.material.serialNumber}\nGenerowany automatycznie przy dodawaniu materiału.',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _weightController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      decoration: const InputDecoration(
+                        labelText: 'Waga',
+                        prefixIcon: Icon(Icons.scale_rounded),
+                      ),
+                      validator: (value) {
+                        final normalized = (value ?? '')
+                            .replaceAll(',', '.')
+                            .trim();
+                        final number = double.tryParse(normalized);
 
-                if (number == null || number < 0) {
-                  return 'Podaj poprawną wagę';
-                }
+                        if (number == null || number < 0) {
+                          return 'Podaj poprawną wagę';
+                        }
 
-                return null;
-              },
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _lengthController,
-              textInputAction: TextInputAction.next,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              decoration: const InputDecoration(labelText: 'Długość'),
-              validator: (value) {
-                final normalized = (value ?? '').replaceAll(',', '.').trim();
-                final number = double.tryParse(normalized);
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _lengthController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      decoration: const InputDecoration(
+                        labelText: 'Długość',
+                        prefixIcon: Icon(Icons.straighten_rounded),
+                      ),
+                      validator: (value) {
+                        final normalized = (value ?? '')
+                            .replaceAll(',', '.')
+                            .trim();
+                        final number = double.tryParse(normalized);
 
-                if (number == null || number < 0) {
-                  return 'Podaj poprawną długość';
-                }
+                        if (number == null || number < 0) {
+                          return 'Podaj poprawną długość';
+                        }
 
-                return null;
-              },
-            ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<LocationEntity?>(
-              value: _selectedLocation,
-              decoration: const InputDecoration(
-                labelText: 'Lokalizacja (z listy)',
-              ),
-              validator: (value) {
-                if (value == null) {
-                  return 'Wybierz lokalizację z listy';
-                }
-
-                return null;
-              },
-              items: [
-                ..._locations.map(
-                  (l) => DropdownMenuItem<LocationEntity?>(
-                    value: l,
-                    child: Text(l.name),
-                  ),
+                        return null;
+                      },
+                    ),
+                  ],
                 ),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _selectedLocation = value;
-                });
-              },
-            ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<String>(
-              value: _selectedStatus,
-              decoration: const InputDecoration(labelText: 'Status materiału'),
-              items: MaterialStatus.values
-                  .map(
-                    (status) => DropdownMenuItem<String>(
-                      value: status,
-                      child: Text(MaterialStatus.label(status)),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (value) {
-                if (value == null) {
-                  return;
-                }
+              ),
+              const SizedBox(height: 12),
+              FormSectionCard(
+                title: 'Lokalizacja i status',
+                subtitle: 'Szybka zmiana miejsca i stanu materiału.',
+                child: Column(
+                  children: [
+                    DropdownButtonFormField<LocationEntity?>(
+                      value: _selectedLocation,
+                      isExpanded: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Lokalizacja (z listy)',
+                        prefixIcon: Icon(Icons.place_rounded),
+                      ),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Wybierz lokalizację z listy';
+                        }
 
-                setState(() {
-                  _selectedStatus = value;
-                });
-              },
-            ),
-            const SizedBox(height: 20),
-            FilledButton.icon(
-              onPressed: _isSaving ? null : _submit,
-              icon: _isSaving
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.save_rounded),
-              label: Text(_isSaving ? 'Zapisywanie...' : 'Zapisz zmiany'),
-            ),
-          ],
+                        return null;
+                      },
+                      items: [
+                        ..._locations.map(
+                          (l) => DropdownMenuItem<LocationEntity?>(
+                            value: l,
+                            child: Text(l.name),
+                          ),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedLocation = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    DropdownButtonFormField<String>(
+                      value: _selectedStatus,
+                      isExpanded: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Status materiału',
+                        prefixIcon: Icon(Icons.flag_rounded),
+                      ),
+                      items: MaterialStatus.values
+                          .map(
+                            (status) => DropdownMenuItem<String>(
+                              value: status,
+                              child: Text(MaterialStatus.label(status)),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        if (value == null) {
+                          return;
+                        }
+
+                        setState(() {
+                          _selectedStatus = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 18),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.icon(
+                  onPressed: _isSaving ? null : _submit,
+                  icon: _isSaving
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.save_rounded),
+                  label: Text(_isSaving ? 'Zapisywanie...' : 'Zapisz zmiany'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

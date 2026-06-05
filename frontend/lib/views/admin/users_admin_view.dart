@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/forms/form_cards.dart';
 import '../../core/di/injection_container.dart';
 import '../../models/managed_user.dart';
 import '../../services/auth_service.dart';
@@ -63,89 +64,124 @@ class _UsersAdminViewState extends State<UsersAdminView> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 24,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           title: Text(
             user == null ? 'Dodaj użytkownika' : 'Edytuj użytkownika',
           ),
-          content: Form(
-            key: formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextFormField(
-                    controller: nameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Imię i nazwisko',
+          content: SizedBox(
+            width: 440,
+            child: Form(
+              key: formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FormSectionCard(
+                      title: 'Dane konta',
+                      subtitle:
+                          'Zmieniaj dane logowania i poziom dostępu w jednym miejscu.',
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: nameController,
+                            textInputAction: TextInputAction.next,
+                            decoration: const InputDecoration(
+                              labelText: 'Imię i nazwisko',
+                              prefixIcon: Icon(Icons.badge_rounded),
+                            ),
+                            validator: (value) {
+                              if ((value ?? '').trim().isEmpty) {
+                                return 'Podaj nazwę użytkownika';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: emailController,
+                            textInputAction: TextInputAction.next,
+                            decoration: const InputDecoration(
+                              labelText: 'Email',
+                              prefixIcon: Icon(Icons.alternate_email_rounded),
+                            ),
+                            validator: (value) {
+                              final text = (value ?? '').trim();
+                              if (text.isEmpty) {
+                                return 'Podaj email';
+                              }
+                              if (!text.contains('@')) {
+                                return 'Podaj poprawny email';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: passwordController,
+                            obscureText: true,
+                            textInputAction: TextInputAction.next,
+                            decoration: InputDecoration(
+                              labelText: user == null
+                                  ? 'Hasło'
+                                  : 'Hasło (zostaw puste, aby nie zmieniać)',
+                              prefixIcon: const Icon(Icons.lock_rounded),
+                            ),
+                            validator: (value) {
+                              if (user == null &&
+                                  (value ?? '').trim().isEmpty) {
+                                return 'Podaj hasło';
+                              }
+                              if (user == null &&
+                                  (value ?? '').trim().length < 6) {
+                                return 'Hasło musi mieć co najmniej 6 znaków';
+                              }
+                              if (user != null &&
+                                  (value ?? '').isNotEmpty &&
+                                  value!.trim().length < 6) {
+                                return 'Hasło musi mieć co najmniej 6 znaków';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          DropdownButtonFormField<String>(
+                            value: selectedRole,
+                            isExpanded: true,
+                            decoration: const InputDecoration(
+                              labelText: 'Rola',
+                              prefixIcon: Icon(Icons.security_rounded),
+                            ),
+                            items: const [
+                              DropdownMenuItem(
+                                value: 'admin',
+                                child: Text('Administrator'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'kierownik',
+                                child: Text('Kierownik'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'pracownik',
+                                child: Text('Pracownik'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              if (value != null) {
+                                selectedRole = value;
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                    validator: (value) {
-                      if ((value ?? '').trim().isEmpty) {
-                        return 'Podaj nazwę użytkownika';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: emailController,
-                    decoration: const InputDecoration(labelText: 'Email'),
-                    validator: (value) {
-                      final text = (value ?? '').trim();
-                      if (text.isEmpty) {
-                        return 'Podaj email';
-                      }
-                      if (!text.contains('@')) {
-                        return 'Podaj poprawny email';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: user == null
-                          ? 'Hasło'
-                          : 'Hasło (zostaw puste, aby nie zmieniać)',
-                    ),
-                    validator: (value) {
-                      if (user == null && (value ?? '').trim().isEmpty) {
-                        return 'Podaj hasło';
-                      }
-                      if (user == null && (value ?? '').trim().length < 6) {
-                        return 'Hasło musi mieć co najmniej 6 znaków';
-                      }
-                      if (user != null &&
-                          (value ?? '').isNotEmpty &&
-                          value!.trim().length < 6) {
-                        return 'Hasło musi mieć co najmniej 6 znaków';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  DropdownButtonFormField<String>(
-                    value: selectedRole,
-                    decoration: const InputDecoration(labelText: 'Rola'),
-                    items: const [
-                      DropdownMenuItem(
-                        value: 'admin',
-                        child: Text('Administrator'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'kierownik',
-                        child: Text('Kierownik'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'pracownik',
-                        child: Text('Pracownik'),
-                      ),
-                    ],
-                    onChanged: (value) {
-                      if (value != null) {
-                        selectedRole = value;
-                      }
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -218,6 +254,8 @@ class _UsersAdminViewState extends State<UsersAdminView> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text('Usuń użytkownika'),
         content: Text('Na pewno usunąć ${user.name}?'),
         actions: [
