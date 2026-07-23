@@ -11,9 +11,11 @@ WORKDIR /var/www/html
 
 COPY . .
 
+RUN chmod +x /var/www/html/docker-entrypoint.sh
+
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist \
     && chown -R www-data:www-data storage bootstrap/cache
 
 EXPOSE 10000
 
-CMD ["sh", "-c", "php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}"]
+ENTRYPOINT ["/var/www/html/docker-entrypoint.sh"]
