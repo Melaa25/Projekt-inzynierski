@@ -12,7 +12,7 @@ class UserController extends Controller
     public function index(): JsonResponse
     {
         $users = User::query()
-            ->select(['id', 'name', 'email', 'role', 'created_at'])
+            ->select(['id', 'name', 'login', 'email', 'role', 'created_at'])
             ->orderBy('name')
             ->get();
 
@@ -28,9 +28,12 @@ class UserController extends Controller
             'role' => ['required', Rule::in(User::ALLOWED_ROLES)],
         ]);
 
+        $data['login'] = User::buildLoginFromName($data['name']);
+        $data['must_change_password'] = true;
+
         $user = User::create($data);
 
-        return response()->json($user->only(['id', 'name', 'email', 'role']), 201);
+        return response()->json($user->only(['id', 'name', 'login', 'email', 'role']), 201);
     }
 
     public function update(Request $request, User $user): JsonResponse
@@ -42,13 +45,17 @@ class UserController extends Controller
             'role' => ['sometimes', 'required', Rule::in(User::ALLOWED_ROLES)],
         ]);
 
+        if (array_key_exists('name', $data)) {
+            $data['login'] = User::buildLoginFromName($data['name'], $user->id);
+        }
+
         if (array_key_exists('password', $data) && $data['password'] === null) {
             unset($data['password']);
         }
 
         $user->update($data);
 
-        return response()->json($user->only(['id', 'name', 'email', 'role']));
+        return response()->json($user->only(['id', 'name', 'login', 'email', 'role']));
     }
 
     public function destroy(User $user): JsonResponse

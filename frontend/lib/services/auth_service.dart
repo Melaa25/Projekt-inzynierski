@@ -18,14 +18,16 @@ class AuthService extends ChangeNotifier {
 
   bool get isAdmin => _currentUser?.role == 'admin';
 
+  bool get mustChangePassword => _currentUser?.mustChangePassword ?? false;
+
   Future<Either<String, AuthUser>> login({
-    required String email,
+    required String login,
     required String password,
   }) async {
     try {
       final response = await _dio.post(
         '/auth/login',
-        data: {'email': email, 'password': password},
+        data: {'login': login, 'password': password},
       );
 
       final data = response.data as Map<String, dynamic>;
@@ -48,6 +50,27 @@ class AuthService extends ChangeNotifier {
       return Left(_mapDioError(e));
     } catch (_) {
       return const Left('Wystapil nieoczekiwany blad podczas logowania.');
+    }
+  }
+
+  Future<Either<String, AuthUser>> changePassword({
+    required String password,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/auth/password',
+        data: {'password': password, 'password_confirmation': password},
+      );
+
+      final user = AuthUser.fromJson(response.data as Map<String, dynamic>);
+      _currentUser = user;
+      notifyListeners();
+
+      return Right(user);
+    } on DioException catch (e) {
+      return Left(_mapDioError(e));
+    } catch (_) {
+      return const Left('Wystapil nieoczekiwany blad podczas zmiany hasla.');
     }
   }
 

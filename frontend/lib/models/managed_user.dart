@@ -1,6 +1,7 @@
 class ManagedUser {
   final int id;
   final String name;
+  final String login;
   final String email;
   final String role;
   final DateTime? createdAt;
@@ -8,6 +9,7 @@ class ManagedUser {
   const ManagedUser({
     required this.id,
     required this.name,
+    required this.login,
     required this.email,
     required this.role,
     this.createdAt,
@@ -17,9 +19,12 @@ class ManagedUser {
     return ManagedUser(
       id: json['id'] as int,
       name: json['name'] as String,
+      login: json['login'] as String? ?? '',
       email: json['email'] as String,
       role: json['role'] as String,
-      createdAt: json['created_at'] == null ? null : DateTime.tryParse(json['created_at'] as String),
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.tryParse(json['created_at'] as String),
     );
   }
 

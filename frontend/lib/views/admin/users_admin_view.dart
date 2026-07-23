@@ -85,7 +85,7 @@ class _UsersAdminViewState extends State<UsersAdminView> {
                     FormSectionCard(
                       title: 'Dane konta',
                       subtitle:
-                          'Zmieniaj dane logowania i poziom dostępu w jednym miejscu.',
+                          'Login jest wyliczany z imienia i nazwiska, więc wystarczy poprawnie wpisać nazwę użytkownika.',
                       child: Column(
                         children: [
                           TextFormField(
@@ -335,7 +335,11 @@ class _UsersAdminViewState extends State<UsersAdminView> {
                   color: Color(0xFF006B38),
                 ),
                 title: Text(currentUser?.name ?? 'Administrator'),
-                subtitle: Text(currentUser?.roleLabel ?? 'Administrator'),
+                subtitle: Text(
+                  currentUser == null
+                      ? 'Administrator'
+                      : '${currentUser.roleLabel} • ${currentUser.login}',
+                ),
                 trailing: const Icon(Icons.verified_rounded),
               ),
             ),
@@ -378,7 +382,9 @@ class _UsersAdminViewState extends State<UsersAdminView> {
                       color: Color(0xFF006B38),
                     ),
                     title: Text(user.name),
-                    subtitle: Text('${user.email}\n${user.roleLabel}'),
+                    subtitle: Text(
+                      '${user.login}\n${user.email}\n${user.roleLabel}',
+                    ),
                     isThreeLine: true,
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,

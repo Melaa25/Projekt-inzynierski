@@ -12,15 +12,15 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'login' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
-        $user = User::query()->where('email', $credentials['email'])->first();
+        $user = User::query()->where('login', $credentials['login'])->first();
 
         if (! $user || ! Hash::check($credentials['password'], $user->password)) {
             return response()->json([
-                'message' => 'Nieprawidlowy email lub haslo.',
+                'message' => 'Nieprawidlowy login lub haslo.',
             ], 422);
         }
 
@@ -32,8 +32,10 @@ class AuthController extends Controller
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
+                'login' => $user->login,
                 'email' => $user->email,
                 'role' => $user->role,
+                'must_change_password' => $user->must_change_password,
             ],
         ]);
     }
@@ -45,8 +47,32 @@ class AuthController extends Controller
         return response()->json([
             'id' => $user->id,
             'name' => $user->name,
+            'login' => $user->login,
             'email' => $user->email,
             'role' => $user->role,
+            'must_change_password' => $user->must_change_password,
+        ]);
+    }
+
+    public function changePassword(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+        ]);
+
+        $user = $request->user();
+        $user->update([
+            'password' => $data['password'],
+            'must_change_password' => false,
+        ]);
+
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'login' => $user->login,
+            'email' => $user->email,
+            'role' => $user->role,
+            'must_change_password' => $user->must_change_password,
         ]);
     }
 

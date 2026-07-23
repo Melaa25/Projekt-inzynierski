@@ -1,35 +1,32 @@
 import 'package:flutter/material.dart';
 
-import '../../core/di/injection_container.dart';
 import '../../components/forms/form_cards.dart';
+import '../../core/di/injection_container.dart';
 import '../../services/auth_service.dart';
-import 'change_password_view.dart';
 import '../home_view.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class ChangePasswordView extends StatefulWidget {
+  const ChangePasswordView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<ChangePasswordView> createState() => _ChangePasswordViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _ChangePasswordViewState extends State<ChangePasswordView> {
   final _formKey = GlobalKey<FormState>();
-  final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _isSubmitting = false;
 
   @override
   void dispose() {
-    _loginController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -48,10 +45,10 @@ class _LoginViewState extends State<LoginView> {
                 shrinkWrap: true,
                 children: [
                   const FormHeaderCard(
-                    icon: Icons.warehouse_rounded,
-                    title: 'Logowanie do systemu',
+                    icon: Icons.lock_reset_rounded,
+                    title: 'Zmiana hasła',
                     subtitle:
-                        'Zaloguj się swoim loginem i hasłem. Login ma format i.nazwisko, a pierwsze hasło to PESEL.',
+                        'To jest pierwsze logowanie. Ustaw własne hasło, żeby dalej korzystać z systemu.',
                   ),
                   const SizedBox(height: 16),
                   Card(
@@ -63,34 +60,36 @@ class _LoginViewState extends State<LoginView> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             TextFormField(
-                              controller: _loginController,
-                              keyboardType: TextInputType.text,
+                              controller: _passwordController,
+                              obscureText: true,
                               textInputAction: TextInputAction.next,
                               decoration: const InputDecoration(
-                                labelText: 'Login',
-                                hintText: 'j.kowalski',
-                                prefixIcon: Icon(Icons.person_outline_rounded),
+                                labelText: 'Nowe hasło',
+                                prefixIcon: Icon(Icons.lock_rounded),
                               ),
                               validator: (value) {
-                                final val = (value ?? '').trim();
-                                if (val.isEmpty) {
-                                  return 'Podaj login';
+                                if ((value ?? '').trim().length < 6) {
+                                  return 'Hasło musi mieć co najmniej 6 znaków';
                                 }
                                 return null;
                               },
                             ),
                             const SizedBox(height: 12),
                             TextFormField(
-                              controller: _passwordController,
+                              controller: _confirmPasswordController,
                               obscureText: true,
                               textInputAction: TextInputAction.done,
                               decoration: const InputDecoration(
-                                labelText: 'Hasło',
-                                prefixIcon: Icon(Icons.lock_rounded),
+                                labelText: 'Powtórz hasło',
+                                prefixIcon: Icon(Icons.lock_outline_rounded),
                               ),
                               validator: (value) {
-                                if ((value ?? '').isEmpty) {
-                                  return 'Podaj hasło';
+                                if ((value ?? '').trim().isEmpty) {
+                                  return 'Powtórz hasło';
+                                }
+                                if (value!.trim() !=
+                                    _passwordController.text.trim()) {
+                                  return 'Hasła nie są takie same';
                                 }
                                 return null;
                               },
@@ -108,13 +107,14 @@ class _LoginViewState extends State<LoginView> {
                                           strokeWidth: 2,
                                         ),
                                       )
-                                    : const Icon(Icons.login_rounded),
+                                    : const Icon(Icons.save_rounded),
                                 label: Text(
-                                  _isSubmitting ? 'Logowanie...' : 'Zaloguj',
+                                  _isSubmitting
+                                      ? 'Zapisywanie...'
+                                      : 'Zmień hasło',
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 10),
                           ],
                         ),
                       ),
@@ -139,9 +139,8 @@ class _LoginViewState extends State<LoginView> {
     });
 
     final authService = getIt<AuthService>();
-    final result = await authService.login(
-      login: _loginController.text.trim(),
-      password: _passwordController.text,
+    final result = await authService.changePassword(
+      password: _passwordController.text.trim(),
     );
 
     if (!mounted) {
@@ -158,14 +157,7 @@ class _LoginViewState extends State<LoginView> {
           context,
         ).showSnackBar(SnackBar(content: Text(error)));
       },
-      (user) {
-        if (user.mustChangePassword) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute<void>(builder: (_) => const ChangePasswordView()),
-          );
-          return;
-        }
-
+      (_) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute<void>(builder: (_) => const HomeView()),
         );
