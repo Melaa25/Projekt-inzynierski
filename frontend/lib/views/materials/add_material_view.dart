@@ -19,6 +19,7 @@ class _AddMaterialViewState extends State<AddMaterialView> {
   final _nameController = TextEditingController();
   final _weightController = TextEditingController();
   final _lengthController = TextEditingController();
+  final _thicknessController = TextEditingController();
   LocationEntity? _selectedLocation;
   List<LocationEntity> _locations = [];
   String _selectedStatus = MaterialStatus.inStock;
@@ -30,6 +31,7 @@ class _AddMaterialViewState extends State<AddMaterialView> {
     _nameController.dispose();
     _weightController.dispose();
     _lengthController.dispose();
+    _thicknessController.dispose();
     super.dispose();
   }
 
@@ -162,6 +164,31 @@ class _AddMaterialViewState extends State<AddMaterialView> {
                         return null;
                       },
                     ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _thicknessController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      decoration: const InputDecoration(
+                        labelText: 'Grubość',
+                        hintText: 'Np. 2',
+                        prefixIcon: Icon(Icons.layers_rounded),
+                      ),
+                      validator: (value) {
+                        final normalized = (value ?? '')
+                            .replaceAll(',', '.')
+                            .trim();
+                        final number = double.tryParse(normalized);
+
+                        if (number == null || number < 0) {
+                          return 'Podaj poprawną grubość';
+                        }
+
+                        return null;
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -264,6 +291,9 @@ class _AddMaterialViewState extends State<AddMaterialView> {
       name: _nameController.text.trim(),
       weight: double.parse(_weightController.text.replaceAll(',', '.').trim()),
       length: double.parse(_lengthController.text.replaceAll(',', '.').trim()),
+      thickness: double.parse(
+        _thicknessController.text.replaceAll(',', '.').trim(),
+      ),
       location: _selectedLocation?.name,
       currentLocationId: _selectedLocation?.id,
       status: _selectedStatus,

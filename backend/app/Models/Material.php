@@ -8,13 +8,14 @@ use Illuminate\Support\Str;
 class Material extends Model
 {
     protected $fillable = [
-        'name',
-        'weight',
-        'length',
-        'location',
-        'status',
-        'current_location_id',
-    ];
+    'name',
+    'weight',
+    'length',
+    'thickness',
+    'location',
+    'status',
+    'current_location_id',
+    ];  
 
     protected static function booted(): void
     {

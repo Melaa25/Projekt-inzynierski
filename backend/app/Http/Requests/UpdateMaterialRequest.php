@@ -26,6 +26,7 @@ class UpdateMaterialRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'weight' => ['required', 'numeric', 'min:0'],
             'length' => ['required', 'numeric', 'min:0'],
+            'thickness' => ['required', 'numeric', 'min:0'],
             'location' => ['nullable', 'string', 'max:100'],
             'current_location_id' => ['nullable', 'integer', 'exists:warehouse_locations,id'],
             'status' => ['required', 'string', 'in:in_stock,cutting,reserved,issued,damaged,missing,transit'],

@@ -144,6 +144,11 @@ class _MaterialDetailsViewState extends State<MaterialDetailsView> {
               icon: Icons.straighten_rounded,
             ),
             _DetailsCard(
+              title: 'Grubość',
+              value: _material.thickness.toStringAsFixed(2),
+              icon: Icons.layers_rounded,
+            ),
+            _DetailsCard(
               title: 'Lokalizacja',
               value:
                   _material.currentLocation?.name ?? _material.location ?? '-',

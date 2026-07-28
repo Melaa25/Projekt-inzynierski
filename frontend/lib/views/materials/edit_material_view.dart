@@ -22,6 +22,7 @@ class _EditMaterialViewState extends State<EditMaterialView> {
   late final TextEditingController _nameController;
   late final TextEditingController _weightController;
   late final TextEditingController _lengthController;
+  late final TextEditingController _thicknessController;
   late String _selectedStatus;
   LocationEntity? _selectedLocation;
   List<LocationEntity> _locations = [];
@@ -37,6 +38,9 @@ class _EditMaterialViewState extends State<EditMaterialView> {
     );
     _lengthController = TextEditingController(
       text: widget.material.length.toStringAsFixed(2),
+    );
+    _thicknessController = TextEditingController(
+      text: widget.material.thickness.toStringAsFixed(2),
     );
     _selectedStatus = widget.material.status;
     _selectedLocation = widget.material.currentLocation;
@@ -54,6 +58,7 @@ class _EditMaterialViewState extends State<EditMaterialView> {
     _nameController.dispose();
     _weightController.dispose();
     _lengthController.dispose();
+    _thicknessController.dispose();
     super.dispose();
   }
 
@@ -171,6 +176,30 @@ class _EditMaterialViewState extends State<EditMaterialView> {
                         return null;
                       },
                     ),
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: _thicknessController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      decoration: const InputDecoration(
+                        labelText: 'Grubość',
+                        prefixIcon: Icon(Icons.layers_rounded),
+                      ),
+                      validator: (value) {
+                        final normalized = (value ?? '')
+                            .replaceAll(',', '.')
+                            .trim();
+                        final number = double.tryParse(normalized);
+
+                        if (number == null || number < 0) {
+                          return 'Podaj poprawną grubość';
+                        }
+
+                        return null;
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -274,6 +303,9 @@ class _EditMaterialViewState extends State<EditMaterialView> {
       name: _nameController.text.trim(),
       weight: double.parse(_weightController.text.replaceAll(',', '.').trim()),
       length: double.parse(_lengthController.text.replaceAll(',', '.').trim()),
+      thickness: double.parse(
+        _thicknessController.text.replaceAll(',', '.').trim(),
+      ),
       location: _selectedLocation?.name,
       currentLocationId: _selectedLocation?.id,
       status: _selectedStatus,

@@ -9,6 +9,7 @@ class MaterialEntity extends Equatable {
   final String serialNumber;
   final double weight;
   final double length;
+  final double thickness;
   final String? location;
   final String status;
   final LocationEntity? currentLocation;
@@ -19,11 +20,12 @@ class MaterialEntity extends Equatable {
     required this.serialNumber,
     required this.weight,
     required this.length,
+    required this.thickness,
     this.location,
     this.status = MaterialStatus.inStock,
     this.currentLocation,
   });
 
   @override
-  List<Object?> get props => [id, name, serialNumber, weight, length, location, status, currentLocation];
+  List<Object?> get props => [id, name, serialNumber, weight, length, thickness, location, status, currentLocation];
 }
