@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class MaterialMovement extends Model
 {
     protected $fillable = [
-        'material_id',
+        'material_batch_id',
         'user_id',
         'type',
+        'quantity_delta',
         'destination',
         'note',
         'previous_status',
@@ -18,9 +19,9 @@ class MaterialMovement extends Model
         'new_location_id',
     ];
 
-    public function material()
+    public function batch()
     {
-        return $this->belongsTo(Material::class);
+        return $this->belongsTo(MaterialBatch::class, 'material_batch_id');
     }
 
     public function user()
