@@ -4,27 +4,27 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
-import '../models/material_entity.dart';
+import '../models/material_batch_entity.dart';
 
-class MaterialLabelPrintService {
-  static Future<void> printSingleLabel(MaterialEntity material) async {
-    await printManyLabels([material]);
+class BatchLabelPrintService {
+  static Future<void> printSingleLabel(MaterialBatchEntity batch) async {
+    await printManyLabels([batch]);
   }
 
-  static Future<void> printManyLabels(List<MaterialEntity> materials) async {
-    if (materials.isEmpty) {
-      throw StateError('Brak materiałów do wydruku.');
+  static Future<void> printManyLabels(List<MaterialBatchEntity> batches) async {
+    if (batches.isEmpty) {
+      throw StateError('Brak partii do wydruku.');
     }
 
     await Printing.layoutPdf(
-      name: materials.length == 1
-          ? 'etykieta_${materials.first.serialNumber}.pdf'
-          : 'etykiety_${materials.length}.pdf',
-      onLayout: (_) => _buildLabelsDocument(materials),
+      name: batches.length == 1
+          ? 'etykieta_${batches.first.batchCode}.pdf'
+          : 'etykiety_${batches.length}.pdf',
+      onLayout: (_) => _buildLabelsDocument(batches),
     );
   }
 
-  static Future<Uint8List> _buildLabelsDocument(List<MaterialEntity> materials) async {
+  static Future<Uint8List> _buildLabelsDocument(List<MaterialBatchEntity> batches) async {
     final pdf = pw.Document();
     const labelWidth = 62 * PdfPageFormat.mm;
     const labelHeight = 28 * PdfPageFormat.mm;
@@ -38,10 +38,10 @@ class MaterialLabelPrintService {
             pw.Wrap(
               spacing: 3 * PdfPageFormat.mm,
               runSpacing: 3 * PdfPageFormat.mm,
-              children: materials
+              children: batches
                   .map(
-                    (material) => _buildSingleSmallLabel(
-                      material,
+                    (batch) => _buildSingleSmallLabel(
+                      batch,
                       width: labelWidth,
                       height: labelHeight,
                     ),
@@ -57,11 +57,12 @@ class MaterialLabelPrintService {
   }
 
   static pw.Widget _buildSingleSmallLabel(
-    MaterialEntity material, {
+    MaterialBatchEntity batch, {
     required double width,
     required double height,
   }) {
-    final safeName = _toPdfSafeText(material.name);
+    final safeName = _toPdfSafeText(batch.displayName);
+    final safeLocation = _toPdfSafeText(batch.currentLocation?.name ?? '');
 
     return pw.Container(
       width: width,
@@ -79,16 +80,22 @@ class MaterialLabelPrintService {
             style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold),
             maxLines: 1,
           ),
+          pw.SizedBox(height: 1),
+          pw.Text(
+            safeLocation,
+            style: const pw.TextStyle(fontSize: 6),
+            maxLines: 1,
+          ),
           pw.SizedBox(height: 1.5),
           pw.Text(
-            material.serialNumber,
+            batch.batchCode,
             style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold),
           ),
           pw.SizedBox(height: 2),
           pw.Expanded(
             child: pw.BarcodeWidget(
               barcode: pw.Barcode.code128(),
-              data: material.serialNumber,
+              data: batch.batchCode,
               drawText: false,
             ),
           ),

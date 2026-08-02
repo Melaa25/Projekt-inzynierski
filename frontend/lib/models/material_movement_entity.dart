@@ -1,14 +1,16 @@
 import 'package:equatable/equatable.dart';
 
-import 'material_entity.dart';
+import 'material_batch_entity.dart';
 import 'location_entity.dart';
 
 class MaterialMovementEntity extends Equatable {
   final int id;
-  final int materialId;
+  final int? materialBatchId;
+  final MaterialBatchEntity? batch;
   final int? userId;
   final String? userName;
   final String type;
+  final int quantityDelta;
   final String? destination;
   final String? note;
   final String? previousStatus;
@@ -19,10 +21,12 @@ class MaterialMovementEntity extends Equatable {
 
   const MaterialMovementEntity({
     required this.id,
-    required this.materialId,
+    this.materialBatchId,
+    this.batch,
     this.userId,
     this.userName,
     required this.type,
+    required this.quantityDelta,
     this.destination,
     this.note,
     this.previousStatus,
@@ -33,5 +37,20 @@ class MaterialMovementEntity extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, materialId, userId, userName, type, destination, note, previousStatus, newStatus, previousLocation, newLocation, createdAt];
+  List<Object?> get props => [
+        id,
+        materialBatchId,
+        batch,
+        userId,
+        userName,
+        type,
+        quantityDelta,
+        destination,
+        note,
+        previousStatus,
+        newStatus,
+        previousLocation,
+        newLocation,
+        createdAt,
+      ];
 }

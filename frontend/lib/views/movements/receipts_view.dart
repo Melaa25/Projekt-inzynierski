@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/di/injection_container.dart';
 import '../../models/material_movement_entity.dart';
-import '../../models/material_status.dart';
-import '../../services/material_repository.dart';
+import '../../services/material_batch_repository.dart';
 import '../scanner/scanner_view.dart';
 
 class ReceiptsView extends StatefulWidget {
@@ -30,7 +29,7 @@ class _ReceiptsViewState extends State<ReceiptsView> {
       _error = null;
     });
 
-    final repository = getIt<MaterialRepository>();
+    final repository = getIt<MaterialBatchRepository>();
     final result = await repository.getMovements(type: 'received');
 
     result.fold(
@@ -69,7 +68,7 @@ class _ReceiptsViewState extends State<ReceiptsView> {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Skanuj materiał, a następnie oznacz go jako przyjęty.',
+                    'Zeskanuj etykietę na regale, aby dodać ilość do istniejącej partii.',
                   ),
                   const SizedBox(height: 12),
                   SizedBox(
@@ -110,7 +109,7 @@ class _ReceiptsViewState extends State<ReceiptsView> {
                     Text('Błąd: ${_error ?? ''}'),
                   ] else if (_items.isEmpty) ...[
                     const SizedBox(height: 8),
-                    const Text('Brak przyjętych materiałów.'),
+                    const Text('Brak przyjętych partii.'),
                   ] else ...[
                     const SizedBox(height: 8),
                     ..._items.map((m) => _buildMovementTile(m)).toList(),
@@ -127,46 +126,16 @@ class _ReceiptsViewState extends State<ReceiptsView> {
   Widget _buildMovementTile(MaterialMovementEntity m) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
-      title: Text('${_movementTypeLabel(m.type)} — ${m.materialId}'),
+      title: Text('${m.batch?.batchCode ?? '-'} (+${m.quantityDelta} szt.)'),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (m.userName != null) Text('Użytkownik: ${m.userName}'),
-          if (m.previousLocation != null || m.newLocation != null)
-            Text(
-              'Lokalizacja: ${m.previousLocation?.name ?? '-'} → ${m.newLocation?.name ?? '-'}',
-            ),
-          if (m.previousStatus != null || m.newStatus != null)
-            Text(
-              'Status: ${_statusLabel(m.previousStatus)} → ${_statusLabel(m.newStatus)}',
-            ),
+          if (m.batch?.currentLocation != null) Text('Lokalizacja: ${m.batch!.currentLocation!.name}'),
           if (m.note != null && m.note!.isNotEmpty) Text('Uwagi: ${m.note}'),
           Text('Data: ${m.createdAt.toLocal()}'),
         ],
       ),
-      trailing: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [if (m.newLocation != null) Text(m.newLocation!.name)],
-      ),
     );
-  }
-
-  String _statusLabel(String? status) {
-    if (status == null || status.isEmpty) {
-      return '-';
-    }
-
-    return MaterialStatus.label(status);
-  }
-
-  String _movementTypeLabel(String type) {
-    switch (type) {
-      case 'received':
-        return 'Przyjęcie';
-      case 'issued':
-        return 'Wydanie';
-      default:
-        return type;
-    }
   }
 }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-import '../../components/scanner/matched_material_tile.dart';
+import '../../components/scanner/matched_batch_tile.dart';
 import '../../components/scanner/scanner_overlay.dart';
 import '../../core/di/injection_container.dart';
-import '../../models/material_entity.dart';
-import '../../services/material_repository.dart';
-import '../materials/material_details_view.dart';
+import '../../models/material_batch_entity.dart';
+import '../../services/material_batch_repository.dart';
+import '../batches/batch_details_view.dart';
 
 class ScannerView extends StatefulWidget {
   const ScannerView({super.key});
@@ -27,23 +27,19 @@ class _ScannerViewState extends State<ScannerView> {
   );
 
   final TextEditingController _manualCodeController = TextEditingController();
-  final TextEditingController _movementTargetController =
-      TextEditingController();
 
   bool _isTorchOn = false;
   bool _isSearching = false;
   bool _isHandlingScan = false;
-  bool _isSavingMovement = false;
 
   String? _lastScannedCode;
   String? _statusMessage;
-  MaterialEntity? _matchedMaterial;
+  MaterialBatchEntity? _matchedBatch;
 
   @override
   void dispose() {
     _controller.dispose();
     _manualCodeController.dispose();
-    _movementTargetController.dispose();
     super.dispose();
   }
 
@@ -51,7 +47,7 @@ class _ScannerViewState extends State<ScannerView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Skanowanie kodu'),
+        title: const Text('Skanowanie etykiety'),
         actions: [
           IconButton(
             tooltip: 'Przełącz kamerę',
@@ -61,9 +57,7 @@ class _ScannerViewState extends State<ScannerView> {
           IconButton(
             tooltip: _isTorchOn ? 'Wyłącz latarkę' : 'Włącz latarkę',
             onPressed: _toggleTorch,
-            icon: Icon(
-              _isTorchOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
-            ),
+            icon: Icon(_isTorchOn ? Icons.flash_on_rounded : Icons.flash_off_rounded),
           ),
         ],
       ),
@@ -104,7 +98,7 @@ class _ScannerViewState extends State<ScannerView> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Text(
-                'Ustaw kod seryjny w ramce i przytrzymaj stabilnie.',
+                'Zeskanuj etykietę na regale.',
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -124,9 +118,7 @@ class _ScannerViewState extends State<ScannerView> {
           children: [
             Text(
               'Wpisz kod ręcznie',
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
             TextField(
@@ -142,9 +134,7 @@ class _ScannerViewState extends State<ScannerView> {
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: _isSearching
-                    ? null
-                    : () => _searchByCode(_manualCodeController.text),
+                onPressed: _isSearching ? null : () => _searchByCode(_manualCodeController.text),
                 icon: _isSearching
                     ? const SizedBox(
                         width: 14,
@@ -152,9 +142,7 @@ class _ScannerViewState extends State<ScannerView> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.search_rounded),
-                label: Text(
-                  _isSearching ? 'Wyszukiwanie...' : 'Wyszukaj materiał',
-                ),
+                label: Text(_isSearching ? 'Wyszukiwanie...' : 'Wyszukaj partię'),
               ),
             ),
           ],
@@ -164,7 +152,7 @@ class _ScannerViewState extends State<ScannerView> {
   }
 
   Widget _buildResultCard(BuildContext context) {
-    final hasError = _statusMessage != null && _matchedMaterial == null;
+    final hasError = _statusMessage != null && _matchedBatch == null;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 220),
@@ -181,9 +169,7 @@ class _ScannerViewState extends State<ScannerView> {
         children: [
           Text(
             'Wynik skanowania',
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 8),
           if (_lastScannedCode != null) Text('Ostatni kod: $_lastScannedCode'),
@@ -192,51 +178,15 @@ class _ScannerViewState extends State<ScannerView> {
             Text(
               _statusMessage!,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: hasError
-                    ? const Color(0xFF8E1B1B)
-                    : const Color(0xFF245E3F),
+                color: hasError ? const Color(0xFF8E1B1B) : const Color(0xFF245E3F),
               ),
             ),
           ],
-          if (_matchedMaterial != null) ...[
+          if (_matchedBatch != null) ...[
             const SizedBox(height: 10),
-            MatchedMaterialTile(
-              material: _matchedMaterial!,
-              onOpenDetails: () => _openMaterialDetails(_matchedMaterial!),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _movementTargetController,
-              decoration: const InputDecoration(
-                labelText: 'Cel / uwaga',
-                hintText: 'Np. Piła, hala 3, dostawca X',
-              ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: FilledButton.icon(
-                    onPressed: _isSavingMovement
-                        ? null
-                        : () => _registerMovement('received'),
-                    icon: const Icon(Icons.call_received_rounded),
-                    label: Text(
-                      _isSavingMovement ? 'Zapisywanie...' : 'Przyjęty',
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: FilledButton.tonalIcon(
-                    onPressed: _isSavingMovement
-                        ? null
-                        : () => _registerMovement('issued'),
-                    icon: const Icon(Icons.call_made_rounded),
-                    label: const Text('Wydane'),
-                  ),
-                ),
-              ],
+            MatchedBatchTile(
+              batch: _matchedBatch!,
+              onOpenDetails: () => _openBatchDetails(_matchedBatch!),
             ),
           ],
         ],
@@ -279,7 +229,7 @@ class _ScannerViewState extends State<ScannerView> {
     if (code.isEmpty) {
       setState(() {
         _statusMessage = 'Podaj kod do wyszukania.';
-        _matchedMaterial = null;
+        _matchedBatch = null;
       });
       return;
     }
@@ -288,12 +238,11 @@ class _ScannerViewState extends State<ScannerView> {
       _isSearching = true;
       _lastScannedCode = code;
       _statusMessage = null;
-      _matchedMaterial = null;
+      _matchedBatch = null;
     });
-    _movementTargetController.clear();
 
-    final repository = getIt<MaterialRepository>();
-    final result = await repository.getMaterials();
+    final repository = getIt<MaterialBatchRepository>();
+    final result = await repository.getBatchByCode(code);
 
     if (!mounted) {
       return;
@@ -302,94 +251,29 @@ class _ScannerViewState extends State<ScannerView> {
     result.fold(
       (error) {
         setState(() {
-          _statusMessage = 'Błąd pobierania: $error';
+          _statusMessage = 'Nie znaleziono partii dla kodu $code.';
           _isSearching = false;
         });
       },
-      (materials) {
-        final match = materials
-            .where((item) => item.serialNumber.toUpperCase() == code)
-            .cast<MaterialEntity?>()
-            .firstWhere((item) => item != null, orElse: () => null);
-
+      (batch) {
         setState(() {
-          _matchedMaterial = match;
-          _statusMessage = match == null
-              ? 'Nie znaleziono materiału dla kodu $code.'
-              : fromScanner
-              ? 'Znaleziono materiał dla zeskanowanego kodu.'
-              : 'Znaleziono materiał.';
+          _matchedBatch = batch;
+          _statusMessage = fromScanner ? 'Znaleziono partię dla zeskanowanego kodu.' : 'Znaleziono partię.';
           _isSearching = false;
         });
       },
     );
   }
 
-  Future<void> _openMaterialDetails(MaterialEntity material) async {
+  Future<void> _openBatchDetails(MaterialBatchEntity batch) async {
     final hasChanges = await Navigator.of(context).push<bool>(
       MaterialPageRoute<bool>(
-        builder: (_) => MaterialDetailsView(material: material),
+        builder: (_) => BatchDetailsView(batchCode: batch.batchCode),
       ),
     );
 
     if (hasChanges == true && mounted && _lastScannedCode != null) {
       await _searchByCode(_lastScannedCode!);
     }
-  }
-
-  Future<void> _registerMovement(String type) async {
-    final material = _matchedMaterial;
-    if (material == null) {
-      return;
-    }
-
-    setState(() {
-      _isSavingMovement = true;
-    });
-
-    final repository = getIt<MaterialRepository>();
-    final result = await repository.recordMovement(
-      materialId: material.id,
-      type: type,
-      destination: _movementTargetController.text.trim().isEmpty
-          ? null
-          : _movementTargetController.text.trim(),
-      note: null,
-    );
-
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      _isSavingMovement = false;
-    });
-
-    result.fold(
-      (error) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(error)));
-      },
-      (updatedMaterial) {
-        setState(() {
-          _matchedMaterial = updatedMaterial;
-          _statusMessage = type == 'received'
-              ? 'Materiał oznaczono jako przyjęty.'
-              : 'Materiał oznaczono jako wydany.';
-          _movementTargetController.clear();
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              type == 'received'
-                  ? 'Zapisano przyjęcie materiału.'
-                  : 'Zapisano wydanie materiału.',
-            ),
-          ),
-        );
-      },
-    );
   }
 }

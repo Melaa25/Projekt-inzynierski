@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/di/injection_container.dart';
 import '../../models/material_movement_entity.dart';
-import '../../models/material_status.dart';
-import '../../services/material_repository.dart';
+import '../../services/material_batch_repository.dart';
 import '../scanner/scanner_view.dart';
 
 class IssuesView extends StatefulWidget {
@@ -30,7 +29,7 @@ class _IssuesViewState extends State<IssuesView> {
       _error = null;
     });
 
-    final repository = getIt<MaterialRepository>();
+    final repository = getIt<MaterialBatchRepository>();
     final result = await repository.getMovements(type: 'issued');
 
     result.fold(
@@ -69,13 +68,13 @@ class _IssuesViewState extends State<IssuesView> {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Skanuj materiał, a następnie oznacz go jako wydany.',
+                    'Zeskanuj etykietę na regale, aby wydać materiał z partii.',
                   ),
                   const SizedBox(height: 12),
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton.icon(
-                      icon: const Icon(Icons.local_shipping_rounded),
+                      icon: const Icon(Icons.qr_code_scanner_rounded),
                       label: const Text('Otwórz skaner'),
                       onPressed: () {
                         Navigator.of(context).push(
@@ -110,7 +109,7 @@ class _IssuesViewState extends State<IssuesView> {
                     Text('Błąd: ${_error ?? ''}'),
                   ] else if (_items.isEmpty) ...[
                     const SizedBox(height: 8),
-                    const Text('Brak wydanych materiałów.'),
+                    const Text('Brak wydanych partii.'),
                   ] else ...[
                     const SizedBox(height: 8),
                     ..._items.map((m) => _buildMovementTile(m)).toList(),
@@ -127,46 +126,17 @@ class _IssuesViewState extends State<IssuesView> {
   Widget _buildMovementTile(MaterialMovementEntity m) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
-      title: Text('${_movementTypeLabel(m.type)} — ${m.materialId}'),
+      title: Text('${m.batch?.batchCode ?? '-'} (${m.quantityDelta} szt.)'),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (m.userName != null) Text('Użytkownik: ${m.userName}'),
-          if (m.previousLocation != null || m.newLocation != null)
-            Text(
-              'Lokalizacja: ${m.previousLocation?.name ?? '-'} → ${m.newLocation?.name ?? '-'}',
-            ),
-          if (m.previousStatus != null || m.newStatus != null)
-            Text(
-              'Status: ${_statusLabel(m.previousStatus)} → ${_statusLabel(m.newStatus)}',
-            ),
+          if (m.destination != null && m.destination!.isNotEmpty) Text('Cel: ${m.destination}'),
+          if (m.batch?.currentLocation != null) Text('Lokalizacja: ${m.batch!.currentLocation!.name}'),
           if (m.note != null && m.note!.isNotEmpty) Text('Uwagi: ${m.note}'),
           Text('Data: ${m.createdAt.toLocal()}'),
         ],
       ),
-      trailing: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [if (m.newLocation != null) Text(m.newLocation!.name)],
-      ),
     );
-  }
-
-  String _statusLabel(String? status) {
-    if (status == null || status.isEmpty) {
-      return '-';
-    }
-
-    return MaterialStatus.label(status);
-  }
-
-  String _movementTypeLabel(String type) {
-    switch (type) {
-      case 'received':
-        return 'Przyjęcie';
-      case 'issued':
-        return 'Wydanie';
-      default:
-        return type;
-    }
   }
 }

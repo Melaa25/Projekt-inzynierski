@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../models/material_entity.dart';
+import '../../models/material_batch_entity.dart';
 
-class MatchedMaterialTile extends StatelessWidget {
-  final MaterialEntity material;
+class MatchedBatchTile extends StatelessWidget {
+  final MaterialBatchEntity batch;
   final VoidCallback onOpenDetails;
 
-  const MatchedMaterialTile({
+  const MatchedBatchTile({
     super.key,
-    required this.material,
+    required this.batch,
     required this.onOpenDetails,
   });
 
@@ -44,16 +44,15 @@ class MatchedMaterialTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    material.name,
+                    batch.displayName,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   const SizedBox(height: 2),
-                  Text('Kod: ${material.serialNumber}'),
-                  Text(
-                    'Lokalizacja: ${material.currentLocation?.name ?? material.location ?? '-'}',
-                  ),
+                  Text('Kod: ${batch.batchCode}'),
+                  Text('Ilość: ${batch.quantity} szt.'),
+                  Text('Lokalizacja: ${batch.currentLocation?.name ?? '-'}'),
                 ],
               ),
             ),

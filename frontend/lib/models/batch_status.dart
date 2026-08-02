@@ -1,38 +1,30 @@
-class MaterialStatus {
+class BatchStatus {
   static const String inStock = 'in_stock';
-  static const String cutting = 'cutting';
+  static const String inProduction = 'in_production';
   static const String reserved = 'reserved';
-  static const String issued = 'issued';
-  static const String damaged = 'damaged';
   static const String missing = 'missing';
-  static const String transit = 'transit';
+  static const String damaged = 'damaged';
 
   static const List<String> values = [
     inStock,
-    cutting,
+    inProduction,
     reserved,
-    issued,
-    damaged,
     missing,
-    transit,
+    damaged,
   ];
 
   static String label(String status) {
     switch (status) {
       case inStock:
         return 'Na magazynie';
-      case cutting:
-        return 'Na cięciu';
+      case inProduction:
+        return 'Na produkcji';
       case reserved:
         return 'Zarezerwowany';
-      case issued:
-        return 'Wydany';
+      case missing:
+        return 'Brak';
       case damaged:
         return 'Uszkodzony';
-      case missing:
-        return 'Brakujący';
-      case transit:
-        return 'W ruchu';
       default:
         return status;
     }

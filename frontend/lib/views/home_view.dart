@@ -4,7 +4,8 @@ import '../core/di/injection_container.dart';
 import '../services/auth_service.dart';
 import 'auth/login_view.dart';
 import 'admin/users_admin_view.dart';
-import 'materials/materials_view.dart';
+import 'admin/material_types_admin_view.dart';
+import 'batches/batches_view.dart';
 import 'locations/locations_view.dart';
 import 'scanner/scanner_view.dart';
 import 'movements/receipts_view.dart';
@@ -37,13 +38,13 @@ class HomeView extends StatelessWidget {
                 shrinkWrap: true,
                 children: [
                   _DashboardTile(
-                    title: 'Lista materiałów',
-                    subtitle: 'Podgląd aktualnych pozycji',
+                    title: 'Partie materiałów',
+                    subtitle: 'Podgląd partii i odpadów',
                     icon: Icons.inventory_2_rounded,
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute<void>(
-                          builder: (_) => const MaterialsView(),
+                          builder: (_) => const BatchesView(),
                         ),
                       );
                     },
@@ -73,9 +74,22 @@ class HomeView extends StatelessWidget {
                         );
                       },
                     ),
+                  if (authService.isAdmin)
+                    _DashboardTile(
+                      title: 'Katalog materiałów',
+                      subtitle: 'Typy materiałów w magazynie',
+                      icon: Icons.category_rounded,
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const MaterialTypesAdminView(),
+                          ),
+                        );
+                      },
+                    ),
                   _DashboardTile(
                     title: 'Skanowanie',
-                    subtitle: 'Skan kodów i szybkie wyszukiwanie',
+                    subtitle: 'Skan etykiet i szybkie wyszukiwanie',
                     icon: Icons.qr_code_scanner_rounded,
                     onTap: () {
                       Navigator.of(context).push(
@@ -282,12 +296,12 @@ class _AppDrawer extends StatelessWidget {
                 ),
                 ListTile(
                   leading: const Icon(Icons.list_alt_rounded),
-                  title: const Text('Lista materiałów'),
+                  title: const Text('Partie materiałów'),
                   onTap: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).push(
                       MaterialPageRoute<void>(
-                        builder: (_) => const MaterialsView(),
+                        builder: (_) => const BatchesView(),
                       ),
                     );
                   },
@@ -313,6 +327,19 @@ class _AppDrawer extends StatelessWidget {
                       Navigator.of(context).push(
                         MaterialPageRoute<void>(
                           builder: (_) => const UsersAdminView(),
+                        ),
+                      );
+                    },
+                  ),
+                if (authService.isAdmin)
+                  ListTile(
+                    leading: const Icon(Icons.category_rounded),
+                    title: const Text('Katalog materiałów'),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const MaterialTypesAdminView(),
                         ),
                       );
                     },
@@ -381,15 +408,6 @@ class _AppDrawer extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  void _showSoonSnackBar(BuildContext context) {
-    Navigator.of(context).pop();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Ten moduł będzie dodany w kolejnym etapie.'),
-      ),
     );
   }
 }
