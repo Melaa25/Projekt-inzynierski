@@ -10,11 +10,10 @@ class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
+        $singleAdminMode = filter_var(env('SEED_SINGLE_ADMIN', false), FILTER_VALIDATE_BOOLEAN);
+
         User::updateOrCreate(
             ['email' => 'admin@admin.pl'],
             [
@@ -22,9 +21,13 @@ class DatabaseSeeder extends Seeder
                 'login' => 'a.administrator',
                 'password' => '12345678901',
                 'role' => User::ROLE_ADMIN,
-                'must_change_password' => true,
+                'must_change_password' => ! $singleAdminMode,
             ],
         );
+
+        if ($singleAdminMode) {
+            return;
+        }
 
         User::updateOrCreate(
             ['email' => 'kierownik@example.com'],
