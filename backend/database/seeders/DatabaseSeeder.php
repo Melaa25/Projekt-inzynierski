@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
             ['email' => 'admin@admin.pl'],
             [
                 'name' => 'Administrator',
-                'login' => 'a.administrator',
-                'password' => '12345678901',
+                'login' => 'admin',
+                'password' => 'admin123',
                 'role' => User::ROLE_ADMIN,
                 'must_change_password' => ! $singleAdminMode,
             ],
@@ -33,8 +33,8 @@ class DatabaseSeeder extends Seeder
             ['email' => 'kierownik@example.com'],
             [
                 'name' => 'Kierownik',
-                'login' => 'k.kierownik',
-                'password' => '10987654321',
+                'login' => 'kierownik',
+                'password' => 'kierownik123',
                 'role' => User::ROLE_MANAGER,
                 'must_change_password' => true,
             ],
@@ -44,8 +44,8 @@ class DatabaseSeeder extends Seeder
             ['email' => 'pracownik@example.com'],
             [
                 'name' => 'Pracownik',
-                'login' => 'p.pracownik',
-                'password' => '22345678901',
+                'login' => 'pracownik',
+                'password' => 'pracownik123',
                 'role' => User::ROLE_WORKER,
                 'must_change_password' => true,
             ],
