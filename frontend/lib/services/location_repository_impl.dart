@@ -11,38 +11,58 @@ class LocationRepositoryImpl implements LocationRepository {
   LocationRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<String, List<LocationEntity>>> getLocations() async {
+  Future<Either<String, List<LocationEntity>>> getLocations({String? type, int? parentId, bool onlyRoot = false}) async {
     try {
-      final locations = await remoteDataSource.getLocations();
+      final locations = await remoteDataSource.getLocations(type: type, parentId: parentId, onlyRoot: onlyRoot);
       return Right(locations);
-    } on DioException catch (e) {
-      return Left(_mapDioError(e));
-    } catch (_) {
-      return const Left('Wystąpił nieoczekiwany błąd podczas pobierania lokalizacji');
+    } catch (e) {
+      return Left(_error(e));
     }
   }
 
   @override
-  Future<Either<String, LocationEntity>> createLocation({String? code, required String name, String? type, int? parentId, String? description}) async {
+  Future<Either<String, LocationEntity>> createLocation({
+    String? code,
+    required String name,
+    required String type,
+    int? parentId,
+    String? description,
+  }) async {
     try {
-      final location = await remoteDataSource.createLocation(code: code, name: name, type: type, parentId: parentId, description: description);
+      final location = await remoteDataSource.createLocation(
+        code: code,
+        name: name,
+        type: type,
+        parentId: parentId,
+        description: description,
+      );
       return Right(location);
-    } on DioException catch (e) {
-      return Left(_mapDioError(e));
-    } catch (_) {
-      return const Left('Wystąpił nieoczekiwany błąd podczas tworzenia lokalizacji');
+    } catch (e) {
+      return Left(_error(e));
     }
   }
 
   @override
-  Future<Either<String, LocationEntity>> updateLocation({required int id, String? code, required String name, String? type, int? parentId, String? description}) async {
+  Future<Either<String, LocationEntity>> updateLocation({
+    required int id,
+    String? code,
+    required String name,
+    required String type,
+    int? parentId,
+    String? description,
+  }) async {
     try {
-      final location = await remoteDataSource.updateLocation(id: id, code: code, name: name, type: type, parentId: parentId, description: description);
+      final location = await remoteDataSource.updateLocation(
+        id: id,
+        code: code,
+        name: name,
+        type: type,
+        parentId: parentId,
+        description: description,
+      );
       return Right(location);
-    } on DioException catch (e) {
-      return Left(_mapDioError(e));
-    } catch (_) {
-      return const Left('Wystąpił nieoczekiwany błąd podczas edycji lokalizacji');
+    } catch (e) {
+      return Left(_error(e));
     }
   }
 
@@ -51,23 +71,16 @@ class LocationRepositoryImpl implements LocationRepository {
     try {
       await remoteDataSource.deleteLocation(id);
       return const Right(true);
-    } on DioException catch (e) {
-      return Left(_mapDioError(e));
-    } catch (_) {
-      return const Left('Wystąpił nieoczekiwany błąd podczas usuwania lokalizacji');
+    } catch (e) {
+      return Left(_error(e));
     }
   }
 
-  String _mapDioError(DioException e) {
-    if (e.response != null) {
-      final data = e.response?.data;
-      if (data is Map<String, dynamic> && data['message'] is String) {
-        return data['message'] as String;
-      }
-
-      return 'Błąd API: ${e.response?.statusCode}';
+  String _error(dynamic e) {
+    if (e is DioException && e.response?.data is Map && e.response?.data['message'] != null) {
+      return e.response?.data['message'];
     }
 
-    return 'Błąd sieci. Sprawdź połączenie z backendem.';
+    return 'Coś poszło nie tak, spróbuj ponownie.';
   }
 }

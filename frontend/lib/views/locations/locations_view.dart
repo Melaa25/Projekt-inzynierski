@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../components/forms/form_cards.dart';
 import '../../core/di/injection_container.dart';
 import '../../models/location_entity.dart';
 import '../../services/location_repository.dart';
+import 'racks_view.dart';
 
 class LocationsView extends StatefulWidget {
   const LocationsView({super.key});
@@ -14,7 +14,7 @@ class LocationsView extends StatefulWidget {
 
 class _LocationsViewState extends State<LocationsView> {
   bool _isLoading = true;
-  List<LocationEntity> _locations = [];
+  List<LocationEntity> _sectors = [];
 
   @override
   void initState() {
@@ -24,156 +24,48 @@ class _LocationsViewState extends State<LocationsView> {
 
   Future<void> _load() async {
     setState(() => _isLoading = true);
+
     final repo = getIt<LocationRepository>();
-    final res = await repo.getLocations();
+    final res = await repo.getLocations(type: 'sektor');
+
     res.fold(
-      (err) {
-        if (mounted)
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(err)));
-      },
-      (list) {
-        setState(() => _locations = list);
-      },
+      (err) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(err))),
+      (list) => _sectors = list,
     );
-    if (mounted) setState(() => _isLoading = false);
+
+    setState(() => _isLoading = false);
   }
 
-  Future<void> _showEditDialog({LocationEntity? location}) async {
+  Future<void> _showDialog({LocationEntity? sector}) async {
+    final nameController = TextEditingController(text: sector?.name ?? '');
+    final codeController = TextEditingController(text: sector?.code ?? '');
     final formKey = GlobalKey<FormState>();
-    final nameController = TextEditingController(text: location?.name ?? '');
-    final codeController = TextEditingController(text: location?.code ?? '');
-    final typeController = TextEditingController(text: location?.type ?? '');
-    final descController = TextEditingController(
-      text: location?.description ?? '',
-    );
 
-    final result = await showDialog<bool>(
+    final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(
-          location == null ? 'Nowa lokalizacja' : 'Edytuj lokalizację',
-        ),
-        content: SizedBox(
-          width: 420,
-          child: Form(
-            key: formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  FormSectionCard(
-                    title: 'Dane lokalizacji',
-                    subtitle: 'Uzupełnij nazwę, kod i dodatkowy opis.',
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: codeController,
-                          textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            labelText: 'Kod',
-                            prefixIcon: Icon(Icons.qr_code_rounded),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        TextFormField(
-                          controller: nameController,
-                          textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            labelText: 'Nazwa',
-                            prefixIcon: Icon(Icons.place_rounded),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Podaj nazwę lokalizacji';
-                            }
-
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        TextFormField(
-                          controller: typeController,
-                          textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            labelText: 'Typ',
-                            prefixIcon: Icon(Icons.category_rounded),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        TextFormField(
-                          controller: descController,
-                          maxLines: 3,
-                          decoration: const InputDecoration(
-                            labelText: 'Opis',
-                            alignLabelWithHint: true,
-                            prefixIcon: Icon(Icons.notes_rounded),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+        title: Text(sector == null ? 'Nowy sektor' : 'Edytuj sektor'),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(controller: codeController, decoration: const InputDecoration(labelText: 'Kod')),
+              TextFormField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: 'Nazwa'),
+                validator: (v) => v!.trim().isEmpty ? 'Podaj nazwę' : null,
               ),
-            ),
+            ],
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Anuluj'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Anuluj')),
           FilledButton(
-            onPressed: () async {
-              if (!(formKey.currentState?.validate() ?? false)) {
-                return;
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                Navigator.pop(ctx, true);
               }
-
-              final repo = getIt<LocationRepository>();
-              final result = location == null
-                  ? await repo.createLocation(
-                      name: nameController.text.trim(),
-                      code: codeController.text.trim().isEmpty
-                          ? null
-                          : codeController.text.trim(),
-                      type: typeController.text.trim().isEmpty
-                          ? null
-                          : typeController.text.trim(),
-                      description: descController.text.trim().isEmpty
-                          ? null
-                          : descController.text.trim(),
-                    )
-                  : await repo.updateLocation(
-                      id: location.id,
-                      name: nameController.text.trim(),
-                      code: codeController.text.trim().isEmpty
-                          ? null
-                          : codeController.text.trim(),
-                      type: typeController.text.trim().isEmpty
-                          ? null
-                          : typeController.text.trim(),
-                      description: descController.text.trim().isEmpty
-                          ? null
-                          : descController.text.trim(),
-                    );
-
-              if (!mounted) return;
-
-              final hasError = result.fold((err) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(err)));
-                return true;
-              }, (_) => false);
-
-              if (hasError) {
-                return;
-              }
-
-              Navigator.of(ctx).pop(true);
             },
             child: const Text('Zapisz'),
           ),
@@ -181,39 +73,39 @@ class _LocationsViewState extends State<LocationsView> {
       ),
     );
 
-    if (result == true) {
-      await _load();
-    }
+    if (ok != true) return;
+
+    final repo = getIt<LocationRepository>();
+    final result = sector == null
+        ? await repo.createLocation(name: nameController.text.trim(), type: 'sektor', code: codeController.text.trim())
+        : await repo.updateLocation(id: sector.id, name: nameController.text.trim(), type: 'sektor', code: codeController.text.trim());
+
+    result.fold(
+      (err) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(err))),
+      (_) => _load(),
+    );
   }
 
-  Future<void> _delete(LocationEntity location) async {
-    final confirmed = await showDialog<bool>(
+  Future<void> _delete(LocationEntity sector) async {
+    final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Usuń lokalizację'),
-        content: Text('Na pewno usunąć "${location.name}"?'),
+        title: const Text('Usuń sektor'),
+        content: Text('Usunąć "${sector.name}" razem z regałami i półkami?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Anuluj'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('Usuń'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Anuluj')),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Usuń')),
         ],
       ),
     );
-    if (confirmed != true) return;
+
+    if (confirm != true) return;
 
     final repo = getIt<LocationRepository>();
-    final res = await repo.deleteLocation(location.id);
-    res.fold(
-      (err) => ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(err))),
+    final result = await repo.deleteLocation(sector.id);
+
+    result.fold(
+      (err) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(err))),
       (_) => _load(),
     );
   }
@@ -221,49 +113,40 @@ class _LocationsViewState extends State<LocationsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Lokalizacje magazynowe')),
+      appBar: AppBar(title: const Text('Sektory')),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-              onRefresh: _load,
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: _locations.length,
-                itemBuilder: (context, index) {
-                  final loc = _locations[index];
-                  return Card(
-                    child: ListTile(
-                      leading: const Icon(
-                        Icons.place_rounded,
-                        color: Color(0xFF006B38),
+          : _sectors.isEmpty
+              ? const Center(child: Text('Brak sektorów'))
+              : ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: _sectors.length,
+                  itemBuilder: (context, i) {
+                    final sector = _sectors[i];
+                    return Card(
+                      child: ListTile(
+                        title: Text(sector.name),
+                        subtitle: Text('${sector.childrenCount} regałów'),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(icon: const Icon(Icons.edit), onPressed: () => _showDialog(sector: sector)),
+                            IconButton(icon: const Icon(Icons.delete), onPressed: () => _delete(sector)),
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => RacksView(sector: sector)),
+                          );
+                        },
                       ),
-                      title: Text(loc.name),
-                      subtitle: Text(loc.code ?? ''),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            onPressed: () => _showEditDialog(location: loc),
-                            icon: const Icon(Icons.edit),
-                          ),
-                          IconButton(
-                            onPressed: () => _delete(loc),
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.redAccent,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showEditDialog(),
-        label: const Text('Nowa lokalizacja'),
-        icon: const Icon(Icons.add),
+                    );
+                  },
+                ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showDialog(),
+        child: const Icon(Icons.add),
       ),
     );
   }

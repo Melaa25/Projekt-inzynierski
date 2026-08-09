@@ -8,16 +8,18 @@ class LocationModel extends LocationEntity {
     super.type,
     super.parentId,
     super.description,
+    super.childrenCount,
   });
 
   factory LocationModel.fromJson(Map<String, dynamic> json) {
     return LocationModel(
-      id: json['id'] as int,
-      code: json['code'] as String?,
-      name: json['name'] as String,
-      type: json['type'] as String?,
-      parentId: json['parent_id'] as int?,
-      description: json['description'] as String?,
+      id: json['id'],
+      code: json['code'],
+      name: json['name'],
+      type: json['type'],
+      parentId: json['parent_id'],
+      description: json['description'],
+      childrenCount: json['children_count'] ?? 0,
     );
   }
 

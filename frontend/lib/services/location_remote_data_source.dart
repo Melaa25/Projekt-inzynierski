@@ -3,12 +3,12 @@ import 'package:dio/dio.dart';
 import '../models/location_model.dart';
 
 abstract class LocationRemoteDataSource {
-  Future<List<LocationModel>> getLocations();
+  Future<List<LocationModel>> getLocations({String? type, int? parentId, bool onlyRoot = false});
 
   Future<LocationModel> createLocation({
     String? code,
     required String name,
-    String? type,
+    required String type,
     int? parentId,
     String? description,
   });
@@ -17,7 +17,7 @@ abstract class LocationRemoteDataSource {
     required int id,
     String? code,
     required String name,
-    String? type,
+    required String type,
     int? parentId,
     String? description,
   });
@@ -31,16 +31,34 @@ class LocationRemoteDataSourceImpl implements LocationRemoteDataSource {
   LocationRemoteDataSourceImpl(this.dio);
 
   @override
-  Future<List<LocationModel>> getLocations() async {
-    final response = await dio.get('/locations');
+  Future<List<LocationModel>> getLocations({String? type, int? parentId, bool onlyRoot = false}) async {
+    final params = <String, dynamic>{};
+
+    if (type != null) {
+      params['type'] = type;
+    }
+
+    if (onlyRoot) {
+      params['parent_id'] = 'null';
+    } else if (parentId != null) {
+      params['parent_id'] = parentId;
+    }
+
+    final response = await dio.get('/locations', queryParameters: params);
 
     final data = response.data as List<dynamic>;
 
-    return data.map((e) => LocationModel.fromJson(e as Map<String, dynamic>)).toList();
+    return data.map((e) => LocationModel.fromJson(e)).toList();
   }
 
   @override
-  Future<LocationModel> createLocation({String? code, required String name, String? type, int? parentId, String? description}) async {
+  Future<LocationModel> createLocation({
+    String? code,
+    required String name,
+    required String type,
+    int? parentId,
+    String? description,
+  }) async {
     final response = await dio.post('/locations', data: {
       'code': code,
       'name': name,
@@ -49,11 +67,18 @@ class LocationRemoteDataSourceImpl implements LocationRemoteDataSource {
       'description': description,
     });
 
-    return LocationModel.fromJson(response.data as Map<String, dynamic>);
+    return LocationModel.fromJson(response.data);
   }
 
   @override
-  Future<LocationModel> updateLocation({required int id, String? code, required String name, String? type, int? parentId, String? description}) async {
+  Future<LocationModel> updateLocation({
+    required int id,
+    String? code,
+    required String name,
+    required String type,
+    int? parentId,
+    String? description,
+  }) async {
     final response = await dio.put('/locations/$id', data: {
       'code': code,
       'name': name,
@@ -62,7 +87,7 @@ class LocationRemoteDataSourceImpl implements LocationRemoteDataSource {
       'description': description,
     });
 
-    return LocationModel.fromJson(response.data as Map<String, dynamic>);
+    return LocationModel.fromJson(response.data);
   }
 
   @override

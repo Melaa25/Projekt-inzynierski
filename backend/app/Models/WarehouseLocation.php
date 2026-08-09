@@ -23,4 +23,9 @@ class WarehouseLocation extends Model
     {
         return $this->hasMany(self::class, 'parent_id');
     }
+
+    public function batches()
+    {
+        return $this->hasMany(MaterialBatch::class, 'current_location_id');
+    }
 }
