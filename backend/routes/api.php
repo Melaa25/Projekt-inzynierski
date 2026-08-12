@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MaterialBatchController;
 use App\Http\Controllers\MaterialMovementController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseLocationController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,9 @@ Route::middleware('auth:sanctum')->group(function (): void {
 	Route::post('batches/{batch}/status', [MaterialBatchController::class, 'updateStatus']);
 
 	Route::get('movements', [MaterialMovementController::class, 'index']);
+
+	Route::get('reports/stock', [ReportController::class, 'stockCsv']);
+	Route::get('reports/movements', [ReportController::class, 'movementsCsv']);
 
 	Route::get('locations', [WarehouseLocationController::class, 'index']);
 	Route::get('locations/{location}', [WarehouseLocationController::class, 'show']);
