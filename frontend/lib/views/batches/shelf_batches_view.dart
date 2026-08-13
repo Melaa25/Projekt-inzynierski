@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../components/batches/batch_card.dart';
+import '../../components/common/responsive_container.dart';
 import '../../core/di/injection_container.dart';
 import '../../models/location_entity.dart';
 import '../../models/material_batch_entity.dart';
@@ -44,27 +45,29 @@ class _ShelfBatchesViewState extends State<ShelfBatchesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.shelf.name)),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _batches.isEmpty
-              ? const Center(child: Text('Ta półka jest pusta'))
-              : ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: _batches.map((batch) {
-                    return BatchCard(
-                      batch: batch,
-                      isSelectionMode: false,
-                      isSelected: false,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => BatchDetailsView(batchCode: batch.batchCode)),
-                        ).then((_) => _load());
-                      },
-                      onLongPress: () {},
-                    );
-                  }).toList(),
-                ),
+      body: ResponsiveContainer(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _batches.isEmpty
+                ? const Center(child: Text('Ta półka jest pusta'))
+                : ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: _batches.map((batch) {
+                      return BatchCard(
+                        batch: batch,
+                        isSelectionMode: false,
+                        isSelected: false,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => BatchDetailsView(batchCode: batch.batchCode)),
+                          ).then((_) => _load());
+                        },
+                        onLongPress: () {},
+                      );
+                    }).toList(),
+                  ),
+      ),
     );
   }
 }

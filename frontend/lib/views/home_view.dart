@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../components/common/responsive_container.dart';
 import '../core/di/injection_container.dart';
 import '../services/auth_service.dart';
 import 'auth/login_view.dart';
@@ -10,7 +11,6 @@ import 'locations/locations_view.dart';
 import 'scanner/scanner_view.dart';
 import 'movements/receipts_view.dart';
 import 'movements/issues_view.dart';
-import 'reports/reports_view.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -25,123 +25,133 @@ class HomeView extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(title: const Text('Panel główny')),
           drawer: const _AppDrawer(),
-          body: ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              const _HeaderPanel(),
-              const SizedBox(height: 16),
-              GridView.count(
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 1.2,
-                shrinkWrap: true,
-                children: [
-                  _DashboardTile(
-                    title: 'Partie materiałów',
-                    subtitle: 'Podgląd partii i odpadów',
-                    icon: Icons.inventory_2_rounded,
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => const BatchesView(),
+          body: ResponsiveContainer(
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                const _HeaderPanel(),
+                const SizedBox(height: 16),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final columns = constraints.maxWidth > 620 ? 4 : 2;
+
+                    return GridView.count(
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisCount: columns,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 1.2,
+                      shrinkWrap: true,
+                      children: [
+                        _DashboardTile(
+                          title: 'Partie materiałów',
+                          subtitle: 'Podgląd partii i odpadów',
+                          icon: Icons.inventory_2_rounded,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => const BatchesView(),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                  _DashboardTile(
-                    title: 'Lokalizacje',
-                    subtitle: 'Strefy, sektory i miejsca',
-                    icon: Icons.place_rounded,
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => const LocationsView(),
+                        _DashboardTile(
+                          title: 'Lokalizacje',
+                          subtitle: 'Strefy, sektory i miejsca',
+                          icon: Icons.place_rounded,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => const LocationsView(),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                  if (authService.isAdmin)
-                    _DashboardTile(
-                      title: 'Panel administratora',
-                      subtitle: 'Użytkownicy i role',
-                      icon: Icons.admin_panel_settings_rounded,
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                            builder: (_) => const UsersAdminView(),
+                        if (authService.isAdmin)
+                          _DashboardTile(
+                            title: 'Panel administratora',
+                            subtitle: 'Użytkownicy i role',
+                            icon: Icons.admin_panel_settings_rounded,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                  builder: (_) => const UsersAdminView(),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  if (authService.isAdmin)
-                    _DashboardTile(
-                      title: 'Katalog materiałów',
-                      subtitle: 'Typy materiałów w magazynie',
-                      icon: Icons.category_rounded,
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                            builder: (_) => const MaterialTypesAdminView(),
+                        if (authService.isAdmin)
+                          _DashboardTile(
+                            title: 'Katalog materiałów',
+                            subtitle: 'Typy materiałów w magazynie',
+                            icon: Icons.category_rounded,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                  builder: (_) => const MaterialTypesAdminView(),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  _DashboardTile(
-                    title: 'Skanowanie',
-                    subtitle: 'Skan etykiet i szybkie wyszukiwanie',
-                    icon: Icons.qr_code_scanner_rounded,
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => const ScannerView(),
+                        _DashboardTile(
+                          title: 'Skanowanie',
+                          subtitle: 'Skan etykiet i szybkie wyszukiwanie',
+                          icon: Icons.qr_code_scanner_rounded,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => const ScannerView(),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                  _DashboardTile(
-                    title: 'Przyjęcia',
-                    subtitle: 'Rejestr dostaw',
-                    icon: Icons.move_to_inbox_rounded,
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => const ReceiptsView(),
+                        _DashboardTile(
+                          title: 'Przyjęcia',
+                          subtitle: 'Rejestr dostaw',
+                          icon: Icons.move_to_inbox_rounded,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => const ReceiptsView(),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                  _DashboardTile(
-                    title: 'Wydania',
-                    subtitle: 'Historia wyjść z magazynu',
-                    icon: Icons.local_shipping_rounded,
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => const IssuesView(),
+                        _DashboardTile(
+                          title: 'Wydania',
+                          subtitle: 'Historia wyjść z magazynu',
+                          icon: Icons.local_shipping_rounded,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => const IssuesView(),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                  _DashboardTile(
-                    title: 'Raporty',
-                    subtitle: 'Eksport do CSV/Excel',
-                    icon: Icons.insights_rounded,
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => const ReportsView(),
+                        _DashboardTile(
+                          title: 'Raporty',
+                          subtitle: 'Analiza i zestawienia',
+                          icon: Icons.insights_rounded,
+                          onTap: () => _showSoonSnackBar(context),
                         ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },
+    );
+  }
+
+  void _showSoonSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Ten moduł będzie dodany w kolejnym etapie.'),
+      ),
     );
   }
 }
@@ -379,18 +389,6 @@ class _AppDrawer extends StatelessWidget {
                         Navigator.of(context).push(
                           MaterialPageRoute<void>(
                             builder: (_) => const IssuesView(),
-                          ),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.insights_rounded),
-                      title: const Text('Raporty'),
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                            builder: (_) => const ReportsView(),
                           ),
                         );
                       },

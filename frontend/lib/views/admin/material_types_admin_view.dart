@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/common/responsive_container.dart';
 import '../../core/di/injection_container.dart';
 import '../../models/material_type_entity.dart';
 import '../../services/material_type_repository.dart';
@@ -257,63 +258,65 @@ class _MaterialTypesAdminViewState extends State<MaterialTypesAdminView> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: _load,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            if (_isLoading)
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(24),
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            else if (_error != null)
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.error_outline_rounded, color: Colors.redAccent),
-                  title: const Text('Nie udało się pobrać materiałów'),
-                  subtitle: Text(_error!),
-                  trailing: IconButton(
-                    onPressed: _load,
-                    icon: const Icon(Icons.refresh_rounded),
+      body: ResponsiveContainer(
+        child: RefreshIndicator(
+          onRefresh: _load,
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              if (_isLoading)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(24),
+                    child: CircularProgressIndicator(),
                   ),
-                ),
-              )
-            else if (_materials.isEmpty)
-              const Card(
-                child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Text('Brak typów materiałów w katalogu.'),
-                ),
-              )
-            else
-              ..._materials.map(
-                (material) => Card(
+                )
+              else if (_error != null)
+                Card(
                   child: ListTile(
-                    leading: const Icon(Icons.category_rounded, color: Color(0xFF006B38)),
-                    title: Text(material.name),
-                    subtitle: Text(
-                      'Waga: ${material.weight} • Długość: ${material.length} • Grubość: ${material.thickness}',
+                    leading: const Icon(Icons.error_outline_rounded, color: Colors.redAccent),
+                    title: const Text('Nie udało się pobrać materiałów'),
+                    subtitle: Text(_error!),
+                    trailing: IconButton(
+                      onPressed: _load,
+                      icon: const Icon(Icons.refresh_rounded),
                     ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: () => _openMaterialDialog(material: material),
-                          icon: const Icon(Icons.edit_rounded),
-                        ),
-                        IconButton(
-                          onPressed: () => _deleteMaterial(material),
-                          icon: const Icon(Icons.delete_rounded, color: Colors.redAccent),
-                        ),
-                      ],
+                  ),
+                )
+              else if (_materials.isEmpty)
+                const Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Text('Brak typów materiałów w katalogu.'),
+                  ),
+                )
+              else
+                ..._materials.map(
+                  (material) => Card(
+                    child: ListTile(
+                      leading: const Icon(Icons.category_rounded, color: Color(0xFF006B38)),
+                      title: Text(material.name),
+                      subtitle: Text(
+                        'Waga: ${material.weight} • Długość: ${material.length} • Grubość: ${material.thickness}',
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () => _openMaterialDialog(material: material),
+                            icon: const Icon(Icons.edit_rounded),
+                          ),
+                          IconButton(
+                            onPressed: () => _deleteMaterial(material),
+                            icon: const Icon(Icons.delete_rounded, color: Colors.redAccent),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(

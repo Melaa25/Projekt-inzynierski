@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/common/responsive_container.dart';
 import '../../components/forms/form_cards.dart';
 import '../../core/di/injection_container.dart';
 import '../../models/managed_user.dart';
@@ -323,89 +324,91 @@ class _UsersAdminViewState extends State<UsersAdminView> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: _loadUsers,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            Card(
-              child: ListTile(
-                leading: const Icon(
-                  Icons.admin_panel_settings_rounded,
-                  color: Color(0xFF006B38),
-                ),
-                title: Text(currentUser?.name ?? 'Administrator'),
-                subtitle: Text(
-                  currentUser == null
-                      ? 'Administrator'
-                      : '${currentUser.roleLabel} • ${currentUser.login}',
-                ),
-                trailing: const Icon(Icons.verified_rounded),
-              ),
-            ),
-            const SizedBox(height: 12),
-            if (_isLoading)
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(24),
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            else if (_error != null)
+      body: ResponsiveContainer(
+        child: RefreshIndicator(
+          onRefresh: _loadUsers,
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
               Card(
                 child: ListTile(
                   leading: const Icon(
-                    Icons.error_outline_rounded,
-                    color: Colors.redAccent,
+                    Icons.admin_panel_settings_rounded,
+                    color: Color(0xFF006B38),
                   ),
-                  title: const Text('Nie udało się pobrać użytkowników'),
-                  subtitle: Text(_error!),
-                  trailing: IconButton(
-                    onPressed: _loadUsers,
-                    icon: const Icon(Icons.refresh_rounded),
+                  title: Text(currentUser?.name ?? 'Administrator'),
+                  subtitle: Text(
+                    currentUser == null
+                        ? 'Administrator'
+                        : '${currentUser.roleLabel} • ${currentUser.login}',
                   ),
-                ),
-              )
-            else if (_users.isEmpty)
-              const Card(
-                child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Text('Brak użytkowników do wyświetlenia.'),
-                ),
-              )
-            else
-              ..._users.map(
-                (user) => Card(
-                  child: ListTile(
-                    leading: const Icon(
-                      Icons.person_rounded,
-                      color: Color(0xFF006B38),
-                    ),
-                    title: Text(user.name),
-                    subtitle: Text(
-                      '${user.login}\n${user.email}\n${user.roleLabel}',
-                    ),
-                    isThreeLine: true,
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: () => _openUserDialog(user: user),
-                          icon: const Icon(Icons.edit_rounded),
-                        ),
-                        IconButton(
-                          onPressed: () => _deleteUser(user),
-                          icon: const Icon(
-                            Icons.delete_rounded,
-                            color: Colors.redAccent,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  trailing: const Icon(Icons.verified_rounded),
                 ),
               ),
-          ],
+              const SizedBox(height: 12),
+              if (_isLoading)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(24),
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              else if (_error != null)
+                Card(
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.error_outline_rounded,
+                      color: Colors.redAccent,
+                    ),
+                    title: const Text('Nie udało się pobrać użytkowników'),
+                    subtitle: Text(_error!),
+                    trailing: IconButton(
+                      onPressed: _loadUsers,
+                      icon: const Icon(Icons.refresh_rounded),
+                    ),
+                  ),
+                )
+              else if (_users.isEmpty)
+                const Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Text('Brak użytkowników do wyświetlenia.'),
+                  ),
+                )
+              else
+                ..._users.map(
+                  (user) => Card(
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.person_rounded,
+                        color: Color(0xFF006B38),
+                      ),
+                      title: Text(user.name),
+                      subtitle: Text(
+                        '${user.login}\n${user.email}\n${user.roleLabel}',
+                      ),
+                      isThreeLine: true,
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () => _openUserDialog(user: user),
+                            icon: const Icon(Icons.edit_rounded),
+                          ),
+                          IconButton(
+                            onPressed: () => _deleteUser(user),
+                            icon: const Icon(
+                              Icons.delete_rounded,
+                              color: Colors.redAccent,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(

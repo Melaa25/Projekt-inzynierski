@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/common/responsive_container.dart';
 import '../../core/di/injection_container.dart';
 import '../../models/material_movement_entity.dart';
 import '../../services/material_batch_repository.dart';
@@ -53,72 +54,74 @@ class _ReceiptsViewState extends State<ReceiptsView> {
           IconButton(icon: const Icon(Icons.refresh_rounded), onPressed: _load),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Szybkie przyjęcia',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Zeskanuj etykietę na regale, aby dodać ilość do istniejącej partii.',
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      icon: const Icon(Icons.qr_code_scanner_rounded),
-                      label: const Text('Otwórz skaner'),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                            builder: (_) => const ScannerView(),
-                          ),
-                        );
-                      },
+      body: ResponsiveContainer(
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Szybkie przyjęcia',
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Historia przyjęć',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 8),
-                  if (_isLoading) ...[
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Zeskanuj etykietę na regale, aby dodać ilość do istniejącej partii.',
+                    ),
                     const SizedBox(height: 12),
-                    const Center(child: CircularProgressIndicator()),
-                  ] else if (_error != null) ...[
-                    const SizedBox(height: 8),
-                    Text('Błąd: ${_error ?? ''}'),
-                  ] else if (_items.isEmpty) ...[
-                    const SizedBox(height: 8),
-                    const Text('Brak przyjętych partii.'),
-                  ] else ...[
-                    const SizedBox(height: 8),
-                    ..._items.map((m) => _buildMovementTile(m)).toList(),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        icon: const Icon(Icons.qr_code_scanner_rounded),
+                        label: const Text('Otwórz skaner'),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (_) => const ScannerView(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ],
-                ],
+                ),
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 12),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Historia przyjęć',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    if (_isLoading) ...[
+                      const SizedBox(height: 12),
+                      const Center(child: CircularProgressIndicator()),
+                    ] else if (_error != null) ...[
+                      const SizedBox(height: 8),
+                      Text('Błąd: ${_error ?? ''}'),
+                    ] else if (_items.isEmpty) ...[
+                      const SizedBox(height: 8),
+                      const Text('Brak przyjętych partii.'),
+                    ] else ...[
+                      const SizedBox(height: 8),
+                      ..._items.map((m) => _buildMovementTile(m)).toList(),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

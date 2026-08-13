@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/common/responsive_container.dart';
 import '../../core/di/injection_container.dart';
 import '../../models/location_entity.dart';
 import '../../services/location_repository.dart';
@@ -114,36 +115,38 @@ class _LocationsViewState extends State<LocationsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Sektory')),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _sectors.isEmpty
-              ? const Center(child: Text('Brak sektorów'))
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _sectors.length,
-                  itemBuilder: (context, i) {
-                    final sector = _sectors[i];
-                    return Card(
-                      child: ListTile(
-                        title: Text(sector.name),
-                        subtitle: Text('${sector.childrenCount} regałów'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(icon: const Icon(Icons.edit), onPressed: () => _showDialog(sector: sector)),
-                            IconButton(icon: const Icon(Icons.delete), onPressed: () => _delete(sector)),
-                          ],
+      body: ResponsiveContainer(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _sectors.isEmpty
+                ? const Center(child: Text('Brak sektorów'))
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _sectors.length,
+                    itemBuilder: (context, i) {
+                      final sector = _sectors[i];
+                      return Card(
+                        child: ListTile(
+                          title: Text(sector.name),
+                          subtitle: Text('${sector.childrenCount} regałów'),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(icon: const Icon(Icons.edit), onPressed: () => _showDialog(sector: sector)),
+                              IconButton(icon: const Icon(Icons.delete), onPressed: () => _delete(sector)),
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => RacksView(sector: sector)),
+                            );
+                          },
                         ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => RacksView(sector: sector)),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
+                      );
+                    },
+                  ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showDialog(),
         child: const Icon(Icons.add),

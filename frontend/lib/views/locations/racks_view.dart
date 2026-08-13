@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/common/responsive_container.dart';
 import '../../core/di/injection_container.dart';
 import '../../models/location_entity.dart';
 import '../../services/location_repository.dart';
@@ -127,36 +128,38 @@ class _RacksViewState extends State<RacksView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Regały — ${widget.sector.name}')),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _racks.isEmpty
-              ? const Center(child: Text('Brak regałów'))
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _racks.length,
-                  itemBuilder: (context, i) {
-                    final rack = _racks[i];
-                    return Card(
-                      child: ListTile(
-                        title: Text(rack.name),
-                        subtitle: Text('${rack.childrenCount} półek'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(icon: const Icon(Icons.edit), onPressed: () => _showDialog(rack: rack)),
-                            IconButton(icon: const Icon(Icons.delete), onPressed: () => _delete(rack)),
-                          ],
+      body: ResponsiveContainer(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _racks.isEmpty
+                ? const Center(child: Text('Brak regałów'))
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _racks.length,
+                    itemBuilder: (context, i) {
+                      final rack = _racks[i];
+                      return Card(
+                        child: ListTile(
+                          title: Text(rack.name),
+                          subtitle: Text('${rack.childrenCount} półek'),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(icon: const Icon(Icons.edit), onPressed: () => _showDialog(rack: rack)),
+                              IconButton(icon: const Icon(Icons.delete), onPressed: () => _delete(rack)),
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => ShelvesView(rack: rack)),
+                            );
+                          },
                         ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => ShelvesView(rack: rack)),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
+                      );
+                    },
+                  ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showDialog(),
         child: const Icon(Icons.add),

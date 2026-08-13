@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/common/responsive_container.dart';
 import '../../core/di/injection_container.dart';
 import '../../models/batch_status.dart';
 import '../../models/material_batch_entity.dart';
@@ -442,154 +443,156 @@ class _BatchDetailsViewState extends State<BatchDetailsView> {
           ),
           title: const Text('Szczegóły partii'),
         ),
-        body: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _error != null
-                ? Center(child: Padding(padding: const EdgeInsets.all(20), child: Text(_error!)))
-                : _batch == null
-                    ? const SizedBox.shrink()
-                    : ListView(
-                        padding: const EdgeInsets.all(16),
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              gradient: LinearGradient(
-                                colors: _batch!.isWaste
-                                    ? const [Color(0xFF8E1B1B), Color(0xFF5A0F0F)]
-                                    : const [Color(0xFF00A54F), Color(0xFF006B38)],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
+        body: ResponsiveContainer(
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _error != null
+                  ? Center(child: Padding(padding: const EdgeInsets.all(20), child: Text(_error!)))
+                  : _batch == null
+                      ? const SizedBox.shrink()
+                      : ListView(
+                          padding: const EdgeInsets.all(16),
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                gradient: LinearGradient(
+                                  colors: _batch!.isWaste
+                                      ? const [Color(0xFF8E1B1B), Color(0xFF5A0F0F)]
+                                      : const [Color(0xFF00A54F), Color(0xFF006B38)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _batch!.displayName,
+                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'Kod partii: ${_batch!.batchCode}',
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      color: const Color(0xFFE5FFF1),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            const SizedBox(height: 12),
+                            Card(
+                              child: ListTile(
+                                leading: const Icon(Icons.numbers_rounded, color: Color(0xFF006B38)),
+                                title: const Text('Ilość'),
+                                subtitle: Text('${_batch!.quantity} szt.'),
+                              ),
+                            ),
+                            if (_batch!.totalWeight != null)
+                              Card(
+                                child: ListTile(
+                                  leading: const Icon(Icons.scale_rounded, color: Color(0xFF006B38)),
+                                  title: const Text('Waga łączna'),
+                                  subtitle: Text('${_batch!.totalWeight} kg'),
+                                ),
+                              ),
+                            Card(
+                              child: ListTile(
+                                leading: const Icon(Icons.place_rounded, color: Color(0xFF006B38)),
+                                title: const Text('Lokalizacja'),
+                                subtitle: Text(_batch!.currentLocation?.name ?? '-'),
+                              ),
+                            ),
+                            Card(
+                              child: ListTile(
+                                leading: const Icon(Icons.flag_rounded, color: Color(0xFF006B38)),
+                                title: const Text('Status'),
+                                subtitle: Text(BatchStatus.label(_batch!.status)),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
                               children: [
-                                Text(
-                                  _batch!.displayName,
-                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w700,
+                                Expanded(
+                                  child: FilledButton.icon(
+                                    onPressed: _isBusy ? null : _addQuantity,
+                                    icon: const Icon(Icons.add_rounded),
+                                    label: const Text('Dodaj ilość'),
                                   ),
                                 ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'Kod partii: ${_batch!.batchCode}',
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: const Color(0xFFE5FFF1),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: FilledButton.tonalIcon(
+                                    onPressed: _isBusy ? null : _issueQuantity,
+                                    icon: const Icon(Icons.call_made_rounded),
+                                    label: const Text('Wydaj'),
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          const SizedBox(height: 12),
-                          Card(
-                            child: ListTile(
-                              leading: const Icon(Icons.numbers_rounded, color: Color(0xFF006B38)),
-                              title: const Text('Ilość'),
-                              subtitle: Text('${_batch!.quantity} szt.'),
-                            ),
-                          ),
-                          if (_batch!.totalWeight != null)
-                            Card(
-                              child: ListTile(
-                                leading: const Icon(Icons.scale_rounded, color: Color(0xFF006B38)),
-                                title: const Text('Waga łączna'),
-                                subtitle: Text('${_batch!.totalWeight} kg'),
-                              ),
-                            ),
-                          Card(
-                            child: ListTile(
-                              leading: const Icon(Icons.place_rounded, color: Color(0xFF006B38)),
-                              title: const Text('Lokalizacja'),
-                              subtitle: Text(_batch!.currentLocation?.name ?? '-'),
-                            ),
-                          ),
-                          Card(
-                            child: ListTile(
-                              leading: const Icon(Icons.flag_rounded, color: Color(0xFF006B38)),
-                              title: const Text('Status'),
-                              subtitle: Text(BatchStatus.label(_batch!.status)),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: FilledButton.icon(
-                                  onPressed: _isBusy ? null : _addQuantity,
-                                  icon: const Icon(Icons.add_rounded),
-                                  label: const Text('Dodaj ilość'),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: FilledButton.tonalIcon(
-                                  onPressed: _isBusy ? null : _issueQuantity,
-                                  icon: const Icon(Icons.call_made_rounded),
-                                  label: const Text('Wydaj'),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            width: double.infinity,
-                            child: OutlinedButton.icon(
-                              onPressed: _isBusy ? null : _changeStatus,
-                              icon: const Icon(Icons.flag_outlined),
-                              label: const Text('Zmień status'),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            width: double.infinity,
-                            child: OutlinedButton.icon(
-                              onPressed: _printLabel,
-                              icon: const Icon(Icons.print_rounded),
-                              label: const Text('Drukuj etykietę'),
-                            ),
-                          ),
-                          if (canManage) ...[
                             const SizedBox(height: 10),
                             SizedBox(
                               width: double.infinity,
-                              child: FilledButton.tonalIcon(
-                                onPressed: _confirmDelete,
-                                icon: const Icon(Icons.delete_rounded),
-                                label: const Text('Usuń partię'),
-                                style: FilledButton.styleFrom(
-                                  foregroundColor: const Color(0xFF8E1B1B),
+                              child: OutlinedButton.icon(
+                                onPressed: _isBusy ? null : _changeStatus,
+                                icon: const Icon(Icons.flag_outlined),
+                                label: const Text('Zmień status'),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              width: double.infinity,
+                              child: OutlinedButton.icon(
+                                onPressed: _printLabel,
+                                icon: const Icon(Icons.print_rounded),
+                                label: const Text('Drukuj etykietę'),
+                              ),
+                            ),
+                            if (canManage) ...[
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                width: double.infinity,
+                                child: FilledButton.tonalIcon(
+                                  onPressed: _confirmDelete,
+                                  icon: const Icon(Icons.delete_rounded),
+                                  label: const Text('Usuń partię'),
+                                  style: FilledButton.styleFrom(
+                                    foregroundColor: const Color(0xFF8E1B1B),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                          if (_batch!.movements != null && _batch!.movements!.isNotEmpty) ...[
-                            const SizedBox(height: 16),
-                            Text(
-                              'Historia ruchów',
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            ..._batch!.movements!.map(
-                              (movement) => Card(
-                                child: ListTile(
-                                  title: Text(
-                                    '${movement.type} (${movement.quantityDelta > 0 ? '+' : ''}${movement.quantityDelta} szt.)',
-                                  ),
-                                  subtitle: Text(
-                                    '${movement.userName ?? '-'} • ${movement.createdAt.toLocal()}${movement.note != null ? '\n${movement.note}' : ''}',
-                                  ),
-                                  isThreeLine: movement.note != null,
+                            ],
+                            if (_batch!.movements != null && _batch!.movements!.isNotEmpty) ...[
+                              const SizedBox(height: 16),
+                              Text(
+                                'Historia ruchów',
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
-                            ),
+                              const SizedBox(height: 8),
+                              ..._batch!.movements!.map(
+                                (movement) => Card(
+                                  child: ListTile(
+                                    title: Text(
+                                      '${movement.type} (${movement.quantityDelta > 0 ? '+' : ''}${movement.quantityDelta} szt.)',
+                                    ),
+                                    subtitle: Text(
+                                      '${movement.userName ?? '-'} • ${movement.createdAt.toLocal()}${movement.note != null ? '\n${movement.note}' : ''}',
+                                    ),
+                                    isThreeLine: movement.note != null,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ],
-                        ],
-                      ),
+                        ),
+        ),
       ),
     );
   }

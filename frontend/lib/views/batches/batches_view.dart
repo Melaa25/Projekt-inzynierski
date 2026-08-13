@@ -5,6 +5,7 @@ import '../../components/materials/error_state.dart';
 import '../../components/materials/filter_panel.dart';
 import '../../components/materials/summary_panel.dart';
 import '../../components/batches/batch_card.dart';
+import '../../components/common/responsive_container.dart';
 import '../../core/di/injection_container.dart';
 import '../../models/material_batch_entity.dart';
 import '../../services/batch_label_print_service.dart';
@@ -108,83 +109,85 @@ class _BatchesViewState extends State<BatchesView> {
 
           final visibleBatches = _buildVisibleBatches(_batches);
 
-          return RefreshIndicator(
-            onRefresh: () async => _refreshBatches(),
-            child: ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                FilterPanel(
-                  controller: _searchController,
-                  searchQuery: _searchQuery,
-                  onSearchChanged: (value) {
-                    setState(() {
-                      _searchQuery = value;
-                    });
-                    _loadBatches(search: value);
-                  },
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ChoiceChip(
-                        label: const Text('Wszystkie'),
-                        selected: _typeFilter == null,
-                        onSelected: (_) => _applyTypeFilter(null),
+          return ResponsiveContainer(
+            child: RefreshIndicator(
+              onRefresh: () async => _refreshBatches(),
+              child: ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  FilterPanel(
+                    controller: _searchController,
+                    searchQuery: _searchQuery,
+                    onSearchChanged: (value) {
+                      setState(() {
+                        _searchQuery = value;
+                      });
+                      _loadBatches(search: value);
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ChoiceChip(
+                          label: const Text('Wszystkie'),
+                          selected: _typeFilter == null,
+                          onSelected: (_) => _applyTypeFilter(null),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: ChoiceChip(
-                        label: const Text('Materiały'),
-                        selected: _typeFilter == 'material',
-                        onSelected: (_) => _applyTypeFilter('material'),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ChoiceChip(
+                          label: const Text('Materiały'),
+                          selected: _typeFilter == 'material',
+                          onSelected: (_) => _applyTypeFilter('material'),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: ChoiceChip(
-                        label: const Text('Odpady'),
-                        selected: _typeFilter == 'waste',
-                        onSelected: (_) => _applyTypeFilter('waste'),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ChoiceChip(
+                          label: const Text('Odpady'),
+                          selected: _typeFilter == 'waste',
+                          onSelected: (_) => _applyTypeFilter('waste'),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                SummaryPanel(
-                  totalCount: _batches.length,
-                  filteredCount: visibleBatches.length,
-                  isLoading: _isLoading,
-                ),
-                const SizedBox(height: 12),
-                visibleBatches.isEmpty
-                    ? const MaterialsEmptyState()
-                    : Column(
-                        children: visibleBatches
-                            .map(
-                              (batch) => BatchCard(
-                                batch: batch,
-                                isSelectionMode: _isSelectionMode,
-                                isSelected: _selectedBatchIds.contains(batch.id),
-                                onTap: () {
-                                  if (_isSelectionMode) {
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  SummaryPanel(
+                    totalCount: _batches.length,
+                    filteredCount: visibleBatches.length,
+                    isLoading: _isLoading,
+                  ),
+                  const SizedBox(height: 12),
+                  visibleBatches.isEmpty
+                      ? const MaterialsEmptyState()
+                      : Column(
+                          children: visibleBatches
+                              .map(
+                                (batch) => BatchCard(
+                                  batch: batch,
+                                  isSelectionMode: _isSelectionMode,
+                                  isSelected: _selectedBatchIds.contains(batch.id),
+                                  onTap: () {
+                                    if (_isSelectionMode) {
+                                      _toggleSelection(batch);
+                                    } else {
+                                      _openBatchDetails(batch);
+                                    }
+                                  },
+                                  onLongPress: () {
+                                    if (!_isSelectionMode) {
+                                      setState(() => _isSelectionMode = true);
+                                    }
                                     _toggleSelection(batch);
-                                  } else {
-                                    _openBatchDetails(batch);
-                                  }
-                                },
-                                onLongPress: () {
-                                  if (!_isSelectionMode) {
-                                    setState(() => _isSelectionMode = true);
-                                  }
-                                  _toggleSelection(batch);
-                                },
-                              ),
-                            )
-                            .toList(),
-                      ),
-              ],
+                                  },
+                                ),
+                              )
+                              .toList(),
+                        ),
+                ],
+              ),
             ),
           );
         },

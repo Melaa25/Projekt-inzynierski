@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/common/responsive_container.dart';
 import '../../components/forms/form_cards.dart';
 import '../../core/di/injection_container.dart';
 import '../../models/location_entity.dart';
@@ -196,140 +197,142 @@ class _ReceiveWasteViewState extends State<ReceiveWasteView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Przyjęcie odpadu')),
-      body: _isLoadingOptions
-          ? const Center(child: CircularProgressIndicator())
-          : Form(
-              key: _formKey,
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  const FormHeaderCard(
-                    icon: Icons.delete_outline_rounded,
-                    title: 'Przyjęcie odpadu',
-                    subtitle:
-                        'Odpady różnych kształtów na tej samej lokalizacji trafiają pod jeden wspólny kod.',
-                  ),
-                  const SizedBox(height: 16),
-                  FormSectionCard(
-                    title: 'Dane przyjęcia',
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: _quantityController,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: 'Ilość (szt.)',
-                            prefixIcon: Icon(Icons.numbers_rounded),
-                          ),
-                          validator: (value) {
-                            final number = int.tryParse((value ?? '').trim());
-                            if (number == null || number < 1) {
-                              return 'Podaj poprawną ilość';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        TextFormField(
-                          controller: _weightController,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                          decoration: const InputDecoration(
-                            labelText: 'Waga łączna (kg, opcjonalnie)',
-                            prefixIcon: Icon(Icons.scale_rounded),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        DropdownButtonFormField<LocationEntity>(
-                          value: _selectedLocation,
-                          isExpanded: true,
-                          decoration: const InputDecoration(
-                            labelText: 'Lokalizacja',
-                            prefixIcon: Icon(Icons.place_rounded),
-                          ),
-                          items: _locations
-                              .map(
-                                (l) => DropdownMenuItem<LocationEntity>(
-                                  value: l,
-                                  child: Text(l.name),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedLocation = value;
-                              _hasChecked = false;
-                              _existingBatch = null;
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Wybierz lokalizację';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        TextFormField(
-                          controller: _noteController,
-                          maxLines: 2,
-                          decoration: const InputDecoration(
-                            labelText: 'Uwagi (opcjonalnie)',
-                            prefixIcon: Icon(Icons.notes_rounded),
-                          ),
-                        ),
-                      ],
+      body: ResponsiveContainer(
+        child: _isLoadingOptions
+            ? const Center(child: CircularProgressIndicator())
+            : Form(
+                key: _formKey,
+                child: ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    const FormHeaderCard(
+                      icon: Icons.delete_outline_rounded,
+                      title: 'Przyjęcie odpadu',
+                      subtitle:
+                          'Odpady różnych kształtów na tej samej lokalizacji trafiają pod jeden wspólny kod.',
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: _isChecking ? null : _checkLocation,
-                      icon: _isChecking
-                          ? const SizedBox(
-                              width: 14,
-                              height: 14,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Icon(Icons.search_rounded),
-                      label: Text(_isChecking ? 'Sprawdzanie...' : 'Sprawdź lokalizację'),
-                    ),
-                  ),
-                  if (_hasChecked) ...[
-                    const SizedBox(height: 12),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF3F8F4),
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: const Color(0xFFD9E4DC)),
+                    const SizedBox(height: 16),
+                    FormSectionCard(
+                      title: 'Dane przyjęcia',
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _quantityController,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'Ilość (szt.)',
+                              prefixIcon: Icon(Icons.numbers_rounded),
+                            ),
+                            validator: (value) {
+                              final number = int.tryParse((value ?? '').trim());
+                              if (number == null || number < 1) {
+                                return 'Podaj poprawną ilość';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: _weightController,
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            decoration: const InputDecoration(
+                              labelText: 'Waga łączna (kg, opcjonalnie)',
+                              prefixIcon: Icon(Icons.scale_rounded),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          DropdownButtonFormField<LocationEntity>(
+                            value: _selectedLocation,
+                            isExpanded: true,
+                            decoration: const InputDecoration(
+                              labelText: 'Lokalizacja',
+                              prefixIcon: Icon(Icons.place_rounded),
+                            ),
+                            items: _locations
+                                .map(
+                                  (l) => DropdownMenuItem<LocationEntity>(
+                                    value: l,
+                                    child: Text(l.name),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedLocation = value;
+                                _hasChecked = false;
+                                _existingBatch = null;
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Wybierz lokalizację';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: _noteController,
+                            maxLines: 2,
+                            decoration: const InputDecoration(
+                              labelText: 'Uwagi (opcjonalnie)',
+                              prefixIcon: Icon(Icons.notes_rounded),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: Text(
-                        _existingBatch == null
-                            ? 'Na tej lokalizacji nie ma jeszcze partii odpadów. Zostanie utworzona nowa partia i nowa etykieta do wydruku.'
-                            : 'Na tej lokalizacji jest już partia odpadów ${_existingBatch!.batchCode} (${_existingBatch!.quantity} szt.). Nowa ilość zostanie do niej dodana, etykieta pozostaje bez zmian.',
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: _isChecking ? null : _checkLocation,
+                        icon: _isChecking
+                            ? const SizedBox(
+                                width: 14,
+                                height: 14,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : const Icon(Icons.search_rounded),
+                        label: Text(_isChecking ? 'Sprawdzanie...' : 'Sprawdź lokalizację'),
+                      ),
+                    ),
+                    if (_hasChecked) ...[
+                      const SizedBox(height: 12),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF3F8F4),
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: const Color(0xFFD9E4DC)),
+                        ),
+                        child: Text(
+                          _existingBatch == null
+                              ? 'Na tej lokalizacji nie ma jeszcze partii odpadów. Zostanie utworzona nowa partia i nowa etykieta do wydruku.'
+                              : 'Na tej lokalizacji jest już partia odpadów ${_existingBatch!.batchCode} (${_existingBatch!.quantity} szt.). Nowa ilość zostanie do niej dodana, etykieta pozostaje bez zmian.',
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 18),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        onPressed: _isSaving ? null : _submit,
+                        icon: _isSaving
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : const Icon(Icons.save_rounded),
+                        label: Text(_isSaving ? 'Zapisywanie...' : 'Zapisz przyjęcie'),
                       ),
                     ),
                   ],
-                  const SizedBox(height: 18),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      onPressed: _isSaving ? null : _submit,
-                      icon: _isSaving
-                          ? const SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Icon(Icons.save_rounded),
-                      label: Text(_isSaving ? 'Zapisywanie...' : 'Zapisz przyjęcie'),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+      ),
     );
   }
 }

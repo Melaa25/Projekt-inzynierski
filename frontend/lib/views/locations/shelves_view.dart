@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/common/responsive_container.dart';
 import '../../core/di/injection_container.dart';
 import '../../models/location_entity.dart';
 import '../../services/location_repository.dart';
@@ -127,36 +128,38 @@ class _ShelvesViewState extends State<ShelvesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Półki — ${widget.rack.name}')),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _shelves.isEmpty
-              ? const Center(child: Text('Brak półek'))
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _shelves.length,
-                  itemBuilder: (context, i) {
-                    final shelf = _shelves[i];
-                    return Card(
-                      child: ListTile(
-                        title: Text(shelf.name),
-                        subtitle: Text(shelf.code ?? ''),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(icon: const Icon(Icons.edit), onPressed: () => _showDialog(shelf: shelf)),
-                            IconButton(icon: const Icon(Icons.delete), onPressed: () => _delete(shelf)),
-                          ],
+      body: ResponsiveContainer(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _shelves.isEmpty
+                ? const Center(child: Text('Brak półek'))
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _shelves.length,
+                    itemBuilder: (context, i) {
+                      final shelf = _shelves[i];
+                      return Card(
+                        child: ListTile(
+                          title: Text(shelf.name),
+                          subtitle: Text(shelf.code ?? ''),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(icon: const Icon(Icons.edit), onPressed: () => _showDialog(shelf: shelf)),
+                              IconButton(icon: const Icon(Icons.delete), onPressed: () => _delete(shelf)),
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => ShelfBatchesView(shelf: shelf)),
+                            );
+                          },
                         ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => ShelfBatchesView(shelf: shelf)),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
+                      );
+                    },
+                  ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showDialog(),
         child: const Icon(Icons.add),

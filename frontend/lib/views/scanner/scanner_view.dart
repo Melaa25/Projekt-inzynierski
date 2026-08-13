@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
+import '../../components/common/responsive_container.dart';
 import '../../components/scanner/matched_batch_tile.dart';
 import '../../components/scanner/scanner_overlay.dart';
 import '../../core/di/injection_container.dart';
@@ -61,15 +62,17 @@ class _ScannerViewState extends State<ScannerView> {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _buildScannerCard(),
-          const SizedBox(height: 12),
-          _buildManualInputCard(),
-          const SizedBox(height: 12),
-          _buildResultCard(context),
-        ],
+      body: ResponsiveContainer(
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            _buildScannerCard(),
+            const SizedBox(height: 12),
+            _buildManualInputCard(),
+            const SizedBox(height: 12),
+            _buildResultCard(context),
+          ],
+        ),
       ),
     );
   }
