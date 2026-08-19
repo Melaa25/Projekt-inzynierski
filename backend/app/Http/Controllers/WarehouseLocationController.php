@@ -10,7 +10,7 @@ class WarehouseLocationController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = WarehouseLocation::query();
+        $query = WarehouseLocation::query()->with('parent.parent');
 
         if ($request->type) {
             $query->where('type', $request->type);
@@ -27,6 +27,21 @@ class WarehouseLocationController extends Controller
         $locations = $query->withCount('children')->orderBy('name')->get();
 
         return response()->json($locations);
+    }
+
+    public function tree(): JsonResponse
+    {
+        $sectors = WarehouseLocation::where('type', 'sektor')
+            ->whereNull('parent_id')
+            ->with(['children' => function ($query) {
+                $query->orderBy('name')->with(['children' => function ($query) {
+                    $query->orderBy('name');
+                }]);
+            }])
+            ->orderBy('name')
+            ->get();
+
+        return response()->json($sectors);
     }
 
     public function store(Request $request): JsonResponse
@@ -58,13 +73,14 @@ class WarehouseLocationController extends Controller
         }
 
         $location = WarehouseLocation::create($data);
+        $location->load('parent.parent')->loadCount('children');
 
         return response()->json($location, 201);
     }
 
     public function show(WarehouseLocation $location): JsonResponse
     {
-        $location->loadCount('children');
+        $location->load('parent.parent')->loadCount('children');
 
         return response()->json($location);
     }
@@ -80,6 +96,7 @@ class WarehouseLocationController extends Controller
         ]);
 
         $location->update($data);
+        $location->load('parent.parent')->loadCount('children');
 
         return response()->json($location);
     }

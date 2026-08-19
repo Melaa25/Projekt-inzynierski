@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
 
 import '../models/location_model.dart';
+import '../models/location_tree_node.dart';
 
 abstract class LocationRemoteDataSource {
   Future<List<LocationModel>> getLocations({String? type, int? parentId, bool onlyRoot = false});
+
+  Future<List<LocationTreeNode>> getLocationsTree();
 
   Future<LocationModel> createLocation({
     String? code,
@@ -49,6 +52,15 @@ class LocationRemoteDataSourceImpl implements LocationRemoteDataSource {
     final data = response.data as List<dynamic>;
 
     return data.map((e) => LocationModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<List<LocationTreeNode>> getLocationsTree() async {
+    final response = await dio.get('/locations/tree');
+
+    final data = response.data as List<dynamic>;
+
+    return data.map((e) => LocationTreeNode.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   @override

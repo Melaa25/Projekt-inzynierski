@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 import '../models/location_entity.dart';
+import '../models/location_tree_node.dart';
 import 'location_repository.dart';
 import 'location_remote_data_source.dart';
 
@@ -15,6 +16,16 @@ class LocationRepositoryImpl implements LocationRepository {
     try {
       final locations = await remoteDataSource.getLocations(type: type, parentId: parentId, onlyRoot: onlyRoot);
       return Right(locations);
+    } catch (e) {
+      return Left(_error(e));
+    }
+  }
+
+  @override
+  Future<Either<String, List<LocationTreeNode>>> getLocationsTree() async {
+    try {
+      final tree = await remoteDataSource.getLocationsTree();
+      return Right(tree);
     } catch (e) {
       return Left(_error(e));
     }

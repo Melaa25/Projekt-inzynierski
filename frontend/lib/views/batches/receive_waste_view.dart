@@ -51,7 +51,7 @@ class _ReceiveWasteViewState extends State<ReceiveWasteView> {
     });
 
     final repo = getIt<LocationRepository>();
-    final result = await repo.getLocations();
+    final result = await repo.getLocations(type: 'polka');
 
     if (!mounted) {
       return;
@@ -245,14 +245,14 @@ class _ReceiveWasteViewState extends State<ReceiveWasteView> {
                             value: _selectedLocation,
                             isExpanded: true,
                             decoration: const InputDecoration(
-                              labelText: 'Lokalizacja',
-                              prefixIcon: Icon(Icons.place_rounded),
+                              labelText: 'Półka',
+                              prefixIcon: Icon(Icons.inventory_2_outlined),
                             ),
                             items: _locations
                                 .map(
                                   (l) => DropdownMenuItem<LocationEntity>(
                                     value: l,
-                                    child: Text(l.name),
+                                    child: Text(l.fullPath ?? l.name),
                                   ),
                                 )
                                 .toList(),
@@ -265,7 +265,7 @@ class _ReceiveWasteViewState extends State<ReceiveWasteView> {
                             },
                             validator: (value) {
                               if (value == null) {
-                                return 'Wybierz lokalizację';
+                                return 'Wybierz półkę';
                               }
                               return null;
                             },

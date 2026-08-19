@@ -9,6 +9,7 @@ class LocationModel extends LocationEntity {
     super.parentId,
     super.description,
     super.childrenCount,
+    super.fullPath,
   });
 
   factory LocationModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +21,7 @@ class LocationModel extends LocationEntity {
       parentId: json['parent_id'],
       description: json['description'],
       childrenCount: json['children_count'] ?? 0,
+      fullPath: json['full_path'],
     );
   }
 

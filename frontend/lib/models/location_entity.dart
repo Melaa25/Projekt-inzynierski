@@ -8,6 +8,7 @@ class LocationEntity extends Equatable {
   final int? parentId;
   final String? description;
   final int childrenCount;
+  final String? fullPath;
 
   const LocationEntity({
     required this.id,
@@ -17,8 +18,9 @@ class LocationEntity extends Equatable {
     this.parentId,
     this.description,
     this.childrenCount = 0,
+    this.fullPath,
   });
 
   @override
-  List<Object?> get props => [id, code, name, type, parentId, description, childrenCount];
+  List<Object?> get props => [id, code, name, type, parentId, description, childrenCount, fullPath];
 }

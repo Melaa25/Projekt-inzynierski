@@ -56,7 +56,7 @@ class _ReceiveMaterialViewState extends State<ReceiveMaterialView> {
     final locationRepo = getIt<LocationRepository>();
 
     final materialsResult = await materialRepo.getMaterialTypes();
-    final locationsResult = await locationRepo.getLocations();
+    final locationsResult = await locationRepo.getLocations(type: 'polka');
 
     if (!mounted) {
       return;
@@ -218,7 +218,7 @@ class _ReceiveMaterialViewState extends State<ReceiveMaterialView> {
                       icon: Icons.move_to_inbox_rounded,
                       title: 'Przyjęcie materiału',
                       subtitle:
-                          'Wybierz typ materiału, ilość i lokalizację. Jeśli na tej lokalizacji jest już taka sama partia, ilość zostanie do niej dodana.',
+                          'Wybierz typ materiału, ilość i półkę. Jeśli na tej półce jest już taka sama partia, ilość zostanie do niej dodana.',
                     ),
                     const SizedBox(height: 16),
                     FormSectionCard(
@@ -275,14 +275,14 @@ class _ReceiveMaterialViewState extends State<ReceiveMaterialView> {
                             value: _selectedLocation,
                             isExpanded: true,
                             decoration: const InputDecoration(
-                              labelText: 'Lokalizacja',
-                              prefixIcon: Icon(Icons.place_rounded),
+                              labelText: 'Półka',
+                              prefixIcon: Icon(Icons.inventory_2_outlined),
                             ),
                             items: _locations
                                 .map(
                                   (l) => DropdownMenuItem<LocationEntity>(
                                     value: l,
-                                    child: Text(l.name),
+                                    child: Text(l.fullPath ?? l.name),
                                   ),
                                 )
                                 .toList(),
@@ -295,7 +295,7 @@ class _ReceiveMaterialViewState extends State<ReceiveMaterialView> {
                             },
                             validator: (value) {
                               if (value == null) {
-                                return 'Wybierz lokalizację';
+                                return 'Wybierz półkę';
                               }
                               return null;
                             },

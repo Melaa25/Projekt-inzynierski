@@ -1,9 +1,12 @@
 import 'package:dartz/dartz.dart';
 
 import '../models/location_entity.dart';
+import '../models/location_tree_node.dart';
 
 abstract class LocationRepository {
   Future<Either<String, List<LocationEntity>>> getLocations({String? type, int? parentId, bool onlyRoot = false});
+
+  Future<Either<String, List<LocationTreeNode>>> getLocationsTree();
 
   Future<Either<String, LocationEntity>> createLocation({
     String? code,

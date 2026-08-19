@@ -14,6 +14,10 @@ class WarehouseLocation extends Model
         'description',
     ];
 
+    protected $appends = [
+        'full_path',
+    ];
+
     public function parent()
     {
         return $this->belongsTo(self::class, 'parent_id');
@@ -27,5 +31,18 @@ class WarehouseLocation extends Model
     public function batches()
     {
         return $this->hasMany(MaterialBatch::class, 'current_location_id');
+    }
+
+    public function getFullPathAttribute(): string
+    {
+        $parts = [$this->name];
+        $node = $this->parent;
+
+        while ($node) {
+            $parts[] = $node->name;
+            $node = $node->parent;
+        }
+
+        return implode(' → ', array_reverse($parts));
     }
 }

@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
 	Route::get('reports/stock', [ReportController::class, 'stockCsv']);
 	Route::get('reports/movements', [ReportController::class, 'movementsCsv']);
 
+	Route::get('locations/tree', [WarehouseLocationController::class, 'tree']);
 	Route::get('locations', [WarehouseLocationController::class, 'index']);
 	Route::get('locations/{location}', [WarehouseLocationController::class, 'show']);
 
