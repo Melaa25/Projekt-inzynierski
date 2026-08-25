@@ -17,6 +17,8 @@ class IssueMaterialBatchRequest extends FormRequest
             'quantity' => ['required', 'integer', 'min:1'],
             'destination' => ['nullable', 'string', 'max:255'],
             'note' => ['nullable', 'string'],
+            'client_operation_id' => ['nullable', 'string', 'max:64'],
+            'performed_at' => ['nullable', 'date'],
         ];
     }
 }

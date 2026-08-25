@@ -9,6 +9,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseLocationController;
 use Illuminate\Support\Facades\Route;
 
+// Lekki endpoint do sprawdzania, czy backend jest osiagalny (uzywany przez tryb offline w aplikacji).
+Route::get('ping', function () {
+	return response()->json(['status' => 'ok']);
+});
+
 Route::post('auth/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function (): void {
@@ -32,7 +37,6 @@ Route::middleware('auth:sanctum')->group(function (): void {
 	Route::get('reports/stock', [ReportController::class, 'stockCsv']);
 	Route::get('reports/movements', [ReportController::class, 'movementsCsv']);
 
-	Route::get('locations/tree', [WarehouseLocationController::class, 'tree']);
 	Route::get('locations', [WarehouseLocationController::class, 'index']);
 	Route::get('locations/{location}', [WarehouseLocationController::class, 'show']);
 

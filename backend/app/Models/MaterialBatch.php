@@ -28,6 +28,7 @@ class MaterialBatch extends Model
         'type',
         'material_id',
         'batch_code',
+        'client_uuid',
         'quantity',
         'total_weight',
         'current_location_id',
@@ -41,6 +42,19 @@ class MaterialBatch extends Model
                 $batch->batch_code = static::generateBatchCode($batch);
             }
         });
+    }
+
+    /**
+     * Partie mozna wskazac w URL zarowno przez id nadane przez baze,
+     * jak i przez client_uuid nadany offline przez aplikacje mobilna.
+     */
+    public function resolveRouteBinding($value, $field = null)
+    {
+        if (is_numeric($value)) {
+            return $this->where('id', (int) $value)->firstOrFail();
+        }
+
+        return $this->where('client_uuid', $value)->firstOrFail();
     }
 
     public function material()

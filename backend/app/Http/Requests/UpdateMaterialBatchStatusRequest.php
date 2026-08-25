@@ -18,6 +18,8 @@ class UpdateMaterialBatchStatusRequest extends FormRequest
         return [
             'status' => ['required', Rule::in(MaterialBatch::ALLOWED_STATUSES)],
             'note' => ['nullable', 'string'],
+            'client_operation_id' => ['nullable', 'string', 'max:64'],
+            'performed_at' => ['nullable', 'date'],
         ];
     }
 }

@@ -88,6 +88,18 @@ class MaterialBatchController extends Controller
     {
         $data = $request->validated();
 
+        // Idempotencja - jesli ta operacja zostala juz zsynchronizowana, zwracamy jej wynik zamiast tworzyc drugi ruch.
+        if (! empty($data['client_operation_id'])) {
+            $alreadySynced = MaterialMovement::where('client_operation_id', $data['client_operation_id'])->first();
+
+            if ($alreadySynced !== null) {
+                $syncedBatch = $alreadySynced->batch;
+                $syncedBatch->load(['material', 'currentLocation']);
+
+                return response()->json($syncedBatch);
+            }
+        }
+
         $batch = DB::transaction(function () use ($data, $request) {
             $targetBatch = null;
 
@@ -99,6 +111,13 @@ class MaterialBatchController extends Controller
                     ->where('current_location_id', $data['location_id'])
                     ->where('status', MaterialBatch::STATUS_IN_STOCK)
                     ->first();
+            } elseif (! empty($data['target_batch_uuid'])) {
+                // Partia zostala utworzona offline i nie ma jeszcze id z bazy.
+                $targetBatch = MaterialBatch::query()
+                    ->where('client_uuid', $data['target_batch_uuid'])
+                    ->where('type', MaterialBatch::TYPE_MATERIAL)
+                    ->where('status', MaterialBatch::STATUS_IN_STOCK)
+                    ->first();
             }
 
             if ($targetBatch !== null) {
@@ -108,6 +127,7 @@ class MaterialBatchController extends Controller
                 $batch = MaterialBatch::create([
                     'type' => MaterialBatch::TYPE_MATERIAL,
                     'material_id' => $data['material_id'],
+                    'client_uuid' => $data['client_uuid'] ?? null,
                     'quantity' => $data['quantity'],
                     'current_location_id' => $data['location_id'],
                     'status' => MaterialBatch::STATUS_IN_STOCK,
@@ -117,9 +137,11 @@ class MaterialBatchController extends Controller
             MaterialMovement::create([
                 'material_batch_id' => $batch->id,
                 'user_id' => $request->user()?->id,
+                'client_operation_id' => $data['client_operation_id'] ?? null,
                 'type' => 'received',
                 'quantity_delta' => $data['quantity'],
                 'note' => $data['note'] ?? null,
+                'performed_at' => $data['performed_at'] ?? now(),
                 'previous_status' => MaterialBatch::STATUS_IN_STOCK,
                 'new_status' => MaterialBatch::STATUS_IN_STOCK,
                 'previous_location_id' => $data['location_id'],
@@ -138,6 +160,17 @@ class MaterialBatchController extends Controller
     {
         $data = $request->validated();
 
+        if (! empty($data['client_operation_id'])) {
+            $alreadySynced = MaterialMovement::where('client_operation_id', $data['client_operation_id'])->first();
+
+            if ($alreadySynced !== null) {
+                $syncedBatch = $alreadySynced->batch;
+                $syncedBatch->load(['material', 'currentLocation']);
+
+                return response()->json($syncedBatch);
+            }
+        }
+
         $batch = DB::transaction(function () use ($data, $request) {
             $targetBatch = null;
 
@@ -146,6 +179,12 @@ class MaterialBatchController extends Controller
                     ->where('id', $data['target_batch_id'])
                     ->where('type', MaterialBatch::TYPE_WASTE)
                     ->where('current_location_id', $data['location_id'])
+                    ->where('status', MaterialBatch::STATUS_IN_STOCK)
+                    ->first();
+            } elseif (! empty($data['target_batch_uuid'])) {
+                $targetBatch = MaterialBatch::query()
+                    ->where('client_uuid', $data['target_batch_uuid'])
+                    ->where('type', MaterialBatch::TYPE_WASTE)
                     ->where('status', MaterialBatch::STATUS_IN_STOCK)
                     ->first();
             }
@@ -160,6 +199,7 @@ class MaterialBatchController extends Controller
                 $batch = MaterialBatch::create([
                     'type' => MaterialBatch::TYPE_WASTE,
                     'material_id' => null,
+                    'client_uuid' => $data['client_uuid'] ?? null,
                     'quantity' => $data['quantity'],
                     'total_weight' => $data['weight'] ?? null,
                     'current_location_id' => $data['location_id'],
@@ -170,9 +210,11 @@ class MaterialBatchController extends Controller
             MaterialMovement::create([
                 'material_batch_id' => $batch->id,
                 'user_id' => $request->user()?->id,
+                'client_operation_id' => $data['client_operation_id'] ?? null,
                 'type' => 'received',
                 'quantity_delta' => $data['quantity'],
                 'note' => $data['note'] ?? null,
+                'performed_at' => $data['performed_at'] ?? now(),
                 'previous_status' => MaterialBatch::STATUS_IN_STOCK,
                 'new_status' => MaterialBatch::STATUS_IN_STOCK,
                 'previous_location_id' => $data['location_id'],
@@ -191,6 +233,17 @@ class MaterialBatchController extends Controller
     {
         $data = $request->validated();
 
+        if (! empty($data['client_operation_id'])) {
+            $alreadySynced = MaterialMovement::where('client_operation_id', $data['client_operation_id'])->first();
+
+            if ($alreadySynced !== null) {
+                $syncedBatch = $alreadySynced->batch;
+                $syncedBatch->load(['material', 'currentLocation']);
+
+                return response()->json($syncedBatch);
+            }
+        }
+
         if ($data['quantity'] > $batch->quantity) {
             return response()->json([
                 'message' => 'Ilość do wydania przekracza dostępną ilość w partii.',
@@ -203,10 +256,12 @@ class MaterialBatchController extends Controller
             MaterialMovement::create([
                 'material_batch_id' => $batch->id,
                 'user_id' => $request->user()?->id,
+                'client_operation_id' => $data['client_operation_id'] ?? null,
                 'type' => 'issued',
                 'quantity_delta' => -$data['quantity'],
                 'destination' => $data['destination'] ?? null,
                 'note' => $data['note'] ?? null,
+                'performed_at' => $data['performed_at'] ?? now(),
                 'previous_status' => $batch->status,
                 'new_status' => $batch->status,
                 'previous_location_id' => $batch->current_location_id,
@@ -222,6 +277,18 @@ class MaterialBatchController extends Controller
     public function updateStatus(UpdateMaterialBatchStatusRequest $request, MaterialBatch $batch): JsonResponse
     {
         $data = $request->validated();
+
+        if (! empty($data['client_operation_id'])) {
+            $alreadySynced = MaterialMovement::where('client_operation_id', $data['client_operation_id'])->first();
+
+            if ($alreadySynced !== null) {
+                $syncedBatch = $alreadySynced->batch;
+                $syncedBatch->load(['material', 'currentLocation']);
+
+                return response()->json($syncedBatch);
+            }
+        }
+
         $previousStatus = $batch->status;
 
         DB::transaction(function () use ($data, $batch, $request, $previousStatus): void {
@@ -230,9 +297,11 @@ class MaterialBatchController extends Controller
             MaterialMovement::create([
                 'material_batch_id' => $batch->id,
                 'user_id' => $request->user()?->id,
+                'client_operation_id' => $data['client_operation_id'] ?? null,
                 'type' => 'status_change',
                 'quantity_delta' => 0,
                 'note' => $data['note'] ?? null,
+                'performed_at' => $data['performed_at'] ?? now(),
                 'previous_status' => $previousStatus,
                 'new_status' => $data['status'],
                 'previous_location_id' => $batch->current_location_id,

@@ -18,7 +18,11 @@ class ReceiveMaterialBatchRequest extends FormRequest
             'quantity' => ['required', 'integer', 'min:1'],
             'location_id' => ['required', 'integer', 'exists:warehouse_locations,id'],
             'target_batch_id' => ['nullable', 'integer', 'exists:material_batches,id'],
+            'target_batch_uuid' => ['nullable', 'string', 'max:64'],
             'note' => ['nullable', 'string'],
+            'client_uuid' => ['nullable', 'string', 'max:64'],
+            'client_operation_id' => ['nullable', 'string', 'max:64'],
+            'performed_at' => ['nullable', 'date'],
         ];
     }
 }

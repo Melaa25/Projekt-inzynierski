@@ -9,14 +9,20 @@ class MaterialMovement extends Model
     protected $fillable = [
         'material_batch_id',
         'user_id',
+        'client_operation_id',
         'type',
         'quantity_delta',
         'destination',
         'note',
+        'performed_at',
         'previous_status',
         'new_status',
         'previous_location_id',
         'new_location_id',
+    ];
+
+    protected $casts = [
+        'performed_at' => 'datetime',
     ];
 
     public function batch()
