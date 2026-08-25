@@ -5,14 +5,11 @@ import '../models/material_movement_entity.dart';
 import '../models/material_movement_model.dart';
 
 abstract class MaterialBatchRemoteDataSource {
-  Future<List<MaterialBatchModel>> getBatches({
-    String? search,
-    String? status,
-    String? type,
-    int? locationId,
-  });
+  /// Pobiera wszystkie partie bez filtrow - filtrowanie robimy w repozytorium,
+  /// zeby dzialalo tak samo online i offline.
+  Future<List<Map<String, dynamic>>> getBatchesRaw();
 
-  Future<MaterialBatchModel> getBatchByCode(String batchCode);
+  Future<Map<String, dynamic>> getBatchRawByCode(String batchCode);
 
   Future<MaterialBatchModel?> suggestExisting({
     int? materialId,
@@ -20,34 +17,14 @@ abstract class MaterialBatchRemoteDataSource {
     required int locationId,
   });
 
-  Future<MaterialBatchModel> receiveMaterial({
-    required int materialId,
-    required int quantity,
-    required int locationId,
-    int? targetBatchId,
-    String? note,
-  });
+  Future<MaterialBatchModel> receiveMaterial(Map<String, dynamic> payload);
 
-  Future<MaterialBatchModel> receiveWaste({
-    required int quantity,
-    double? weight,
-    required int locationId,
-    int? targetBatchId,
-    String? note,
-  });
+  Future<MaterialBatchModel> receiveWaste(Map<String, dynamic> payload);
 
-  Future<MaterialBatchModel> issueBatch({
-    required int batchId,
-    required int quantity,
-    String? destination,
-    String? note,
-  });
+  /// batchIdentifier to id z serwera albo client_uuid partii utworzonej offline.
+  Future<MaterialBatchModel> issueBatch(String batchIdentifier, Map<String, dynamic> payload);
 
-  Future<MaterialBatchModel> updateBatchStatus({
-    required int batchId,
-    required String status,
-    String? note,
-  });
+  Future<MaterialBatchModel> updateBatchStatus(String batchIdentifier, Map<String, dynamic> payload);
 
   Future<void> deleteBatch(int batchId);
 
@@ -60,45 +37,19 @@ class MaterialBatchRemoteDataSourceImpl implements MaterialBatchRemoteDataSource
   MaterialBatchRemoteDataSourceImpl(this.dio);
 
   @override
-  Future<List<MaterialBatchModel>> getBatches({
-    String? search,
-    String? status,
-    String? type,
-    int? locationId,
-  }) async {
-    final queryParameters = <String, dynamic>{};
-
-    if (search != null && search.trim().isNotEmpty) {
-      queryParameters['search'] = search.trim();
-    }
-
-    if (status != null && status.trim().isNotEmpty) {
-      queryParameters['status'] = status.trim();
-    }
-
-    if (type != null && type.trim().isNotEmpty) {
-      queryParameters['type'] = type.trim();
-    }
-
-    if (locationId != null) {
-      queryParameters['location_id'] = locationId;
-    }
-
-    final response = await dio.get(
-      '/batches',
-      queryParameters: queryParameters.isEmpty ? null : queryParameters,
-    );
+  Future<List<Map<String, dynamic>>> getBatchesRaw() async {
+    final response = await dio.get('/batches');
 
     final data = response.data as List<dynamic>;
 
-    return data.map((item) => MaterialBatchModel.fromJson(item as Map<String, dynamic>)).toList();
+    return data.map((item) => item as Map<String, dynamic>).toList();
   }
 
   @override
-  Future<MaterialBatchModel> getBatchByCode(String batchCode) async {
+  Future<Map<String, dynamic>> getBatchRawByCode(String batchCode) async {
     final response = await dio.get('/batches/$batchCode');
 
-    return MaterialBatchModel.fromJson(response.data as Map<String, dynamic>);
+    return response.data as Map<String, dynamic>;
   }
 
   @override
@@ -123,81 +74,29 @@ class MaterialBatchRemoteDataSourceImpl implements MaterialBatchRemoteDataSource
   }
 
   @override
-  Future<MaterialBatchModel> receiveMaterial({
-    required int materialId,
-    required int quantity,
-    required int locationId,
-    int? targetBatchId,
-    String? note,
-  }) async {
-    final response = await dio.post(
-      '/batches/receive-material',
-      data: {
-        'material_id': materialId,
-        'quantity': quantity,
-        'location_id': locationId,
-        'target_batch_id': targetBatchId,
-        'note': note,
-      },
-    );
+  Future<MaterialBatchModel> receiveMaterial(Map<String, dynamic> payload) async {
+    final response = await dio.post('/batches/receive-material', data: payload);
 
     return MaterialBatchModel.fromJson(response.data as Map<String, dynamic>);
   }
 
   @override
-  Future<MaterialBatchModel> receiveWaste({
-    required int quantity,
-    double? weight,
-    required int locationId,
-    int? targetBatchId,
-    String? note,
-  }) async {
-    final response = await dio.post(
-      '/batches/receive-waste',
-      data: {
-        'quantity': quantity,
-        'weight': weight,
-        'location_id': locationId,
-        'target_batch_id': targetBatchId,
-        'note': note,
-      },
-    );
+  Future<MaterialBatchModel> receiveWaste(Map<String, dynamic> payload) async {
+    final response = await dio.post('/batches/receive-waste', data: payload);
 
     return MaterialBatchModel.fromJson(response.data as Map<String, dynamic>);
   }
 
   @override
-  Future<MaterialBatchModel> issueBatch({
-    required int batchId,
-    required int quantity,
-    String? destination,
-    String? note,
-  }) async {
-    final response = await dio.post(
-      '/batches/$batchId/issue',
-      data: {
-        'quantity': quantity,
-        'destination': destination,
-        'note': note,
-      },
-    );
+  Future<MaterialBatchModel> issueBatch(String batchIdentifier, Map<String, dynamic> payload) async {
+    final response = await dio.post('/batches/$batchIdentifier/issue', data: payload);
 
     return MaterialBatchModel.fromJson(response.data as Map<String, dynamic>);
   }
 
   @override
-  Future<MaterialBatchModel> updateBatchStatus({
-    required int batchId,
-    required String status,
-    String? note,
-  }) async {
-    final response = await dio.post(
-      '/batches/$batchId/status',
-      data: {
-        'status': status,
-        'note': note,
-      },
-    );
+  Future<MaterialBatchModel> updateBatchStatus(String batchIdentifier, Map<String, dynamic> payload) async {
+    final response = await dio.post('/batches/$batchIdentifier/status', data: payload);
 
     return MaterialBatchModel.fromJson(response.data as Map<String, dynamic>);
   }

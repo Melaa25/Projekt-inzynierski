@@ -1,12 +1,11 @@
 import 'package:dio/dio.dart';
 
 import '../models/location_model.dart';
-import '../models/location_tree_node.dart';
 
 abstract class LocationRemoteDataSource {
-  Future<List<LocationModel>> getLocations({String? type, int? parentId, bool onlyRoot = false});
-
-  Future<List<LocationTreeNode>> getLocationsTree();
+  /// Pobiera wszystkie lokalizacje - filtrowanie po typie i rodzicu
+  /// odbywa sie w repozytorium, zeby dzialalo takze offline.
+  Future<List<Map<String, dynamic>>> getLocationsRaw();
 
   Future<LocationModel> createLocation({
     String? code,
@@ -34,33 +33,12 @@ class LocationRemoteDataSourceImpl implements LocationRemoteDataSource {
   LocationRemoteDataSourceImpl(this.dio);
 
   @override
-  Future<List<LocationModel>> getLocations({String? type, int? parentId, bool onlyRoot = false}) async {
-    final params = <String, dynamic>{};
-
-    if (type != null) {
-      params['type'] = type;
-    }
-
-    if (onlyRoot) {
-      params['parent_id'] = 'null';
-    } else if (parentId != null) {
-      params['parent_id'] = parentId;
-    }
-
-    final response = await dio.get('/locations', queryParameters: params);
+  Future<List<Map<String, dynamic>>> getLocationsRaw() async {
+    final response = await dio.get('/locations');
 
     final data = response.data as List<dynamic>;
 
-    return data.map((e) => LocationModel.fromJson(e)).toList();
-  }
-
-  @override
-  Future<List<LocationTreeNode>> getLocationsTree() async {
-    final response = await dio.get('/locations/tree');
-
-    final data = response.data as List<dynamic>;
-
-    return data.map((e) => LocationTreeNode.fromJson(e as Map<String, dynamic>)).toList();
+    return data.map((e) => e as Map<String, dynamic>).toList();
   }
 
   @override

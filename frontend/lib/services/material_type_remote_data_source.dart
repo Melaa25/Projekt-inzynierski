@@ -3,7 +3,8 @@ import 'package:dio/dio.dart';
 import '../models/material_type_model.dart';
 
 abstract class MaterialTypeRemoteDataSource {
-  Future<List<MaterialTypeModel>> getMaterialTypes({String? search});
+  /// Pobiera caly katalog materialow - wyszukiwanie robimy w repozytorium.
+  Future<List<Map<String, dynamic>>> getMaterialTypesRaw();
 
   Future<MaterialTypeModel> createMaterialType({
     required String name,
@@ -29,15 +30,12 @@ class MaterialTypeRemoteDataSourceImpl implements MaterialTypeRemoteDataSource {
   MaterialTypeRemoteDataSourceImpl(this.dio);
 
   @override
-  Future<List<MaterialTypeModel>> getMaterialTypes({String? search}) async {
-    final response = await dio.get(
-      '/materials',
-      queryParameters: (search == null || search.trim().isEmpty) ? null : {'search': search.trim()},
-    );
+  Future<List<Map<String, dynamic>>> getMaterialTypesRaw() async {
+    final response = await dio.get('/materials');
 
     final data = response.data as List<dynamic>;
 
-    return data.map((item) => MaterialTypeModel.fromJson(item as Map<String, dynamic>)).toList();
+    return data.map((item) => item as Map<String, dynamic>).toList();
   }
 
   @override

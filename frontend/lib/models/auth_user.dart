@@ -26,6 +26,18 @@ class AuthUser {
     );
   }
 
+  /// Uzywane przy zapisie sesji do pamieci lokalnej.
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'login': login,
+      'email': email,
+      'role': role,
+      'must_change_password': mustChangePassword,
+    };
+  }
+
   String get roleLabel {
     switch (role) {
       case 'admin':

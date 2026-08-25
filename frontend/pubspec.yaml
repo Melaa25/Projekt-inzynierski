@@ -24,6 +24,9 @@ dependencies:
   mobile_scanner: ^7.1.1
   path_provider: ^2.1.5
   share_plus: ^10.1.4
+  hive_ce: ^2.19.3
+  hive_ce_flutter: ^2.3.4
+  uuid: ^4.6.0
 
 dev_dependencies:
   flutter_test:
