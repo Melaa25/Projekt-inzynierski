@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:frontend/models/location_tree_node.dart';
 
 import '../core/offline/api_cache.dart';
 import '../core/offline/connectivity_service.dart';
 import '../models/location_entity.dart';
 import '../models/location_model.dart';
+import '../models/location_tree_node.dart';
 import 'location_repository.dart';
 import 'location_remote_data_source.dart';
 
@@ -57,9 +57,76 @@ class LocationRepositoryImpl implements LocationRepository {
       return true;
     }).toList();
 
-    filtered.sort((a, b) => a.name.compareTo(b.name));
+    // Sortujemy po pelnej sciezce, zeby polki z jednego sektora i regalu
+    // byly obok siebie na liscie wyboru.
+    filtered.sort((a, b) => (a.fullPath ?? a.name).compareTo(b.fullPath ?? b.name));
 
     return Right(filtered);
+  }
+
+  @override
+  Future<Either<String, List<LocationTreeNode>>> getLocationsTree() async {
+    List<Map<String, dynamic>> raw;
+
+    try {
+      raw = await remoteDataSource.getLocationsRaw();
+      await cache.saveList(ApiCache.locationsKey, raw);
+      connectivity.reportSuccess();
+    } on DioException catch (e) {
+      if (!_isNetworkError(e)) {
+        return Left(_error(e));
+      }
+
+      connectivity.reportFailure();
+      raw = cache.readList(ApiCache.locationsKey);
+
+      if (raw.isEmpty) {
+        return const Left('Brak połączenia z serwerem i brak zapisanych lokalizacji w pamięci telefonu.');
+      }
+    } catch (e) {
+      return Left(_error(e));
+    }
+
+    final locations = raw.map((item) => LocationModel.fromJson(item)).toList();
+
+    return Right(_buildTree(locations));
+  }
+
+  /// Sklada plaska liste lokalizacji w drzewo sektor -> regal -> polka.
+  List<LocationTreeNode> _buildTree(List<LocationModel> locations) {
+    final sectors = locations.where((l) => l.type == 'sektor' && l.parentId == null).toList()
+      ..sort((a, b) => a.name.compareTo(b.name));
+
+    return sectors.map((sector) {
+      final racks = locations.where((l) => l.type == 'regal' && l.parentId == sector.id).toList()
+        ..sort((a, b) => a.name.compareTo(b.name));
+
+      return LocationTreeNode(
+        id: sector.id,
+        code: sector.code,
+        name: sector.name,
+        type: 'sektor',
+        children: racks.map((rack) {
+          final shelves = locations.where((l) => l.type == 'polka' && l.parentId == rack.id).toList()
+            ..sort((a, b) => a.name.compareTo(b.name));
+
+          return LocationTreeNode(
+            id: rack.id,
+            code: rack.code,
+            name: rack.name,
+            type: 'regal',
+            children: shelves
+                .map((shelf) => LocationTreeNode(
+                      id: shelf.id,
+                      code: shelf.code,
+                      name: shelf.name,
+                      type: 'polka',
+                    ))
+                .toList(),
+          );
+        }).toList(),
+      );
+    }).toList();
   }
 
   @override
@@ -132,11 +199,5 @@ class LocationRepositoryImpl implements LocationRepository {
     }
 
     return 'Coś poszło nie tak, spróbuj ponownie.';
-  }
-
-  @override
-  Future<Either<String, List<LocationTreeNode>>> getLocationsTree() {
-    // TODO: implement getLocationsTree
-    throw UnimplementedError();
   }
 }

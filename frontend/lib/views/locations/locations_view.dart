@@ -7,6 +7,22 @@ import '../../models/location_tree_node.dart';
 import '../../services/location_repository.dart';
 import '../batches/shelf_batches_view.dart';
 
+/// Polska odmiana rzeczownika po liczbie, np. 1 regał / 2 regały / 5 regałów.
+String odmiana(int liczba, String jeden, String kilka, String wiele) {
+  if (liczba == 1) {
+    return '1 $jeden';
+  }
+
+  final ostatnia = liczba % 10;
+  final dwieOstatnie = liczba % 100;
+
+  if (ostatnia >= 2 && ostatnia <= 4 && (dwieOstatnie < 12 || dwieOstatnie > 14)) {
+    return '$liczba $kilka';
+  }
+
+  return '$liczba $wiele';
+}
+
 class LocationsView extends StatefulWidget {
   const LocationsView({super.key});
 
@@ -144,14 +160,18 @@ class _LocationsViewState extends State<LocationsView> {
     );
   }
 
-  Widget _buildShelfRow(LocationTreeNode shelf) {
+  Widget _buildShelfRow(LocationTreeNode shelf, LocationTreeNode rack, LocationTreeNode sector) {
     return Padding(
       padding: const EdgeInsets.only(left: 32, right: 8),
       child: ListTile(
         dense: true,
         leading: const Icon(Icons.inventory_2_outlined),
         title: Text(shelf.name),
-        subtitle: shelf.code != null && shelf.code!.isNotEmpty ? Text(shelf.code!) : null,
+        subtitle: Text(
+          shelf.code != null && shelf.code!.isNotEmpty
+              ? '${shelf.code} • ${sector.name} → ${rack.name}'
+              : '${sector.name} → ${rack.name}',
+        ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -160,6 +180,7 @@ class _LocationsViewState extends State<LocationsView> {
               onPressed: () => _showLocationDialog(
                 type: 'polka',
                 title: 'Edytuj półkę',
+                parentId: rack.id,
                 id: shelf.id,
                 initialName: shelf.name,
                 initialCode: shelf.code,
@@ -185,14 +206,15 @@ class _LocationsViewState extends State<LocationsView> {
     );
   }
 
-  Widget _buildRackTile(LocationTreeNode rack) {
+  Widget _buildRackTile(LocationTreeNode rack, LocationTreeNode sector) {
     return Padding(
       padding: const EdgeInsets.only(left: 16),
       child: ExpansionTile(
         leading: const Icon(Icons.view_column_outlined),
         title: Text(rack.name),
         subtitle: Text(
-          '${rack.code != null && rack.code!.isNotEmpty ? '${rack.code} • ' : ''}${rack.children.length} półek',
+          '${rack.code != null && rack.code!.isNotEmpty ? '${rack.code} • ' : ''}'
+          '${odmiana(rack.children.length, 'półka', 'półki', 'półek')} • sektor ${sector.name}',
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -211,7 +233,7 @@ class _LocationsViewState extends State<LocationsView> {
               onPressed: () => _showLocationDialog(
                 type: 'regal',
                 title: 'Edytuj regał',
-                parentId: rack.id,
+                parentId: sector.id,
                 id: rack.id,
                 initialName: rack.name,
                 initialCode: rack.code,
@@ -226,7 +248,7 @@ class _LocationsViewState extends State<LocationsView> {
         ),
         children: rack.children.isEmpty
             ? [const Padding(padding: EdgeInsets.only(left: 32, bottom: 8), child: Text('Brak półek'))]
-            : rack.children.map(_buildShelfRow).toList(),
+            : rack.children.map((shelf) => _buildShelfRow(shelf, rack, sector)).toList(),
       ),
     );
   }
@@ -238,7 +260,8 @@ class _LocationsViewState extends State<LocationsView> {
         leading: const Icon(Icons.warehouse_outlined),
         title: Text(sector.name, style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text(
-          '${sector.code != null && sector.code!.isNotEmpty ? '${sector.code} • ' : ''}${sector.children.length} regałów',
+          '${sector.code != null && sector.code!.isNotEmpty ? '${sector.code} • ' : ''}'
+          '${odmiana(sector.children.length, 'regał', 'regały', 'regałów')}',
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -271,7 +294,7 @@ class _LocationsViewState extends State<LocationsView> {
         ),
         children: sector.children.isEmpty
             ? [const Padding(padding: EdgeInsets.only(left: 16, bottom: 8), child: Text('Brak regałów'))]
-            : sector.children.map(_buildRackTile).toList(),
+            : sector.children.map((rack) => _buildRackTile(rack, sector)).toList(),
       ),
     );
   }

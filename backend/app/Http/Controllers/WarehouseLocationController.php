@@ -29,21 +29,6 @@ class WarehouseLocationController extends Controller
         return response()->json($locations);
     }
 
-    public function tree(): JsonResponse
-    {
-        $sectors = WarehouseLocation::where('type', 'sektor')
-            ->whereNull('parent_id')
-            ->with(['children' => function ($query) {
-                $query->orderBy('name')->with(['children' => function ($query) {
-                    $query->orderBy('name');
-                }]);
-            }])
-            ->orderBy('name')
-            ->get();
-
-        return response()->json($sectors);
-    }
-
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([
@@ -95,6 +80,32 @@ class WarehouseLocationController extends Controller
             'description' => 'nullable|string',
         ]);
 
+        if ($data['type'] != $location->type) {
+            return response()->json(['message' => 'Nie można zmienić typu istniejącej lokalizacji.'], 422);
+        }
+
+        if (!empty($data['parent_id']) && $data['parent_id'] == $location->id) {
+            return response()->json(['message' => 'Lokalizacja nie może być swoim własnym rodzicem.'], 422);
+        }
+
+        if ($data['type'] == 'sektor' && !empty($data['parent_id'])) {
+            return response()->json(['message' => 'Sektor nie może mieć rodzica.'], 422);
+        }
+
+        if ($data['type'] == 'regal') {
+            $parent = WarehouseLocation::find($data['parent_id'] ?? null);
+            if (!$parent || $parent->type != 'sektor') {
+                return response()->json(['message' => 'Regał musi być przypisany do sektora.'], 422);
+            }
+        }
+
+        if ($data['type'] == 'polka') {
+            $parent = WarehouseLocation::find($data['parent_id'] ?? null);
+            if (!$parent || $parent->type != 'regal') {
+                return response()->json(['message' => 'Półka musi być przypisana do regału.'], 422);
+            }
+        }
+
         $location->update($data);
         $location->load('parent.parent')->loadCount('children');
 
@@ -103,6 +114,12 @@ class WarehouseLocationController extends Controller
 
     public function destroy(WarehouseLocation $location): JsonResponse
     {
+        // Kasujemy od dolu, zeby nie zostawic regalow i polek bez rodzica.
+        foreach ($location->children as $child) {
+            $child->children()->delete();
+        }
+
+        $location->children()->delete();
         $location->delete();
 
         return response()->json(['message' => 'Location deleted successfully']);
