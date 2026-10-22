@@ -11,6 +11,7 @@ import 'locations/locations_view.dart';
 import 'scanner/scanner_view.dart';
 import 'movements/receipts_view.dart';
 import 'movements/issues_view.dart';
+import 'reports/reports_view.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -133,7 +134,13 @@ class HomeView extends StatelessWidget {
                           title: 'Raporty',
                           subtitle: 'Analiza i zestawienia',
                           icon: Icons.insights_rounded,
-                          onTap: () => _showSoonSnackBar(context),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => const ReportsView(),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     );
@@ -144,14 +151,6 @@ class HomeView extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  void _showSoonSnackBar(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Ten moduł będzie dodany w kolejnym etapie.'),
-      ),
     );
   }
 }
@@ -389,6 +388,18 @@ class _AppDrawer extends StatelessWidget {
                         Navigator.of(context).push(
                           MaterialPageRoute<void>(
                             builder: (_) => const IssuesView(),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.insights_rounded),
+                      title: const Text('Raporty'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) => const ReportsView(),
                           ),
                         );
                       },
