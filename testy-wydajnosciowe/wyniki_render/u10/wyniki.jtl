@@ -1,0 +1,286 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1794671336446,2084,00 Logowanie,200,OK,Przygotowanie - logowanie i wybor partii 1-1,text,true,,685,272,1,1,https://projekt-inzynierski-3wfv.onrender.com/api/auth/login,2078,0,538
+1794671338571,1174,00 Pobranie partii do testu,200,OK,Przygotowanie - logowanie i wybor partii 1-1,text,true,,355629,283,1,1,https://projekt-inzynierski-3wfv.onrender.com/api/batches,1125,0,0
+1794671342460,110,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-1,text,true,,492,280,2,3,https://projekt-inzynierski-3wfv.onrender.com/api/ping,110,0,48
+1794671343879,106,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-2,text,true,,492,280,3,4,https://projekt-inzynierski-3wfv.onrender.com/api/ping,106,0,48
+1794671344517,1211,02 Lista partii,200,OK,Pracownicy magazynu 1-1,text,true,,355615,283,5,6,https://projekt-inzynierski-3wfv.onrender.com/api/batches,1176,0,0
+1794671344730,1062,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-3,text,true,,492,280,5,6,https://projekt-inzynierski-3wfv.onrender.com/api/ping,1062,0,37
+1794671345665,1465,02 Lista partii,200,OK,Pracownicy magazynu 1-2,text,true,,355623,283,6,7,https://projekt-inzynierski-3wfv.onrender.com/api/batches,1430,0,0
+1794671345728,1451,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-4,text,true,,492,280,6,7,https://projekt-inzynierski-3wfv.onrender.com/api/ping,1451,0,36
+1794671346199,1297,06 Raport stanu magazynowego (CSV),200,OK,Kierownik - raporty 2-1,text,true,,26659,289,1,8,https://projekt-inzynierski-3wfv.onrender.com/api/reports/stock,1098,0,34
+1794671346633,949,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-5,text,true,,492,280,7,8,https://projekt-inzynierski-3wfv.onrender.com/api/ping,949,0,40
+1794671346872,919,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-1,text,true,,29340,291,7,8,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0300,919,0,0
+1794671347315,1759,02 Lista partii,200,OK,Pracownicy magazynu 1-3,text,true,,355612,283,8,9,https://projekt-inzynierski-3wfv.onrender.com/api/batches,1686,0,0
+1794671347859,1227,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-6,text,true,,492,280,8,9,https://projekt-inzynierski-3wfv.onrender.com/api/ping,1226,0,37
+1794671348746,1649,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-7,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,1649,0,35
+1794671348308,2120,02 Lista partii,200,OK,Pracownicy magazynu 1-4,text,true,,355600,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,2076,0,0
+1794671348869,1732,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-2,text,true,,13884,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0299,1732,0,0
+1794671348964,2960,02 Lista partii,200,OK,Pracownicy magazynu 1-5,text,true,,355607,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,2930,0,0
+1794671348985,3102,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-1,text,true,,1667,512,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,3102,0,0
+1794671349300,2795,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-8,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,2794,0,39
+1794671350190,3222,02 Lista partii,200,OK,Pracownicy magazynu 1-6,text,true,,355615,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,3187,0,0
+1794671350816,2706,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-3,text,true,,13884,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0298,2705,0,0
+1794671350882,2704,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-9,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,2704,0,35
+1794671351510,3208,02 Lista partii,200,OK,Pracownicy magazynu 1-7,text,true,,355623,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,3178,0,0
+1794671351666,3122,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-10,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,3122,0,32
+1794671352415,2588,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-4,text,true,,13884,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0297,2588,0,0
+1794671352450,2834,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-2,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2833,0,0
+1794671352499,3594,07 Raport historii ruchow (CSV),200,OK,Kierownik - raporty 2-1,text,true,,43998,293,1,11,https://projekt-inzynierski-3wfv.onrender.com/api/reports/movements,3086,0,0
+1794671353054,3242,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-5,text,true,,13884,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0296,3242,0,0
+1794671353482,3087,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-1,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/300/issue,3086,0,0
+1794671353998,4109,02 Lista partii,200,OK,Pracownicy magazynu 1-8,text,true,,355630,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,4078,0,0
+1794671355302,3274,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-3,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,3274,0,0
+1794671355343,4632,02 Lista partii,200,OK,Pracownicy magazynu 1-9,text,true,,355615,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,4547,0,0
+1794671355414,4681,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-6,text,true,,2291,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0295,4681,0,0
+1794671355827,4456,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-7,text,true,,2291,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0294,4456,0,0
+1794671355929,5580,02 Lista partii,200,OK,Pracownicy magazynu 1-10,text,true,,355644,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,5546,0,0
+1794671356564,5044,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-2,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/299/issue,5044,0,0
+1794671356582,5214,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-4,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,5214,0,0
+1794671357909,4085,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-5,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,4084,0,0
+1794671358541,3459,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-1,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,3459,0,0
+1794671359362,2853,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-8,text,true,,2291,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0293,2852,0,0
+1794671360212,2170,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-3,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/298/issue,2170,0,0
+1794671361097,1682,06 Raport stanu magazynowego (CSV),200,OK,Kierownik - raporty 2-1,text,true,,26757,289,1,11,https://projekt-inzynierski-3wfv.onrender.com/api/reports/stock,1401,0,0
+1794671361430,1469,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-9,text,true,,2291,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0292,1469,0,0
+1794671361583,1504,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-6,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,1503,0,0
+1794671361665,1615,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-7,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,1615,0,0
+1794671362853,621,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-10,text,true,,2291,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0291,550,0,0
+1794671363183,1595,02 Lista partii,200,OK,Pracownicy magazynu 1-1,text,true,,355639,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,1509,0,0
+1794671363292,1495,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-2,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,1495,0,0
+1794671363499,1379,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-3,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,1379,0,0
+1794671363680,1322,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-4,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/297/issue,1322,0,0
+1794671363977,1208,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-5,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/296/issue,1208,0,0
+1794671364152,1234,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-8,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,1233,0,0
+1794671364528,1053,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-7,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/294/issue,1053,0,0
+1794671364626,1154,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-9,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,1154,0,0
+1794671364776,1197,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-10,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,1197,0,0
+1794671364857,1235,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-6,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/295/issue,1235,0,0
+1794671366117,55,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-4,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,55,0,0
+1794671366229,1372,02 Lista partii,200,OK,Pracownicy magazynu 1-3,text,true,,355631,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,1359,0,0
+1794671366590,1293,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-1,text,true,,30628,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0300,1292,0,0
+1794671366655,2547,02 Lista partii,200,OK,Pracownicy magazynu 1-2,text,true,,355616,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,2527,0,0
+1794671366992,2398,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-8,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/293/issue,2398,0,0
+1794671367044,2534,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-10,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/291/issue,2534,0,0
+1794671367180,2406,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-5,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,2406,0,0
+1794671367344,2439,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-9,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/292/issue,2438,0,0
+1794671367538,2252,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-7,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,2252,0,0
+1794671367781,2799,07 Raport historii ruchow (CSV),200,OK,Kierownik - raporty 2-1,text,true,,45540,293,1,11,https://projekt-inzynierski-3wfv.onrender.com/api/reports/movements,2299,0,0
+1794671367857,2819,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-6,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,2818,0,0
+1794671368158,3636,02 Lista partii,200,OK,Pracownicy magazynu 1-4,text,true,,355614,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,3624,0,0
+1794671368896,3086,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-3,text,true,,15172,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0298,3086,0,0
+1794671369697,2476,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-1,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2471,0,0
+1794671370821,2575,02 Lista partii,200,OK,Pracownicy magazynu 1-7,text,true,,355615,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,2567,0,0
+1794671371035,3664,02 Lista partii,200,OK,Pracownicy magazynu 1-5,text,true,,355624,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,3644,0,0
+1794671371082,3798,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-8,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,3798,0,0
+1794671371338,3547,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-10,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,3547,0,0
+1794671371554,3425,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-9,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,3425,0,0
+1794671371033,4074,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-2,text,true,,15172,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0299,4074,0,0
+1794671371857,4236,02 Lista partii,200,OK,Pracownicy magazynu 1-6,text,true,,355624,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,4222,0,0
+1794671373040,3158,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-4,text,true,,15172,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0297,3158,0,0
+1794671373640,2754,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-3,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2754,0,0
+1794671373658,2936,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-1,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/300/issue,2936,0,0
+1794671375317,1472,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-7,text,true,,3579,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0294,1472,0,0
+1794671375586,1692,06 Raport stanu magazynowego (CSV),200,OK,Kierownik - raporty 2-1,text,true,,26715,289,1,11,https://projekt-inzynierski-3wfv.onrender.com/api/reports/stock,1392,0,0
+1794671376126,1354,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-5,text,true,,15172,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0296,1354,0,0
+1794671376258,2344,02 Lista partii,200,OK,Pracownicy magazynu 1-8,text,true,,355637,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,2322,0,0
+1794671376345,2366,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-2,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2366,0,0
+1794671376785,3218,02 Lista partii,200,OK,Pracownicy magazynu 1-10,text,true,,355630,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,3199,0,0
+1794671376794,4620,02 Lista partii,200,OK,Pracownicy magazynu 1-9,text,true,,355631,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,4599,0,0
+1794671377361,4229,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-6,text,true,,3579,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0295,4228,0,0
+1794671377476,4232,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-3,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/298/issue,4232,0,0
+1794671377865,4033,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-4,text,true,,1667,512,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,4033,0,0
+1794671377942,4037,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-1,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,4037,0,0
+1794671378108,4066,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-7,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,4066,0,0
+1794671379390,2982,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-5,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2982,0,0
+1794671379935,2555,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-8,text,true,,3579,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0293,2555,0,0
+1794671380462,2215,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-2,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/299/issue,2215,0,0
+1794671381062,1739,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-10,text,true,,3579,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0291,1739,0,0
+1794671382281,1203,07 Raport historii ruchow (CSV),200,OK,Kierownik - raporty 2-1,text,true,,46702,293,1,11,https://projekt-inzynierski-3wfv.onrender.com/api/reports/movements,713,0,0
+1794671382863,716,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-3,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,716,0,0
+1794671383030,664,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-9,text,true,,3579,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0292,664,0,0
+1794671383384,495,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-6,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,494,0,0
+1794671383507,1595,02 Lista partii,200,OK,Pracownicy magazynu 1-1,text,true,,355629,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,1578,0,0
+1794671383509,1693,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-4,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/297/issue,1693,0,0
+1794671383592,1889,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-5,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/296/issue,1888,0,0
+1794671383870,1807,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-7,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/294/issue,1806,0,0
+1794671384252,1549,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-8,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,1549,0,0
+1794671384276,1717,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-10,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,1717,0,0
+1794671384389,1612,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-2,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,1612,0,0
+1794671384925,1264,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-6,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/295/issue,1263,0,0
+1794671385246,2440,02 Lista partii,200,OK,Pracownicy magazynu 1-3,text,true,,355628,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,2434,0,0
+1794671385365,2513,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-9,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2513,0,0
+1794671386681,1402,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-1,text,true,,31916,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0300,1402,0,0
+1794671386982,1193,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-4,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,1193,0,0
+1794671387179,1003,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-5,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,1003,0,0
+1794671387415,858,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-7,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,772,0,0
+1794671387436,1068,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-8,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/293/issue,1068,0,0
+1794671387514,1261,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-10,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/291/issue,1260,0,0
+1794671388060,2224,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-6,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,2224,0,0
+1794671387882,2569,02 Lista partii,200,OK,Pracownicy magazynu 1-2,text,true,,355637,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,2393,0,0
+1794671388484,2210,06 Raport stanu magazynowego (CSV),200,OK,Kierownik - raporty 2-1,text,true,,26715,289,1,11,https://projekt-inzynierski-3wfv.onrender.com/api/reports/stock,2000,0,0
+1794671388850,2343,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-3,text,true,,16468,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0298,2342,0,0
+1794671389149,2624,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-9,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/292/issue,2624,0,0
+1794671389715,3375,02 Lista partii,200,OK,Pracownicy magazynu 1-7,text,true,,355608,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,3368,0,0
+1794671389690,3592,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-1,text,true,,1667,512,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,3592,0,0
+1794671389985,4807,02 Lista partii,200,OK,Pracownicy magazynu 1-4,text,true,,355616,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,4800,0,0
+1794671390110,6097,02 Lista partii,200,OK,Pracownicy magazynu 1-5,text,true,,355630,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,6078,0,0
+1794671390220,6059,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-10,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,6059,0,0
+1794671390440,5846,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-8,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,5846,0,0
+1794671391515,6273,02 Lista partii,200,OK,Pracownicy magazynu 1-6,text,true,,355616,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,6265,0,0
+1794671391988,6000,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-2,text,true,,16460,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0299,6000,0,0
+1794671392601,5774,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-3,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,5774,0,0
+1794671393083,5302,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-9,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,5302,0,0
+1794671394479,4306,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-7,text,true,,4868,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0294,4306,0,0
+1794671394909,4074,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-1,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/300/issue,4073,0,0
+1794671395697,4080,07 Raport historii ruchow (CSV),200,OK,Kierownik - raporty 2-1,text,true,,47885,293,1,11,https://projekt-inzynierski-3wfv.onrender.com/api/reports/movements,3495,0,0
+1794671395975,4006,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-4,text,true,,16460,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0297,4006,0,0
+1794671397438,2739,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-5,text,true,,16460,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0296,2739,0,0
+1794671397902,3498,02 Lista partii,200,OK,Pracownicy magazynu 1-8,text,true,,355623,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,3480,0,0
+1794671398052,4653,02 Lista partii,200,OK,Pracownicy magazynu 1-10,text,true,,355616,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,4632,0,0
+1794671399655,3153,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-6,text,true,,4868,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0295,3153,0,0
+1794671399718,4486,02 Lista partii,200,OK,Pracownicy magazynu 1-9,text,true,,355623,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,4466,0,0
+1794671399719,4662,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-2,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,4662,0,0
+1794671400099,4474,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-3,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/298/issue,4472,0,0
+1794671400496,4272,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-7,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,4272,0,0
+1794671400528,4261,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-1,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,4261,0,0
+1794671400992,3998,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-4,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,3998,0,0
+1794671401946,3252,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-5,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,3252,0,0
+1794671402511,2874,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-8,text,true,,4868,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0293,2874,0,0
+1794671403973,1603,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-10,text,true,,4868,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0291,1603,0,0
+1794671404345,1428,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-6,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,1427,0,0
+1794671404780,1398,06 Raport stanu magazynowego (CSV),200,OK,Kierownik - raporty 2-1,text,true,,26745,289,1,11,https://projekt-inzynierski-3wfv.onrender.com/api/reports/stock,1109,0,0
+1794671405808,1922,02 Lista partii,200,OK,Pracownicy magazynu 1-1,text,true,,355612,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,1875,0,36
+1794671405873,2019,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-2,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/299/issue,2019,0,37
+1794671406131,1946,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-9,text,true,,4868,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0292,1946,0,0
+1794671406150,2525,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-4,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/297/issue,2525,0,33
+1794671406345,2337,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-3,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,2337,0,30
+1794671406464,2340,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-7,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/294/issue,2340,0,0
+1794671406482,2509,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-5,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/296/issue,2509,0,0
+1794671406860,2335,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-10,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2335,0,0
+1794671406911,2471,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-8,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2471,0,0
+1794671409307,287,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-2,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,287,0,0
+1794671406980,2616,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-6,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/295/issue,2616,0,0
+1794671409342,541,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-1,text,true,,33212,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0300,541,0,0
+1794671409725,161,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-4,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,161,0,0
+1794671409995,97,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-9,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,96,0,0
+1794671410061,81,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-5,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,81,0,29
+1794671410181,1226,02 Lista partii,200,OK,Pracownicy magazynu 1-3,text,true,,355630,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,1194,0,0
+1794671410440,1137,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-10,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/291/issue,1136,0,0
+1794671410758,827,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-7,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,827,0,32
+1794671410981,607,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-6,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,607,0,32
+1794671411027,787,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-1,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,786,0,0
+1794671411149,1860,02 Lista partii,200,OK,Pracownicy magazynu 1-2,text,true,,355607,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,1827,0,0
+1794671411181,2513,07 Raport historii ruchow (CSV),200,OK,Kierownik - raporty 2-1,text,true,,49440,293,1,11,https://projekt-inzynierski-3wfv.onrender.com/api/reports/movements,2000,0,33
+1794671411365,2550,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-8,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/293/issue,2550,0,33
+1794671411524,3601,02 Lista partii,200,OK,Pracownicy magazynu 1-4,text,true,,355607,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,3556,0,0
+1794671411530,3762,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-9,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/292/issue,3762,0,31
+1794671411688,5229,02 Lista partii,200,OK,Pracownicy magazynu 1-5,text,true,,355622,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,5197,0,0
+1794671412491,4697,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-3,text,true,,17755,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0298,4697,0,0
+1794671413096,5723,02 Lista partii,200,OK,Pracownicy magazynu 1-7,text,true,,355600,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,5681,0,0
+1794671413217,7096,02 Lista partii,200,OK,Pracownicy magazynu 1-6,text,true,,355615,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,7066,0,0
+1794671413278,7100,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-10,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,7100,0,31
+1794671413539,6969,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-1,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/300/issue,6969,0,0
+1794671414638,6055,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-2,text,true,,17748,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0299,6055,0,0
+1794671415892,4887,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-8,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,4887,0,0
+1794671416384,4402,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-9,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,4401,0,0
+1794671416857,4224,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-4,text,true,,17748,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0297,4224,0,0
+1794671418372,2918,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-5,text,true,,17748,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0296,2908,0,0
+1794671418696,3084,06 Raport stanu magazynowego (CSV),200,OK,Kierownik - raporty 2-1,text,true,,26765,289,1,11,https://projekt-inzynierski-3wfv.onrender.com/api/reports/stock,2791,0,0
+1794671418874,3121,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-3,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,3120,0,0
+1794671420728,1456,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-7,text,true,,6156,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0294,1456,0,0
+1794671421541,2178,02 Lista partii,200,OK,Pracownicy magazynu 1-10,text,true,,355612,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,2139,0,0
+1794671421830,3359,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-1,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,3359,0,0
+1794671421825,3379,02 Lista partii,200,OK,Pracownicy magazynu 1-8,text,true,,355624,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,3351,0,0
+1794671421834,3646,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-2,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,3646,0,0
+1794671422015,3658,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-6,text,true,,6156,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0295,3590,0,0
+1794671422049,5267,02 Lista partii,200,OK,Pracownicy magazynu 1-9,text,true,,355615,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,5240,0,0
+1794671422377,5215,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-4,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,5214,0,0
+1794671422554,5225,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-5,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,5225,0,0
+1794671423039,4865,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-3,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/298/issue,4865,0,0
+1794671423231,4867,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-7,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,4867,0,0
+1794671425365,3223,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-10,text,true,,6156,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0291,3223,0,0
+1794671426348,2436,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-8,text,true,,6156,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0293,2436,0,0
+1794671426708,3690,02 Lista partii,200,OK,Pracownicy magazynu 1-1,text,true,,355606,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,3672,0,0
+1794671426756,3825,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-2,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/299/issue,3825,0,0
+1794671426782,4594,07 Raport historii ruchow (CSV),200,OK,Kierownik - raporty 2-1,text,true,,50508,293,1,11,https://projekt-inzynierski-3wfv.onrender.com/api/reports/movements,4003,0,0
+1794671427144,4358,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-6,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,4357,0,0
+1794671428898,2799,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-4,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/297/issue,2798,0,0
+1794671429213,2490,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-3,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,2490,0,0
+1794671429246,2647,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-5,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/296/issue,2647,0,0
+1794671429285,2810,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-9,text,true,,6156,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0292,2809,0,0
+1794671429748,2554,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-10,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2554,0,0
+1794671429947,2562,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-7,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/294/issue,2562,0,0
+1794671430661,2409,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-8,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2409,0,0
+1794671432102,1691,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-1,text,true,,34492,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0300,1690,0,0
+1794671432570,1316,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-2,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,1315,0,0
+1794671433334,556,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-5,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,556,0,0
+1794671433294,812,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-6,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/295/issue,811,0,0
+1794671433489,2126,02 Lista partii,200,OK,Pracownicy magazynu 1-3,text,true,,355629,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,2104,0,0
+1794671433524,2278,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-10,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/291/issue,2277,0,0
+1794671433601,2279,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-4,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,2279,0,0
+1794671433922,2162,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-9,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2162,0,0
+1794671434143,2064,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-8,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/293/issue,2064,0,0
+1794671434290,1992,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-7,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,1992,0,0
+1794671434980,2809,02 Lista partii,200,OK,Pracownicy magazynu 1-2,text,true,,355622,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,2800,0,0
+1794671435107,2896,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-1,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2896,0,0
+1794671435136,4557,02 Lista partii,200,OK,Pracownicy magazynu 1-5,text,true,,355630,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,4548,0,0
+1794671435198,4578,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-6,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,4578,0,0
+1794671436378,3900,06 Raport stanu magazynowego (CSV),200,OK,Kierownik - raporty 2-1,text,true,,26960,289,1,11,https://projekt-inzynierski-3wfv.onrender.com/api/reports/stock,3522,0,0
+1794671437165,4435,02 Lista partii,200,OK,Pracownicy magazynu 1-4,text,true,,355630,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,4413,0,0
+1794671437355,4427,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-3,text,true,,19036,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0298,4426,0,0
+1794671437361,4613,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-9,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/292/issue,4613,0,0
+1794671437489,4493,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-10,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,4493,0,0
+1794671437864,4121,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-8,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,4121,0,0
+1794671438175,5129,02 Lista partii,200,OK,Pracownicy magazynu 1-7,text,true,,355608,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,5106,0,0
+1794671439466,4111,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-2,text,true,,19036,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0299,4111,0,0
+1794671439658,4125,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-1,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/300/issue,4125,0,0
+1794671441054,4236,02 Lista partii,200,OK,Pracownicy magazynu 1-6,text,true,,355614,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,4229,0,0
+1794671441547,4031,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-5,text,true,,19036,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0296,4031,0,0
+1794671442972,2807,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-3,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2807,0,0
+1794671443005,2777,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-9,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,2777,0,0
+1794671443031,2950,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-4,text,true,,19036,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0297,2950,0,0
+1794671443354,4047,02 Lista partii,200,OK,Pracownicy magazynu 1-10,text,true,,355630,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,4026,0,0
+1794671443882,4921,02 Lista partii,200,OK,Pracownicy magazynu 1-8,text,true,,355622,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,4903,0,0
+1794671444821,4158,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-7,text,true,,7444,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0294,4158,0,0
+1794671445279,4501,07 Raport historii ruchow (CSV),200,OK,Kierownik - raporty 2-1,text,true,,51757,293,1,11,https://projekt-inzynierski-3wfv.onrender.com/api/reports/movements,3910,0,0
+1794671445327,4462,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-1,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,4462,0,0
+1794671445515,4474,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-2,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,4473,0,0
+1794671446951,3226,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-5,text,true,,1667,512,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,3225,0,0
+1794671447111,3189,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-6,text,true,,7444,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0295,3188,0,0
+1794671447173,4435,02 Lista partii,200,OK,Pracownicy magazynu 1-9,text,true,,355615,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,4414,0,0
+1794671447548,4449,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-4,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,4449,0,0
+1794671447565,4634,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-3,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/298/issue,4634,0,0
+1794671449220,3188,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-10,text,true,,7444,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0291,3187,0,0
+1794671450283,2391,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-7,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2391,0,0
+1794671450600,2208,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-8,text,true,,7444,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0293,2208,0,0
+1794671451632,2681,02 Lista partii,200,OK,Pracownicy magazynu 1-1,text,true,,355653,283,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches,2664,0,0
+1794671451680,2829,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-2,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/299/issue,2829,0,0
+1794671452030,2756,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-6,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2756,0,0
+1794671452097,2806,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-5,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/296/issue,2806,0,0
+1794671452886,2202,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-9,text,true,,7444,291,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0292,2202,0,0
+1794671453654,1440,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-3,text,true,,492,280,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/ping,1440,0,0
+1794671453950,1354,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-4,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/297/issue,1354,0,0
+1794671454016,1494,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-10,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,1494,0,0
+1794671454096,1601,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-7,text,true,,1662,416,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/294/issue,1601,0,0
+1794671454624,1274,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-8,text,true,,1667,515,10,11,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,1274,0,0
+1794671454781,1511,06 Raport stanu magazynowego (CSV),200,OK,Kierownik - raporty 2-1,text,true,,26744,289,1,11,https://projekt-inzynierski-3wfv.onrender.com/api/reports/stock,1303,0,0
+1794671456219,156,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-5,text,true,,492,280,10,10,https://projekt-inzynierski-3wfv.onrender.com/api/ping,156,0,0
+1794671456280,303,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-1,text,true,,35780,291,10,10,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0300,302,0,0
+1794671456361,427,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-9,text,true,,1667,515,10,10,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,426,0,0
+1794671456395,578,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-6,text,true,,1662,416,10,10,https://projekt-inzynierski-3wfv.onrender.com/api/batches/295/issue,577,0,0
+1794671456501,482,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-2,text,true,,492,280,10,10,https://projekt-inzynierski-3wfv.onrender.com/api/ping,481,0,0
+1794671456591,395,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-4,text,true,,492,280,10,10,https://projekt-inzynierski-3wfv.onrender.com/api/ping,395,0,0
+1794671456700,1507,02 Lista partii,200,OK,Pracownicy magazynu 1-3,text,true,,355631,283,10,10,https://projekt-inzynierski-3wfv.onrender.com/api/batches,1487,0,0
+1794671456950,1642,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-10,text,true,,1662,416,10,10,https://projekt-inzynierski-3wfv.onrender.com/api/batches/291/issue,1642,0,0
+1794671457068,1715,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-8,text,true,,1662,416,10,10,https://projekt-inzynierski-3wfv.onrender.com/api/batches/293/issue,1715,0,0
+1794671457642,1148,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-7,text,true,,492,280,10,10,https://projekt-inzynierski-3wfv.onrender.com/api/ping,1148,0,0
+1794671457745,2441,02 Lista partii,200,OK,Pracownicy magazynu 1-5,text,true,,355599,283,10,10,https://projekt-inzynierski-3wfv.onrender.com/api/batches,2433,0,0
+1794671457938,2429,04 Przyjecie materialu do partii,201,Created,Pracownicy magazynu 1-1,text,true,,1667,515,9,9,https://projekt-inzynierski-3wfv.onrender.com/api/batches/receive-material,2428,0,0
+1794671458149,2237,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-6,text,true,,492,280,8,8,https://projekt-inzynierski-3wfv.onrender.com/api/ping,2236,0,0
+1794671458387,3201,02 Lista partii,200,OK,Pracownicy magazynu 1-2,text,true,,355606,283,7,7,https://projekt-inzynierski-3wfv.onrender.com/api/batches,3196,0,0
+1794671458437,4562,02 Lista partii,200,OK,Pracownicy magazynu 1-4,text,true,,355623,283,6,6,https://projekt-inzynierski-3wfv.onrender.com/api/batches,4543,0,0
+1794671458685,4498,05 Wydanie materialu z partii,200,OK,Pracownicy magazynu 1-9,text,true,,1662,416,5,5,https://projekt-inzynierski-3wfv.onrender.com/api/batches/292/issue,4498,0,0
+1794671459518,3870,03 Szczegoly partii (skan etykiety),200,OK,Pracownicy magazynu 1-3,text,true,,20324,291,4,4,https://projekt-inzynierski-3wfv.onrender.com/api/batches/TE-0298,3869,0,0
+1794671459673,3807,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-10,text,true,,492,280,3,3,https://projekt-inzynierski-3wfv.onrender.com/api/ping,3807,0,0
+1794671460190,3305,01 Sprawdzenie polaczenia (ping),200,OK,Pracownicy magazynu 1-8,text,true,,492,280,2,2,https://projekt-inzynierski-3wfv.onrender.com/api/ping,3304,0,0
+1794671460747,4130,02 Lista partii,200,OK,Pracownicy magazynu 1-7,text,true,,355638,283,1,1,https://projekt-inzynierski-3wfv.onrender.com/api/batches,4045,0,0

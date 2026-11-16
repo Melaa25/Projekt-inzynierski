@@ -18,7 +18,8 @@ class MaterialMovementController extends Controller
             $query->where('type', $type);
         }
 
-        $movements = $query->orderBy('created_at', 'desc')->paginate(50);
+        // Najnowsze operacje na gorze, wedlug czasu wykonania na telefonie.
+        $movements = $query->orderByRaw('COALESCE(performed_at, created_at) DESC')->paginate(50);
 
         return response()->json($movements);
     }

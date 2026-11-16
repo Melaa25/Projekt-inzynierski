@@ -16,7 +16,9 @@ class MaterialBatchController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $query = MaterialBatch::with(['material', 'currentLocation']);
+        // Ladujemy od razu cala sciezke lokalizacji (polka -> regal -> sektor),
+        // zeby atrybut full_path nie wysylal osobnego zapytania dla kazdej polki i regalu.
+        $query = MaterialBatch::with(['material', 'currentLocation.parent.parent']);
 
         $type = $request->query('type');
         if ($type) {

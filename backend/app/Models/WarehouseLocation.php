@@ -18,6 +18,12 @@ class WarehouseLocation extends Model
         'full_path',
     ];
 
+    // Relacja parent jest potrzebna tylko do zbudowania full_path - nie wysylamy
+    // jej w odpowiedzi, bo aplikacja korzysta z full_path i parent_id.
+    protected $hidden = [
+        'parent',
+    ];
+
     public function parent()
     {
         return $this->belongsTo(self::class, 'parent_id');

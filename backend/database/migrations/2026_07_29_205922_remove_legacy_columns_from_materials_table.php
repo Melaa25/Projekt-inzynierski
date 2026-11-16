@@ -8,6 +8,12 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Najpierw usuwamy indeks unikalnosci - SQLite (baza testowa) nie pozwala
+        // usunac kolumny, na ktorej wciaz jest indeks.
+        Schema::table('materials', function (Blueprint $table) {
+            $table->dropUnique(['serial_number']);
+        });
+
         Schema::table('materials', function (Blueprint $table) {
             $table->dropColumn(['serial_number', 'location', 'status']);
         });

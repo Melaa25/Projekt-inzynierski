@@ -35,7 +35,7 @@ class User extends Authenticatable
         $firstName = $parts[0] ?? 'uzytkownik';
         $surname = $parts[count($parts) - 1] ?? $firstName;
 
-        $initial = preg_replace('/[^a-z0-9]/', '', Str::lower(Str::ascii(substr($firstName, 0, 1)))) ?: 'u';
+        $initial = preg_replace('/[^a-z0-9]/', '', Str::lower(Str::ascii(mb_substr($firstName, 0, 1)))) ?: 'u';
         $surnamePart = preg_replace('/[^a-z0-9]/', '', Str::lower(Str::ascii($surname))) ?: 'zytkownik';
         $baseLogin = $initial . '.' . $surnamePart;
 

@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -36,7 +39,7 @@ class _ReportsViewState extends State<ReportsView> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
       },
       (bytes) async {
-        await _saveAndShare(bytes, 'stan_magazynowy.csv');
+        await _saveAndShare(bytes, 'stan_magazynowy');
       },
     );
   }
@@ -59,15 +62,31 @@ class _ReportsViewState extends State<ReportsView> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
       },
       (bytes) async {
-        await _saveAndShare(bytes, 'historia_ruchow.csv');
+        await _saveAndShare(bytes, 'historia_ruchow');
       },
     );
   }
 
   Future<void> _saveAndShare(List<int> bytes, String fileName) async {
     try {
+      if (kIsWeb) {
+        // W przeglądarce nie ma dostępu do katalogów - plik trafia do Pobranych
+        await FileSaver.instance.saveFile(
+          name: fileName,
+          bytes: Uint8List.fromList(bytes),
+          ext: 'csv',
+          mimeType: MimeType.csv,
+        );
+
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Raport został pobrany')),
+        );
+        return;
+      }
+
       final dir = await getTemporaryDirectory();
-      final file = File('${dir.path}/$fileName');
+      final file = File('${dir.path}/$fileName.csv');
       await file.writeAsBytes(bytes, flush: true);
 
       await Share.shareXFiles(

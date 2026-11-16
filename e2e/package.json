@@ -1,0 +1,14 @@
+{
+  "name": "wms-testy-e2e",
+  "private": true,
+  "description": "Testy funkcjonalne panelu webowego systemu magazynowego (Playwright)",
+  "scripts": {
+    "test": "playwright test",
+    "test:widoczne": "playwright test --headed",
+    "raport": "playwright show-report wyniki/raport-html"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "http-server": "^14.1.1"
+  }
+}

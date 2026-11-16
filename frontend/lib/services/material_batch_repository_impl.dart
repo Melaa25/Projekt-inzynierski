@@ -163,7 +163,7 @@ class MaterialBatchRepositoryImpl implements MaterialBatchRepository {
       'note': note,
       'client_uuid': clientUuid,
       'client_operation_id': operationId,
-      'performed_at': performedAt.toIso8601String(),
+      'performed_at': performedAt.toUtc().toIso8601String(),
     };
 
     try {
@@ -223,7 +223,7 @@ class MaterialBatchRepositoryImpl implements MaterialBatchRepository {
       'note': note,
       'client_uuid': clientUuid,
       'client_operation_id': operationId,
-      'performed_at': performedAt.toIso8601String(),
+      'performed_at': performedAt.toUtc().toIso8601String(),
     };
 
     try {
@@ -283,7 +283,7 @@ class MaterialBatchRepositoryImpl implements MaterialBatchRepository {
       'destination': destination,
       'note': note,
       'client_operation_id': operationId,
-      'performed_at': performedAt.toIso8601String(),
+      'performed_at': performedAt.toUtc().toIso8601String(),
     };
 
     try {
@@ -337,7 +337,7 @@ class MaterialBatchRepositoryImpl implements MaterialBatchRepository {
       'status': status,
       'note': note,
       'client_operation_id': operationId,
-      'performed_at': performedAt.toIso8601String(),
+      'performed_at': performedAt.toUtc().toIso8601String(),
     };
 
     try {

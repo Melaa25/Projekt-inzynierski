@@ -41,7 +41,7 @@ class ReportController extends Controller
                     $batch->total_weight ?? '',
                     $batch->currentLocation?->name ?? '-',
                     $batch->status,
-                    $batch->created_at?->format('Y-m-d H:i'),
+                    $batch->created_at?->timezone('Europe/Warsaw')->format('Y-m-d H:i'),
                 ], ';');
             }
 
@@ -55,19 +55,21 @@ class ReportController extends Controller
     {
         $query = MaterialMovement::with(['batch.material', 'batch.currentLocation', 'user']);
 
+        // Liczy sie czas wykonania operacji na telefonie (performed_at),
+        // a dla starszych ruchow bez tej wartosci - czas zapisu na serwerze.
         if ($request->filled('from')) {
-            $query->whereDate('created_at', '>=', $request->query('from'));
+            $query->whereRaw('DATE(COALESCE(performed_at, created_at)) >= ?', [$request->query('from')]);
         }
 
         if ($request->filled('to')) {
-            $query->whereDate('created_at', '<=', $request->query('to'));
+            $query->whereRaw('DATE(COALESCE(performed_at, created_at)) <= ?', [$request->query('to')]);
         }
 
         if ($request->filled('type')) {
             $query->where('type', $request->query('type'));
         }
 
-        $movements = $query->orderBy('created_at')->get();
+        $movements = $query->orderByRaw('COALESCE(performed_at, created_at)')->get();
 
         $filename = 'historia_ruchow_' . now()->format('Y_m_d_His') . '.csv';
 
@@ -89,7 +91,7 @@ class ReportController extends Controller
 
             foreach ($movements as $movement) {
                 fputcsv($handle, [
-                    $movement->created_at?->format('Y-m-d H:i'),
+                    ($movement->performed_at ?? $movement->created_at)?->timezone('Europe/Warsaw')->format('Y-m-d H:i'),
                     $movement->type,
                     $movement->batch?->batch_code ?? '-',
                     $movement->batch?->material?->name

@@ -39,7 +39,8 @@ class MaterialMovementModel extends MaterialMovementEntity {
       newStatus: json['new_status'] as String?,
       previousLocation: previousLocationJson == null ? null : LocationModel.fromJson(previousLocationJson),
       newLocation: newLocationJson == null ? null : LocationModel.fromJson(newLocationJson),
-      createdAt: DateTime.parse(json['created_at'] as String),
+      // Czas wykonania operacji na telefonie; dla starszych ruchow - czas zapisu na serwerze.
+      createdAt: DateTime.parse((json['performed_at'] ?? json['created_at']) as String),
     );
   }
 }
