@@ -74,7 +74,7 @@ class _ReportsViewState extends State<ReportsView> {
         await FileSaver.instance.saveFile(
           name: fileName,
           bytes: Uint8List.fromList(bytes),
-          ext: 'csv',
+          fileExtension: 'csv',
           mimeType: MimeType.csv,
         );
 
