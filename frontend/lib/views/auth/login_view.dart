@@ -51,7 +51,7 @@ class _LoginViewState extends State<LoginView> {
                     icon: Icons.warehouse_rounded,
                     title: 'Logowanie do systemu',
                     subtitle:
-                        'Zaloguj się swoim loginem i hasłem. Login ma format i.nazwisko, a pierwsze hasło to PESEL.',
+                        'Zaloguj się swoim loginem i hasłem. Login ma format i.nazwisko.',
                   ),
                   const SizedBox(height: 16),
                   Card(
